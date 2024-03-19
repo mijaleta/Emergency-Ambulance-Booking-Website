@@ -1,5 +1,85 @@
 const express = require('express');
+const passport = require('passport');
+
 const router = express.Router();
+// for authentication 
+router.get('/login', (req, res) => {
+res.render('login'); // Renders the index view
+});
+
+// login route
+router.post('/login', passport.authenticate('local'), (req, res) => {
+    if (req.user) {
+      if (req.headers.accept && req.headers.accept.indexOf('application/json') !== -1) {
+        // API request from mobile app
+        res.json({
+          success: true,
+          message: 'Authentication successful',
+          user: {
+            username: req.user.username,
+            role: req.user.role
+          }
+        });
+      } else {
+        // Web request
+        res.redirect('/dashboard');
+      }
+    } else {
+      if (req.headers.accept && req.headers.accept.indexOf('application/json') !== -1) {
+        // API request from mobile app
+        res.status(401).json({ success: false, message: 'Authentication failed' });
+      } else {
+        // Web request
+        res.redirect('/login');
+      }
+    }
+  });
+  router.get('/dashboard', (req, res) => {
+    if (!req.isAuthenticated()) {
+      if (req.headers.accept && req.headers.accept.indexOf('application/json') !== -1) {
+        // API request from mobile app
+        res.status(401).json({ success: false, message: 'Unauthorized' });
+      } else {
+        // Web request
+        res.redirect('/login'); // Redirect to login if not authenticated
+      }
+    } else {
+      const userRole = req.user.role;
+      if (req.headers.accept && req.headers.accept.indexOf('application/json') !== -1) {
+        // API request from mobile app
+        res.json({
+          success: true,
+          message: 'Authenticated',
+          user: {
+            username: req.user.username,
+            role: req.user.role
+          }
+        });
+      } else {
+        // Web request
+        switch (userRole) {
+          case 'admin':
+            res.render('adminDashboard', { username: req.user.username }); // Render admin dashboard template
+            break;
+          case 'nurse':
+            res.render('nurseDashboard', { username: req.user.username }); // Render nurse dashboard template
+            break;
+          case 'driver':
+            res.render('driverDashboard', { username: req.user.username }); // Render driver dashboard template
+            break;
+          case 'dispatcher':
+            res.render('dispatcherDashboard', { username: req.user.username }); // Render dispatcher dashboard template
+            break;
+          default:
+            res.status(403).send('Unauthorized'); // Handle unauthorized access
+        }
+      }
+    }
+  });
+
+
+
+
 router.get('/', (req, res) => {
   res.render('indexindex'); // Renders the index view
 });

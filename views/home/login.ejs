@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Example Login Form</title>
+</head>
+<body>
+    <form action="/login" method="post">
+        <!-- user input -->
+        Username:<br>
+        <input type="text" name="username" placeholder="Username" required><br><br>
+        Password:<br>
+        <input type="password" name="password" placeholder="Password" required><br><br>
+        <!-- submit button -->
+        <input type="submit" value="Login">
+    </form>
+    <!-- Modify the form action to navigate to the forgot password page -->
+    <form action="/forgot-password" method="get">
+        <!-- reset password button -->
+        <input type="submit" value="Forgot Password?">
+    </form>
+</body>
+</html>

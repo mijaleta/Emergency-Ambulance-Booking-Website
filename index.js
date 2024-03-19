@@ -17,11 +17,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Set up views rendering
 app.set('views', [
     path.join(__dirname, 'views', 'dispatcher'),
-    path.join(__dirname, 'views', 'admin')
+    path.join(__dirname, 'views', 'admin'),
+    path.join(__dirname, 'views', 'home')
+
   ]);
-  
 app.set('view engine', 'ejs'); // Assuming you're using EJS as the template engine
 app.use('/', indexRouter);
+
+// for authentication
+
+
+
+
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;
