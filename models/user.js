@@ -8,9 +8,11 @@ mongoose.connect('mongodb://127.0.0.1/ambulance-website', {
 
 
 const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
   username: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  mobile_number:{type:Number,required:true},
   role: {
     type: String,
     enum: ['admin', 'nurse', 'driver', 'dispatcher'],

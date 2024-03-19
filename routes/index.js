@@ -3,6 +3,10 @@ const passport = require('passport');
 const {isAdmin,isDispatcher} = require('../controllers/createadmin');
 const nodemailer = require('nodemailer')
 const router = express.Router();
+const User = require('../models/user')
+const crypto = require('crypto')
+const bcrypt = require('bcrypt')
+
 // for authentication 
 router.get('/login', (req, res) => {
 res.render('login'); // Renders the index view
@@ -167,9 +171,9 @@ router.get('/adminContact', (req, res) => {
   // Route to handle user registration form submission
   router.post('/register', isAdmin, async (req, res) => {
     try {
-      const { username, email, role } = req.body;
+      const { username, email, role, name, mobile_number} = req.body;
   
-      if (!username || !email || !role) {
+      if (!username || !email || !role || !mobile_number || !name) {
         return res.status(400).send('Please provide all required fields');
       }
   
@@ -186,6 +190,8 @@ router.get('/adminContact', (req, res) => {
         email,
         password: hashedPassword,
         role,
+        name,
+        mobile_number,
         passwordChanged: false,
       });
   
@@ -421,5 +427,22 @@ router.post('/forgot-password', async (req, res) => {
   });
 
 
+
+
+
+
+
+
+  // Route to Log out
+  router.get('/logout', function(req, res) {
+    req.logout(function(err) {
+      if(err) {
+        console.error('Error logging out:', err);
+        return res.status(500).send('Internal server error');
+      }
+      // Redirect the user to the login page after successful logout
+      res.redirect('/login');
+    });
+  });
 
 module.exports = router;

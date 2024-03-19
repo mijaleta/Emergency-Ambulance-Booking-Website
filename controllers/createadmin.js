@@ -13,7 +13,9 @@ async function createAdmin() {
   const adminPassword = 'a'; // Set the password for the admin user
   const hashedAdminPassword = await bcrypt.hash(adminPassword, 10); // Hash the password
   const adminUser = new User({
+      name:'General Admin',
       username: 'a',
+      mobile_number:'0973284058',
       password: hashedAdminPassword, // Use the hashed password
       role: 'admin',
       email:'miratuujaallataa@gmail.com'
