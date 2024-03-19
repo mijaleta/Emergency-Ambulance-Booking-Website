@@ -7,7 +7,7 @@ const Users = require('./models/user')
 const indexRouter = require('./routes/index')
 // Initialize Express app
 const app = express();
-app.use('/', indexRouter);
+
 // app.use('/users', usersRouter);
 
 
@@ -21,11 +21,7 @@ app.set('views', [
   ]);
   
 app.set('view engine', 'ejs'); // Assuming you're using EJS as the template engine
-
-// Define routes
-app.get('/', (req, res) => {
-  res.render('index'); // Renders the index view
-});
+app.use('/', indexRouter);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
