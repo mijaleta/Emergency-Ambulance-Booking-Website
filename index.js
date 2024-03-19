@@ -1,38 +1,31 @@
 // Import required modules
 const express = require('express');
+const bcrypt = require('bcrypt');
 const { request } = require('http');
 const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
-
 const User = require('./models/user')
+const bodyParser = require('body-parser')
 const indexRouter = require('./routes/index')
 const LocalStrategy = require('passport-local').Strategy;
-
 // Initialize Express app
 const app = express();
 // app.use('/users', usersRouter);
 // Set up static files serving from the public folder
 app.use(express.static(path.join(__dirname, 'public')));
-
 // Set up views rendering
 app.set('views', [
     path.join(__dirname, 'views', 'dispatcher'),
     path.join(__dirname, 'views', 'admin'),
     path.join(__dirname, 'views', 'home')
-
   ]);
 app.set('view engine', 'ejs'); // Assuming you're using EJS as the template engine
-app.use('/', indexRouter);
-
-
 
 app.use(express.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-
-
+app.use(bodyParser.urlencoded({ extended: false }));
 // Session middleware
 app.use(session({
   secret: 'r8q,+&1LM3)CD*zAGpx1xm{NeQhc;#',
@@ -76,14 +69,8 @@ passport.deserializeUser(async function (id, done) {
       done(error);
   }
 });
-
+app.use('/', indexRouter);
 // for authentication
-
-
-
-
-
-
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

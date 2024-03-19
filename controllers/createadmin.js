@@ -1,4 +1,6 @@
 const User = require('../models/user'); // Import User Model
+const bcrypt = require('bcrypt');
+
 async function createAdmin() {
     try {
         // Check if admin already exists
