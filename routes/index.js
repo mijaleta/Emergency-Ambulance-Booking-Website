@@ -88,36 +88,34 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 router.get('/', (req, res) => {
   res.render('indexindex'); // Renders the index view
 });
-router.get('/adminDashboard', (req, res) => {
+router.get('/adminDashboard', isAdmin,(req, res) => {
     res.render('adminDashboard'); // Renders the index view
   });
-  router.get('/adminAmbulance', (req, res) => {
+  router.get('/adminAmbulance', isAdmin,(req, res) => {
     res.render('adminAmbulance'); // Renders the index view
   });
-  router.get('/adminNurse', (req, res) => {
+  router.get('/adminNurse', isAdmin,(req, res) => {
     res.render('adminNurse'); // Renders the index view
   });  
-  router.get('/adminDriver', (req, res) => {
+  router.get('/adminDriver', isAdmin,(req, res) => {
     res.render('adminDriver'); // Renders the index view
   });  
-  router.get('/adminContact', (req, res) => {
+  router.get('/adminContact', isAdmin,(req, res) => {
     res.render('adminContact'); // Renders the index view
   });
-  router.get('/adminDispacher', (req, res) => {
+  router.get('/adminDispacher',isAdmin, (req, res) => {
     res.render('adminDispacher'); // Renders the index view
   });
-  router.get('/adminMap', (req, res) => {
+  router.get('/adminMap', isAdmin,(req, res) => {
     res.render('adminMap'); // Renders the index view
   });
-  router.get('/adminSettings', (req, res) => {
+  router.get('/adminSettings', isAdmin,(req, res) => {
     res.render('adminSettings'); // Renders the index view
   });
-  router.get('/adminIndex', (req, res) => {
+  router.get('/adminIndex', isAdmin,(req, res) => {
     res.render('adminIndex'); // Renders the index view
   });
-router.get('/adminContact', (req, res) => {
-    res.render('adminContact'); // Renders the index view
-  });
+
 
 
 
@@ -126,22 +124,22 @@ router.get('/adminContact', (req, res) => {
 
 
 // for dispatcher
-  router.get('/dispatcherDashboard', (req, res) => {
+  router.get('/dispatcherDashboard', isDispatcher,(req, res) => {
     res.render('dispatcherDashboard'); // Renders the index view
   });
-  router.get('/dispatcherAmbulance', (req, res) => {
+  router.get('/dispatcherAmbulance', isDispatcher,(req, res) => {
     res.render('dispatcherAmbulance'); // Renders the index view
   });
-  router.get('/dispatcherContact', (req, res) => {
+  router.get('/dispatcherContact',isDispatcher, (req, res) => {
     res.render('dispatcherContact'); // Renders the index view
   });
-  router.get('/dispatcherDispacher', (req, res) => {
+  router.get('/dispatcherDispacher',isDispatcher, (req, res) => {
     res.render('dispatcherDispacher'); // Renders the index view
   });
-  router.get('/dispatcherMap', (req, res) => {
+  router.get('/dispatcherMap',isDispatcher, (req, res) => {
     res.render('dispatcherMap'); // Renders the index view
   });
-  router.get('/dispatcherSettings', (req, res) => {
+  router.get('/dispatcherSettings',isDispatcher, (req, res) => {
     res.render('dispatcherSettings'); // Renders the index view
   });
 
