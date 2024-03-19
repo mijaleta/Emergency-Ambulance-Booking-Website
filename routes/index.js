@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('passport');
+const mongoose = require('mongoose')
 const {isAdmin,isDispatcher} = require('../controllers/createadmin');
 const nodemailer = require('nodemailer')
 const router = express.Router();
@@ -82,39 +83,90 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
     }
   });
 
-
-
-
-router.get('/', (req, res) => {
-  res.render('indexindex'); // Renders the index view
-});
-router.get('/adminDashboard', isAdmin,(req, res) => {
+router.get('/adminDashboard',(req, res) => {
     res.render('adminDashboard'); // Renders the index view
   });
-  router.get('/adminAmbulance', isAdmin,(req, res) => {
+  router.get('/adminAmbulance',(req, res) => {
     res.render('adminAmbulance'); // Renders the index view
-  });
-  router.get('/adminNurse', isAdmin,(req, res) => {
-    res.render('adminNurse'); // Renders the index view
-  });  
-  router.get('/adminDriver', isAdmin,(req, res) => {
-    res.render('adminDriver'); // Renders the index view
-  });  
-  router.get('/adminContact', isAdmin,(req, res) => {
+  }); 
+  router.get('/adminContact',(req, res) => {
     res.render('adminContact'); // Renders the index view
   });
-  router.get('/adminDispacher',isAdmin, (req, res) => {
-    res.render('adminDispacher'); // Renders the index view
-  });
-  router.get('/adminMap', isAdmin,(req, res) => {
+
+
+  // Route to fetch dispatcher users and render the table
+router.get('/adminDispatcher', async (req, res) => {
+  try {
+    const dispatcherUsers = await User.find({ role: 'dispatcher' });
+    res.render('adminDispatcher', { users: dispatcherUsers });
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+// Route to fetch nurse users and render the table
+router.get('/adminNurse', async (req, res) => {
+  try {
+    const nurseUsers = await User.find({ role: 'nurse' });
+    res.render('adminNurse', { users: nurseUsers });
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Route to fetch driver users and render the table
+router.get('/adminDriver', async (req, res) => {
+  try {
+    const driverUsers = await User.find({ role: 'driver' });
+    res.render('adminDriver', { users: driverUsers });
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+// updating user 
+router.post('/updateUser', async (req, res) => {
+  try {
+      const { id, name, mobile_number, username, email, role } = req.body;
+
+      // Ensure the provided ID is a valid MongoDB ObjectId
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(400).send('Invalid user ID');
+      }
+
+      // Find the user by ID
+      const user = await User.findById(id);
+
+      if (!user) {
+          return res.status(404).send('User not found');
+      }
+
+      // Update user details
+      user.name = name;
+      user.mobile_number = mobile_number;
+      user.username = username;
+      user.email = email;
+      user.role = role;
+
+      // Save the updated user
+      await user.save();
+
+      res.status(200).send('User details updated successfully!');
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+  router.get('/adminMap',(req, res) => {
     res.render('adminMap'); // Renders the index view
   });
-  router.get('/adminSettings', isAdmin,(req, res) => {
+  router.get('/adminSettings',(req, res) => {
     res.render('adminSettings'); // Renders the index view
   });
-  router.get('/adminIndex', isAdmin,(req, res) => {
-    res.render('adminIndex'); // Renders the index view
-  });
+
 
 
 
@@ -133,8 +185,8 @@ router.get('/adminDashboard', isAdmin,(req, res) => {
   router.get('/dispatcherContact',isDispatcher, (req, res) => {
     res.render('dispatcherContact'); // Renders the index view
   });
-  router.get('/dispatcherDispacher',isDispatcher, (req, res) => {
-    res.render('dispatcherDispacher'); // Renders the index view
+  router.get('/dispatcherDispatcher',isDispatcher, (req, res) => {
+    res.render('dispatcherDispatcher'); // Renders the index view
   });
   router.get('/dispatcherMap',isDispatcher, (req, res) => {
     res.render('dispatcherMap'); // Renders the index view
@@ -423,6 +475,8 @@ router.post('/forgot-password', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
+
+
 
 
 

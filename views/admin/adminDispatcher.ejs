@@ -64,7 +64,7 @@
                    <li>
                          <a href="#users" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-diamond purple_color"></i> <span>Users</span></a>
                          <ul class="collapse list-unstyled" id="users">
-                            <li><a href="adminDispacher"> <span>Dispatchers</span></a></li>
+                            <li><a href="adminDispatcher"> <span>Dispatchers</span></a></li>
                             <li><a href="adminNurse"><span>Nurse</span></a></li>
                             <li><a href="adminDriver"> <span>Drivers</span></a></li>
                          </ul>
@@ -98,9 +98,9 @@
                                 <li>
                                 <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="../images/layout_img/prof.jpg" alt="#" /><span class="name_user">Humna Guda</span></a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="profile.html">My Profile</a>
-                                    <a class="dropdown-item" href="settings.html">Settings</a>
-                                    <a class="dropdown-item" href="help.html">Help</a>
+                                    <a class="dropdown-item" href="adminDashboard">My Profile</a>
+                                    <a class="dropdown-item" href="adminSettings">Settings</a>
+                                    <a class="dropdown-item" href="adminDashboard">Help</a>
                                     <a class="dropdown-item" href="logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
                                 </div>
                                 </li>
@@ -136,57 +136,46 @@
                                 <!-- Modal Body -->
                                 <div class="modal-body">
                                     <!-- Your update form content goes here -->
-                                    <form>
-                                    <div class="form-group col-md-12">
-                                            <label for="inputId4">ID</label>
-                                            <input type="id" class="form-control" id="inputEmail4" placeholder="Id">
-                                    </div>
-            
-                                    <div class="form-group col-md-12">
-                                            <label for="inputName4">Name</label>
-                                            <input type="name" class="form-control" id="inputPassword4" placeholder="Name">
-                                    </div>
-            
-                                    <div class="form-group col-md-12">
-                                            <label for="inputphone4">Phone</label>
-                                            <input type="phone" class="form-control" id="inputEmail4" placeholder="phone">
-                                    </div>
-            
-                                    <div class="form-group col-md-12">
-                                            <label for="inputUsername4">Username</label>
-                                            <input type="username" class="form-control" id="inputEmail4" placeholder="Username">
-                                    </div>
-            
-                                    <div class="form-group col-md-12">
-                                            <label for="inputPassword4">Password</label>
-                                            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
-                                    </div>
-            
-                                    <div class="form-group col-md-12">
-                                            <label for="inputState">Role</label>
-                                            <select id="inputState" class="form-control">
-                                            <option selected>Choose...</option>
-                                            <option>Admin</option>
-                                            <option>Dispatcher</option>
-                                            <option>Driver</option>
-                                            <option>Nurse</option>
-                                            <option>Patient</option>
-                                            </select>
-                                    </div>
-            
-                                    <div class="regr">
-                                            <div class="form-group">
-                                            <!-- <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="gridCheck">
-                                                <label class="form-check-label" for="gridCheck">
-                                                Check me out
-                                                </label>
-                                            </div> -->
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Update</button>
-                                    </div>
+                                    <form action="/updateUser" method="post"> <!-- Assuming the endpoint to update user details is "/updateUser" -->
                                     
+                                        <div class="form-group col-md-12">
+                                            <label for="inputName">Name</label>
+                                            <input type="text" class="form-control" id="inputName" name="name" placeholder="Name" required>
+                                        </div>
+                                    
+                                        <div class="form-group col-md-12">
+                                            <label for="inputPhone">Phone</label>
+                                            <input type="tel" class="form-control" id="inputPhone" name="mobile_number" placeholder="Phone" required>
+                                        </div>
+                                    
+                                        <div class="form-group col-md-12">
+                                            <label for="inputUsername">Username</label>
+                                            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Username" required>
+                                        </div>
+                                    
+                                        <div class="form-group col-md-12">
+                                            <label for="inputEmail">Email</label>
+                                            <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email" required>
+                                        </div>
+                                    
+                                        <div class="form-group col-md-12">
+                                            <label for="inputState">Role</label>
+                                            <select id="inputState" class="form-control" name="role" required>
+                                                <option selected disabled>Choose...</option>
+                                                <option value="dispatcher">Dispatcher</option>
+                                                <option value="driver">Driver</option>
+                                                <option value="nurse">Nurse</option>
+                                            </select>
+                                        </div>
+                                    
+                                        <!-- Add additional form fields if needed -->
+                                    
+                                        <div class="regr">
+                                            <!-- You can add form-check or other elements here if needed -->
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                        </div>
                                     </form>
+                                    
                                 </div>
                         
                                 <!-- Modal Footer -->
@@ -212,84 +201,33 @@
                                 <div class="table_row">
                                     <div class="table-responsive">
                                         <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
+                                            <thead>
+                                              <tr>
                                                 <th>Name</th>
                                                 <th>Phone</th>
                                                 <th>Username</th>
                                                 <th>Role</th>
                                                 <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Sami Moke</td>
-                                                <td>0915657585</td>
-                                                <td>@samoke</td>
-                                                <td>Dispatcher</td>
-                                                <td>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <% users.forEach(user => { %>
+                                                <tr>
+                                                  <td><%= user.name %></td>
+                                                  <td><%= user.mobile_number %></td>
+                                                  <td><%= user.username %></td>
+                                                  <td><%= user.role %></td>
+                                                  <td>
                                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-                                                        Update</button>
-                                                        <button class="btn btn-success">Suspend</button>
+                                                      Update
+                                                    </button>
+                                                    <button class="btn btn-success">Suspend</button>
                                                     <button class="btn btn-danger">Delete</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Gezagn Beky</td>
-                                                <td>0915657585</td>
-                                                <td>@gebeky</td>
-                                                <td>Dispatcher</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-                                                        Update</button>
-                                                        <button class="btn btn-success">Suspend</button>
-                                                    <button class="btn btn-danger">Delete</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Miretu Jaleta</td>
-                                                <td>0915657585</td>
-                                                <td>@mijaleta</td>
-                                                <td>Dispatcher</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-                                                        Update</button>
-                                                        <button class="btn btn-success">Suspend</button>
-                                                    <button class="btn btn-danger">Delete</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Humna Guda</td>
-                                                <td>0915657585</td>
-                                                <td>@huguda</td>
-                                                <td>Dispatcher</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-                                                        Update</button>
-                                                        <button class="btn btn-success">Suspend</button>
-                                                    <button class="btn btn-danger">Delete</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Feyisa Gizew</td>
-                                                <td>0915657585</td>
-                                                <td>@fegizew</td>
-                                                <td>Dispatcher</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-                                                        Update</button>
-                                                        <button class="btn btn-success">Suspend</button>
-                                                    <button class="btn btn-danger">Delete</button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        </table>
+                                                  </td>
+                                                </tr>
+                                              <% }); %>
+                                            </tbody>
+                                          </table>
                                     </div>
                                 </div>
                             </div>
