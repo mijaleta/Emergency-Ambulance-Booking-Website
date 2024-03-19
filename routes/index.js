@@ -21,7 +21,7 @@ router.get('/adminDashboard', (req, res) => {
   });  
 
   
-  
+
   router.get('/adminContact', (req, res) => {
     res.render('adminContact'); // Renders the index view
   });
@@ -38,16 +38,52 @@ router.get('/adminDashboard', (req, res) => {
     res.render('adminSettings'); // Renders the index view
   });
 
-  
-  
-  
+
   router.get('/adminIndex', (req, res) => {
     res.render('adminIndex'); // Renders the index view
   });
 
-  
 router.get('/adminContact', (req, res) => {
     res.render('adminContact'); // Renders the index view
   });
+
+
+
+
+// for dispatcher
+  router.get('/dispatcherDashboard', (req, res) => {
+    res.render('dispatcherDashboard'); // Renders the index view
+  });
+
+
+  router.get('/dispatcherAmbulance', (req, res) => {
+    res.render('dispatcherAmbulance'); // Renders the index view
+  });
+
+
+
+  
+
+  router.get('/dispatcherContact', (req, res) => {
+    res.render('dispatcherContact'); // Renders the index view
+  });
+
+  router.get('/dispatcherDispacher', (req, res) => {
+    res.render('dispatcherDispacher'); // Renders the index view
+  });
+
+  router.get('/dispatcherMap', (req, res) => {
+    res.render('dispatcherMap'); // Renders the index view
+  });
+  
+  router.get('/dispatcherSettings', (req, res) => {
+    res.render('dispatcherSettings'); // Renders the index view
+  });
+
+
+
+
+
+
 
 module.exports = router;
