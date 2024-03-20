@@ -153,6 +153,38 @@ router.get('/adminDashboard',(req, res) => {
         res.status(500).send('Internal Server Error');
     }
   });
+
+
+
+  router.post('/updateUserNurse', async (req, res) => {
+    try {
+        const { name, mobile_number, username, email, role } = req.body;
+  
+        // Find the user with role 'dispatcher'
+        const user = await User.findOne({ role: 'nurse' });
+  
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+  
+        // Update user details
+        user.name = name;
+        user.mobile_number = mobile_number;
+        user.username = username;
+        user.email = email;
+        user.role = role;
+  
+        // Save the updated user
+        await user.save();
+  
+        // Pass the user object to the view when rendering
+        res.redirect('adminNurse'); // Pass the user object to the view
+  
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+  });
   // Route to fetch dispatcher users and render the table
 // Route to fetch dispatcher users and render the table
 router.get('/adminDispatcher', async (req, res) => {
@@ -290,8 +322,8 @@ router.delete('/deleteUser/:userId', async (req, res) => {
   
  // Route to handle user update form submission
 // Route to handle user registration form submission
-
-router.post('/register', isAdmin, async (req, res) => {
+// isAdmin,
+router.post('/register',  async (req, res) => {
   try {
     const { username, email, role, name, mobile_number} = req.body;
 
