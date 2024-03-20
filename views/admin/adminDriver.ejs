@@ -136,8 +136,9 @@
                                 <!-- Modal Body -->
                                 <div class="modal-body">
                                     <!-- Your update form content goes here -->
-                                    <form action="updateUserDriver" method="post"> <!-- Assuming the endpoint to update user details is "/updateUser" -->
-                                    
+                                    <form action="updateUser" method="post"> <!-- Assuming the endpoint to update user details is "/updateUser" -->
+                                        <input type="hidden" id="inputUserId" name="userId">
+
                                         <div class="form-group col-md-12">
                                             <label for="inputName">Name</label>
                                             <input type="text" class="form-control" id="inputName" name="name" placeholder="Name" value="" required>
@@ -218,7 +219,7 @@
           <td><%= user.username %></td>
           <td><%= user.role %></td>
           <td>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="fillModal('<%= user.name %>', '<%= user.mobile_number %>', '<%= user.username %>', '<%= user.email %>', '<%= user.role %>')">Update</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="fillModal('<%= user._id %>', '<%= user.name %>', '<%= user.mobile_number %>', '<%= user.username %>', '<%= user.email %>', '<%= user.role %>')">Update</button>
 
             <button class="btn btn-success">Suspend</button>
             <button class="btn btn-danger" onclick="deleteUser('<%= user._id %>')">Delete</button> <!-- Pass user ID to deleteUser function -->
@@ -256,13 +257,15 @@
         <!-- for filling of the modal -->
     <!-- for updating of the user iformations  -->
 <script>
-    function fillModal(name, mobile_number, username, email, role) {
-        document.getElementById('inputName').value = name;
-        document.getElementById('inputPhone').value = mobile_number;
-        document.getElementById('inputUsername').value = username;
-        document.getElementById('inputEmail').value = email;
-        document.getElementById('inputState').value = role;
-    }
+// Function to fill the modal with user details
+function fillModal(userId, name, mobileNumber, username, email, role) {
+    document.getElementById('inputUserId').value = userId; // Set the hidden input value
+    document.getElementById('inputName').value = name;
+    document.getElementById('inputPhone').value = mobileNumber;
+    document.getElementById('inputUsername').value = username;
+    document.getElementById('inputEmail').value = email;
+    document.getElementById('inputState').value = role;
+}
 
 
 

@@ -94,6 +94,44 @@ router.get('/adminDashboard',(req, res) => {
   });
 
 
+  // Route to update user details
+router.post('/updateUser', async (req, res) => {
+  try {
+      const { userId, name, mobile_number, username, email, role } = req.body;
+
+      // Find the user by ID
+      const user = await User.findById(userId);
+
+      if (!user) {
+          return res.status(404).send('User not found');
+      }
+
+      // Update user details
+      user.name = name;
+      user.mobile_number = mobile_number;
+      user.username = username;
+      user.email = email;
+      user.role = role;
+
+      // Save the updated user
+      await user.save();
+
+      // Redirect to the appropriate dashboard based on the role
+      if (role === 'dispatcher') {
+          res.redirect('adminDispatcher');
+      } else if (role === 'driver') {
+          res.redirect('adminDriver');
+      } else {
+          // Handle other roles if needed
+          res.status(400).send('Invalid role');
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
   router.post('/updateUserDispatcher', async (req, res) => {
     try {
         const { name, mobile_number, username, email, role } = req.body;
