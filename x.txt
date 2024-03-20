@@ -1,36 +1,14 @@
-// Route to update user details
-router.post('/updateUser', async (req, res) => {
+// Route to update an ambulance
+router.post('/updateAmbulance', async (req, res) => {
     try {
-        const { userId, name, mobile_number, username, email, role } = req.body;
+        const { ambulanceId, type, available } = req.body;
 
-        // Find the user by ID
-        const user = await User.findById(userId);
+        // Find the ambulance by ID and update its details
+        const updatedAmbulance = await Ambulance.findByIdAndUpdate(ambulanceId, { type, available }, { new: true });
 
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-
-        // Update user details
-        user.name = name;
-        user.mobile_number = mobile_number;
-        user.username = username;
-        user.email = email;
-        user.role = role;
-
-        // Save the updated user
-        await user.save();
-
-        // Redirect to the appropriate dashboard based on the role
-        if (role === 'dispatcher') {
-            res.redirect('adminDispatcher');
-        } else if (role === 'driver') {
-            res.redirect('adminDriver');
-        } else {
-            // Handle other roles if needed
-            res.status(400).send('Invalid role');
-        }
+        // Send the updated ambulance object in the response
+        res.json(updatedAmbulance);
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: error.message });
     }
 });

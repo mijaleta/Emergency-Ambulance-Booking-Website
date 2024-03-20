@@ -146,52 +146,21 @@
                             <!-- Modal Body -->
                             <div class="modal-body">
                                 <!-- Your registration form content goes here -->
-                                <form class="marleft">
-                                    <div class="form-group col-md-12">
-                                        <label for="inputId4">ID</label>
-                                        <input type="id" class="form-control" id="inputEmail4" placeholder="Id">
-                                    </div>
+                                <form class="marleft" action="add-ambulance" method="post">
             
                                     <div class="form-group col-md-12">
                                         <label for="inputType4">Type</label>
-                                        <input type="name" class="form-control" id="inputPassword4" placeholder="Enter Amb Type">
+                                        <input type="name"name ="type" class="form-control" id="inputPassword4" placeholder="Enter Amb Type">
                                     </div>
-            
-                                    <div class="form-group col-md-12">
-                                        <label for="inputStatus4">Status</label>
-                                        <input type="status" class="form-control" id="inputStatus4" placeholder="Enter Status">
-                                    </div>
-            
-                                    <div class="form-group col-md-12">
-                                        <label for="inputBook4">Booked</label>
-                                        <input type="booked" class="form-control" id="inputBook4" placeholder="Booked">
-                                    </div>
-            
                                     <div class="form-group col-md-12">
                                         <label for="inputAvailability4">Available</label>
-                                        <input type="available" class="form-control" id="inputAvailability4" placeholder="No of Available Amb">
+                                        <input type="available" class="form-control" id="inputAvailability4" name="available" placeholder="No of Available Amb">
                                     </div>
-            
-                                    <!-- <div class="form-group col-md-6">
-                                        <label for="inputState">Role</label>
-                                        <select id="inputState" class="form-control">
-                                        <option selected>Choose...</option>
-                                        <option>Admin</option>
-                                        <option>Dispatcher</option>
-                                        <option>Driver</option>
-                                        <option>Nurse</option>
-                                        <option>Patient</option>
-                                        </select>
-                                    </div> -->
+
             
                                     <div class="regr">
                                         <div class="form-group">
-                                        <!-- <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="gridCheck">
-                                            <label class="form-check-label" for="gridCheck">
-                                            Check me out
-                                            </label>
-                                        </div> -->
+
                                         </div>
                                         <button type="submit" class="btn btn-primary">Add</button>
                                     </div>
@@ -295,7 +264,6 @@
                                         <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
                                                 <th>Type</th>
                                                 <th>Date</th>
                                                 <th>Booked</th>
@@ -304,7 +272,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>1</td>
+
                                                 <td>Basic</td>
                                                 <td>005-475-321</td>
                                                 <td>Requested</td>
@@ -315,54 +283,7 @@
                                                     <button class="btn btn-danger">Cancel</button>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Medium</td>
-                                                <td>005-475-321</td>
-                                                <td>Requested</td>
-                                                <td>
-                                                    <button class="btn btn-primary">Confirm</button>
-                                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#dispatchModal">
-                                                        Dispatch</button>
-                                                    <button class="btn btn-danger">Cancel</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Medium</td>
-                                                <td>005-475-321</td>
-                                                <td>Requested</td>
-                                                <td>
-                                                    <button class="btn btn-primary">Confirm</button>
-                                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#dispatchModal">
-                                                        Dispatch</button>
-                                                    <button class="btn btn-danger">Cancel</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Advanced</td>
-                                                <td>005-475-321</td>
-                                                <td>Requested</td>
-                                                <td>
-                                                    <button class="btn btn-primary">Confirm</button>
-                                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#dispatchModal">
-                                                        Dispatch</button>
-                                                    <button class="btn btn-danger">Cancel</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Advanced</td>
-                                                <td>005-475-321</td>
-                                                <td>Requested</td>
-                                                <td>
-                                                    <button class="btn btn-primary">Confirm</button>
-                                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#dispatchModal">
-                                                        Dispatch</button>
-                                                    <button class="btn btn-danger">Cancel</button>
-                                                </td>
-                                            </tr>
+
                                         </tbody>
                                         </table>
                                     </div>
@@ -373,6 +294,44 @@
                     </div>
                 </div>
             </div>
+
+
+            <!-- modal for updating ambualnce  -->
+            <!-- Account update Form Modal -->
+<div class="modal" id="editModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Ambulance Details</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Ambulance update form content -->
+                <form action="/updateAmbulance" method="post"> <!-- Assuming the endpoint to update ambulance details is "/updateAmbulance" -->
+                    <input type="hidden" id="inputAmbulanceId" name="ambulanceId">
+                    <div class="form-group col-md-12">
+                        <label for="inputType">Type</label>
+                        <input type="text" class="form-control" id="inputType" name="type" placeholder="Type" required>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="inputAvailable">Available</label>
+                        <input type="number" class="form-control" id="inputAvailable" name="available" placeholder="Available" required>
+                    </div>
+                    <!-- Add additional form fields if needed -->
+                    <div class="regr">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
                     <div class="row mt-4">
@@ -386,38 +345,26 @@
                                             <table class="table table-striped">
                                             <thead>
                                             <tr>
-                                                <th>Ambulance ID</th>
                                                 <th>Amb Type</th>
                                                 <th>No of Ambu</th>
+                                                <th>Action</th>
+
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Basic</td>
-                                                <td>10</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Basic</td>
-                                                <td>10</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Medium</td>
-                                                <td>6</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Medium</td>
-                                                <td>6</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Advanced</td>
-                                                <td>4</td>
-                                            </tr>
-                                            </tbody>
+                                                <% ambulances.forEach(ambulance => { %>
+                                                  <tr>
+                                                    <td><%= ambulance.type %></td>
+                                                    <td><%= ambulance.available %></td>
+                                                    <td>
+                                                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="fillModal('<%= ambulance._id %>', '<%= ambulance.type %>', '<%= ambulance.available %>')">Update</button>
+                                                      <button class="btn btn-success">Suspend</button>
+                                                      <button class="btn btn-danger" onclick="deleteAmbulance('<%= ambulance._id %>')">Delete</button>
+                                                    </td>
+                                                  </tr>
+                                                <% }); %>
+                                              </tbody>
+                                              
                                             </table>
                                     </div>
                                 </div>
@@ -440,6 +387,40 @@
         </div>
         </div>
     </div>
+
+    <script>
+
+function fillModal(ambulanceId, type, available) {
+    // Fill the modal form fields with the ambulance data
+    document.getElementById('inputAmbulanceId').value = ambulanceId;
+    document.getElementById('inputType').value = type;
+    document.getElementById('inputAvailable').value = available;
+}
+
+
+// JavaScript code
+
+function deleteAmbulance(ambulanceId) {
+    if (confirm('Are you sure you want to delete this ambulance?')) {
+        fetch('/deleteAmbulance/' + ambulanceId, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                // Refresh the page or update the ambulance list as needed
+                location.reload(); // Refresh the page after deletion
+            } else {
+                console.error('Failed to delete ambulance');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+}
+
+
+    </script>
     <!-- jQuery -->
     <script src="../js/jquery.min.js"></script>
     <script src="../js/popper.min.js"></script>

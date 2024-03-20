@@ -5,6 +5,8 @@ const {isAdmin,isDispatcher} = require('../controllers/createadmin');
 const nodemailer = require('nodemailer')
 const router = express.Router();
 const User = require('../models/user')
+const Ambulance = require('../models/ambulance')
+
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 
@@ -121,7 +123,11 @@ router.post('/updateUser', async (req, res) => {
           res.redirect('adminDispatcher');
       } else if (role === 'driver') {
           res.redirect('adminDriver');
-      } else {
+      }
+      else if (role === 'nurse') {
+        res.redirect('adminNurse');
+    }
+      else {
           // Handle other roles if needed
           res.status(400).send('Invalid role');
       }
@@ -132,97 +138,6 @@ router.post('/updateUser', async (req, res) => {
 });
 
 
-  router.post('/updateUserDispatcher', async (req, res) => {
-    try {
-        const { name, mobile_number, username, email, role } = req.body;
-  
-        // Find the user with role 'dispatcher'
-        const user = await User.findOne({ role: 'dispatcher' });
-  
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-  
-        // Update user details
-        user.name = name;
-        user.mobile_number = mobile_number;
-        user.username = username;
-        user.email = email;
-        user.role = role;
-  
-        // Save the updated user
-        await user.save();
-  
-        // Pass the user object to the view when rendering
-        res.redirect('adminDispatcher'); // Pass the user object to the view
-  
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-  });
-  
-  router.post('/updateUserDriver', async (req, res) => {
-    try {
-        const { name, mobile_number, username, email, role } = req.body;
-  
-        // Find the user with role 'dispatcher'
-        const user = await User.findOne({ role: 'driver' });
-  
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-  
-        // Update user details
-        user.name = name;
-        user.mobile_number = mobile_number;
-        user.username = username;
-        user.email = email;
-        user.role = role;
-  
-        // Save the updated user
-        await user.save();
-  
-        // Pass the user object to the view when rendering
-        res.redirect('adminDriver'); // Pass the user object to the view
-  
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-  });
-
-
-
-  router.post('/updateUserNurse', async (req, res) => {
-    try {
-        const { name, mobile_number, username, email, role } = req.body;
-  
-        // Find the user with role 'dispatcher'
-        const user = await User.findOne({ role: 'nurse' });
-  
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-  
-        // Update user details
-        user.name = name;
-        user.mobile_number = mobile_number;
-        user.username = username;
-        user.email = email;
-        user.role = role;
-  
-        // Save the updated user
-        await user.save();
-  
-        // Pass the user object to the view when rendering
-        res.redirect('adminNurse'); // Pass the user object to the view
-  
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-  });
   // Route to fetch dispatcher users and render the table
 // Route to fetch dispatcher users and render the table
 router.get('/adminDispatcher', async (req, res) => {
@@ -319,9 +234,7 @@ router.delete('/deleteUser/:userId', async (req, res) => {
   router.get('/dispatcherDashboard', isDispatcher,(req, res) => {
     res.render('dispatcherDashboard'); // Renders the index view
   });
-  router.get('/dispatcherAmbulance', isDispatcher,(req, res) => {
-    res.render('dispatcherAmbulance'); // Renders the index view
-  });
+
   router.get('/dispatcherContact',isDispatcher, (req, res) => {
     res.render('dispatcherContact'); // Renders the index view
   });
@@ -337,6 +250,55 @@ router.delete('/deleteUser/:userId', async (req, res) => {
 
 
 
+
+  router.post('/add-ambulance', async (req, res) => {
+    try {
+      const { type, available } = req.body;
+      const ambulance = new Ambulance({ type, available });
+      await ambulance.save();
+      res.status(201).json({ message: 'Ambulance added successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Route to update an ambulance
+router.post('/updateAmbulance', async (req, res) => {
+  try {
+      const { ambulanceId, type, available } = req.body;
+
+      // Find the ambulance by ID and update its details
+      const updatedAmbulance = await Ambulance.findByIdAndUpdate(ambulanceId, { type, available }, { new: true });
+
+      // Send the updated ambulance object in the response
+      res.redirect('dispatcherAmbulance')
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+  // retrieve ambulance data 
+  // Route to fetch ambulance information
+router.get('/dispatcherAmbulance', async (req, res) => {
+  try {
+    const ambulances = await Ambulance.find();
+    res.render('dispatcherAmbulance', { ambulances }); // Render the ambulances using a template engine
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+// Route to delete an ambulance
+router.delete('/deleteAmbulance/:ambulanceId', async (req, res) => {
+  try {
+      const ambulanceId = req.params.ambulanceId;
+      await Ambulance.findByIdAndDelete(ambulanceId);
+      res.sendStatus(200); // Send success status if deletion is successful
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
 
 
 

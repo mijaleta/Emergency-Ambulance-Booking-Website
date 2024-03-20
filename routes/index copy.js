@@ -94,15 +94,150 @@ router.get('/adminDashboard',(req, res) => {
   });
 
 
+  // Route to update user details
+router.post('/updateUser', async (req, res) => {
+  try {
+      const { userId, name, mobile_number, username, email, role } = req.body;
+
+      // Find the user by ID
+      const user = await User.findById(userId);
+
+      if (!user) {
+          return res.status(404).send('User not found');
+      }
+
+      // Update user details
+      user.name = name;
+      user.mobile_number = mobile_number;
+      user.username = username;
+      user.email = email;
+      user.role = role;
+
+      // Save the updated user
+      await user.save();
+
+      // Redirect to the appropriate dashboard based on the role
+      if (role === 'dispatcher') {
+          res.redirect('adminDispatcher');
+      } else if (role === 'driver') {
+          res.redirect('adminDriver');
+      }
+      else if (role === 'nurse') {
+        res.redirect('adminNurse');
+    }
+      else {
+          // Handle other roles if needed
+          res.status(400).send('Invalid role');
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
+  router.post('/updateUserDispatcher', async (req, res) => {
+    try {
+        const { name, mobile_number, username, email, role } = req.body;
+  
+        // Find the user with role 'dispatcher'
+        const user = await User.findOne({ role: 'dispatcher' });
+  
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+  
+        // Update user details
+        user.name = name;
+        user.mobile_number = mobile_number;
+        user.username = username;
+        user.email = email;
+        user.role = role;
+  
+        // Save the updated user
+        await user.save();
+  
+        // Pass the user object to the view when rendering
+        res.redirect('adminDispatcher'); // Pass the user object to the view
+  
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+  });
+  
+  router.post('/updateUserDriver', async (req, res) => {
+    try {
+        const { name, mobile_number, username, email, role } = req.body;
+  
+        // Find the user with role 'dispatcher'
+        const user = await User.findOne({ role: 'driver' });
+  
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+  
+        // Update user details
+        user.name = name;
+        user.mobile_number = mobile_number;
+        user.username = username;
+        user.email = email;
+        user.role = role;
+  
+        // Save the updated user
+        await user.save();
+  
+        // Pass the user object to the view when rendering
+        res.redirect('adminDriver'); // Pass the user object to the view
+  
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+  });
+
+
+
+  router.post('/updateUserNurse', async (req, res) => {
+    try {
+        const { name, mobile_number, username, email, role } = req.body;
+  
+        // Find the user with role 'dispatcher'
+        const user = await User.findOne({ role: 'nurse' });
+  
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+  
+        // Update user details
+        user.name = name;
+        user.mobile_number = mobile_number;
+        user.username = username;
+        user.email = email;
+        user.role = role;
+  
+        // Save the updated user
+        await user.save();
+  
+        // Pass the user object to the view when rendering
+        res.redirect('adminNurse'); // Pass the user object to the view
+  
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+  });
   // Route to fetch dispatcher users and render the table
+// Route to fetch dispatcher users and render the table
 router.get('/adminDispatcher', async (req, res) => {
   try {
     const dispatcherUsers = await User.find({ role: 'dispatcher' });
-    res.render('adminDispatcher', { users: dispatcherUsers });
+    res.render('adminDispatcher', { users: dispatcherUsers }); // Pass users to the template
   } catch (error) {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 // Route to fetch nurse users and render the table
@@ -126,34 +261,6 @@ router.get('/adminDriver', async (req, res) => {
 });
 
 
-router.post('/updateUser', async (req, res) => {
-  try {
-      const { name, mobile_number, username, email, role } = req.body;
-
-      // Find the user with role 'dispatcher'
-      const user = await User.findOne({ role: 'dispatcher' });
-
-      if (!user) {
-          return res.status(404).send('User not found');
-      }
-
-      // Update user details
-      user.name = name;
-      user.mobile_number = mobile_number;
-      user.username = username;
-      user.email = email;
-      user.role = role;
-
-      // Save the updated user
-      await user.save();
-
-      // Render the updated user data back to the frontend
-      res.render('adminDispatcher', { user: user });
-  } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
-  }
-});
 
 
   router.get('/adminMap',(req, res) => {
@@ -163,50 +270,44 @@ router.post('/updateUser', async (req, res) => {
     res.render('adminSettings'); // Renders the index view
   });
 
+// Route to handle updating user details
+router.post('/updateUser', async (req, res) => {
+  const { name, mobile_number, username, email, role } = req.body;
 
-
-  // Route to display the form with user details for updating
-router.get('/adminDispatcher/:username', async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username });
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
+      // Find the user by username
+      let user = await User.findOne({ username });
 
-    // Render the form with the user's data
-    res.render('adminDispatcher', { user }); // Replace 'editUserForm' with your actual form template name
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Update user details
+      user.name = name;
+      user.mobile_number = mobile_number;
+      user.email = email;
+      user.role = role;
+
+      // Save updated user
+      await user.save();
+
+      res.status(200).json({ message: 'User details updated successfully' });
   } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).send('An error occurred while fetching the user');
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
-// Route to handle the form submission for updating a user
-router.post('/updateUser', async (req, res) => {
+
+// Route to delete a user
+router.delete('/deleteUser/:userId', async (req, res) => {
   try {
-    // Find the user by their username and update their details
-    const updatedUser = await User.findOneAndUpdate(
-      { username: req.body.username }, // Find user by username
-      {
-        name: req.body.name,
-        mobile_number: req.body.mobile_number,
-        email: req.body.email,
-        role: req.body.role,
-        username:req.body.username
-        // Include other fields you want to update
-      },
-      { new: true } // Return the updated document
-    );
-
-    if (!updatedUser) {
-      return res.status(404).send('User not found');
-    }
-
-    // Redirect to the user profile page or send a success response
-    res.redirect('/userProfile'); // Replace with the path to your user profile page
+    const userId = req.params.userId;
+    await User.findByIdAndDelete(userId);
+    res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).send('An error occurred while updating the user');
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
@@ -255,68 +356,62 @@ router.post('/updateUser', async (req, res) => {
   });
   // // Express.js routes
   // Function to save admin user to the database
-  // Route for user registration (accessible only to admin)
-  router.get('/register', isAdmin, (req, res) => {
+  // Route for user registration (accessible only to admin) isAdmin
+  router.get('/register',  (req, res) => {
     res.render('register'); // Render registration form
   });
   
   
  // Route to handle user update form submission
-
-
-
-
-  // Read (List all users)
-router.get('/users', isAdmin, async (req, res) => {
+// Route to handle user registration form submission
+// isAdmin,
+router.post('/register',  async (req, res) => {
   try {
-    const users = await User.find({});
-    res.render('userList', { users }); // Render user list page with users data
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
+    const { username, email, role, name, mobile_number} = req.body;
 
-// Update (Get user by ID and render edit form)
-router.get('/edit/:id', isAdmin, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    res.render('editUser', { user }); // Render user edit page with user data
-  } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
+    if (!username || !email || !role || !mobile_number || !name) {
+      return res.status(400).send('Please provide all required fields');
+    }
 
-// Update (Handle user edit form submission)
-router.post('/edit/:id', isAdmin, async (req, res) => {
-  try {
-    const { username, email, role } = req.body;
-    await User.findByIdAndUpdate(req.params.id, {
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      return res.status(400).send('User already exists');
+    }
+
+    const randomPassword = crypto.randomBytes(8).toString('hex'); // Generate random password
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+    const newUser = new User({
       username,
       email,
+      password: hashedPassword,
       role,
-      passwordChanged: false // Reset passwordChanged flag
+      name,
+      mobile_number,
+      passwordChanged: false,
     });
-    res.redirect('/users'); // Redirect to user list page
+
+    await newUser.save();
+    console.log(req.user);
+
+    const changePasswordURL = `http://${req.headers.host}/change-password/${newUser._id}`;
+
+    const mailOptions = {
+      from: 'miratuujaallataa@gmail.com',
+      to: email,
+      subject: 'Password Change Required',
+      text: `Please click the following link to change your password: ${changePasswordURL}`,
+      html: `Please click the following link to change your password: <a href="${changePasswordURL}">${changePasswordURL}</a>`,
+    };
+    await transporter.sendMail(mailOptions);
+    
+    res.status(201).render('index');
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error('Error registering user:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// Delete (Remove user by ID)
-router.get('/delete/:id', isAdmin, async (req, res) => {
-  try {
-    // Attempt to find and delete the user by ID
-    await User.findOneAndDelete({ _id: req.params.id });
-    // Redirect to the user list page after successful deletion
-    res.redirect('/users');
-  } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
 
 
 // the following for the password reset 
