@@ -1,29 +1,35 @@
-<!-- views/adminNurse.ejs -->
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Phone</th>
-      <th>Username</th>
-      <th>Role</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% users.forEach(user => { %>
-      <tr>
-        <td><%= user.name %></td>
-        <td><%= user.mobile_number %></td>
-        <td><%= user.username %></td>
-        <td><%= user.role %></td>
-        <td>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-            Update
-          </button>
-          <button class="btn btn-success">Suspend</button>
-          <button class="btn btn-danger">Delete</button>
-        </td>
-      </tr>
-    <% }); %>
-  </tbody>
-</table>
+// Route to update user details
+router.post('/updateUser', async (req, res) => {
+    try {
+        const { name, mobile_number, username, email, role } = req.body;
+
+        // Find the user by role
+        const user = await User.findOne({ role });
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Update user details
+        user.name = name;
+        user.mobile_number = mobile_number;
+        user.username = username;
+        user.email = email;
+
+        // Save the updated user
+        await user.save();
+
+        // Redirect to the appropriate dashboard based on the role
+        if (role === 'dispatcher') {
+            res.redirect('adminDispatcher');
+        } else if (role === 'driver') {
+            res.redirect('driverDashboard');
+        } else {
+            // Handle other roles if needed
+            res.status(400).send('Invalid role');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
