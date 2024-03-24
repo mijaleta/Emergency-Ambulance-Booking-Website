@@ -274,50 +274,91 @@
 
 
 
+<!-- (e.g., dispatcherDashboard.ejs) -->
 
-      <!-- Inside your EJS file (e.g., dispatcherDashboard.ejs) -->
-
-
-
- <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
-  import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging.js';
-
-               const firebaseConfig = {
-                 apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
-                 authDomain: "ambulancebooking-812cd.firebaseapp.com",
-                 projectId: "ambulancebooking-812cd",
-                 storageBucket: "ambulancebooking-812cd.appspot.com",
-                 messagingSenderId: "887269267926",
-                 appId: "1:887269267926:web:fff487690a9b8364e02c77",
-                 measurementId: "G-H5CN5R5BLD"
-               };
-             
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const messaging = getMessaging(app);
-             
-               // Get token
-               getToken(messaging, { vapidKey: 'BMbALCuu9k_sjxT-t4I2uWBDPwnsI8Zbc3Em0XobSWX5ZjSd8PVBAGpxoGYyBaxLk0PwCMSyvrbrKpH-qIgpQjc' })
-                 .then((currentToken) => {
-                   if (currentToken) {
-                     console.log('Token retrieved:', currentToken);
-                     // Send the token to your server to subscribe to the 'dispatcher' topic
-                   } else {
-                     console.log('No registration token available. Request permission to generate one.');
-                     // Show permission UI
-                   }
-                 }).catch((err) => {
-                   console.error('Token retrieval failed:', err);
-                 });
-             
-               // Handle incoming messages
-               onMessage(messaging, (payload) => {
-                 console.log('Message received:', payload);
-                 // Display the notification content in the dashboard
-                 alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
-               });
-             </script>
+      <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js"></script>
+      
+      <!-- <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging.js"></script> -->
+      
+      <script>
+        // Your Firebase initialization and messaging logic goes here
+        var firebaseConfig = {
+          apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
+          authDomain: "ambulancebooking-812cd.firebaseapp.com",
+          projectId: "ambulancebooking-812cd",
+          storageBucket: "ambulancebooking-812cd.appspot.com",
+          messagingSenderId: "887269267926",
+          appId: "1:887269267926:web:fff487690a9b8364e02c77",
+          measurementId: "G-H5CN5R5BLD"
+        };
+      
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+      
+        // Check if notification permissions are granted
+        if (Notification.permission === 'default') {
+          Notification.requestPermission()
+            .then(permission => {
+              if (permission === 'granted') {
+                console.log('Notification permission granted.');
+                // Proceed to get the token
+                messaging.getToken({ vapidKey: 'BMbALCuu9k_sjxT-t4I2uWBDPwnsI8Zbc3Em0XobSWX5ZjSd8PVBAGpxoGYyBaxLk0PwCMSyvrbrKpH-qIgpQjc' })
+                  .then(currentToken => {
+                    if (currentToken) {
+                      console.log('Token retrieved:', currentToken);
+                      // Send the token to your server to subscribe to the 'dispatcher' topic
+                    } else {
+                      console.log('No registration token available. Request permission to generate one.');
+                      // Show permission UI or handle accordingly
+                    }
+                  })
+                  .catch(err => {
+                    console.error('Token retrieval failed:', err);
+                  });
+              } else {
+                console.log('Notification permission denied.');
+                // Handle permission denied scenario
+                // Show permission UI or handle accordingly
+              }
+            })
+            .catch(err => {
+              console.error('Error requesting notification permission:', err);
+            });
+        } else if (Notification.permission === 'granted') {
+          console.log('Notification permission already granted.');
+          // Proceed to get the token
+          messaging.getToken({ vapidKey: 'BMbALCuu9k_sjxT-t4I2uWBDPwnsI8Zbc3Em0XobSWX5ZjSd8PVBAGpxoGYyBaxLk0PwCMSyvrbrKpH-qIgpQjc' })
+            .then(currentToken => {
+              if (currentToken) {
+                console.log('Token retrieved:', currentToken);
+                // Send the token to your server to subscribe to the 'dispatcher' topic
+              } else {
+                console.log('No registration token available. Request permission to generate one.');
+                // Show permission UI or handle accordingly
+              }
+            })
+            .catch(err => {
+              console.error('Token retrieval failed:', err);
+            });
+        } else {
+          console.log('Notification permission denied.');
+          // Handle permission denied scenario
+          // Show permission UI or handle accordingly
+        }
+      
+        // Handle incoming messages
+        messaging.onMessage((payload) => {
+          console.log('Message received:', payload);
+          // Display the notification content in the dashboard
+          alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
+        });
+      </script>
+      
+       
+       
    <!-- jQuery -->
    <script src="../js/jquery.min.js"></script>
    <script src="../js/popper.min.js"></script>

@@ -1,41 +1,9 @@
-// Register the service worker from your main JavaScript file
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/firebase-messaging-sw.js')
-    .then(function(registration) {
-      console.log('Service Worker Registered', registration);
-      // Wait for the service worker to become active
-      return navigator.serviceWorker.ready;
-    })
-    .then(function(registration) {
-      console.log('Service Worker is active', registration);
-      // Import the Firebase app module here
-      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
-      // Initialize Firebase here and get the token
-      const app = initializeApp(firebaseConfig);
-      const messaging = getMessaging(app);
-      return getToken(messaging, { vapidKey: 'your-vapid-key' });
-    })
-    .then(function(currentToken) {
-      if (currentToken) {
-        console.log('Token retrieved:', currentToken);
-        // Send the token to your server to subscribe to the 'dispatcher' topic
-      } else {
-        console.log('No registration token available. Request permission to generate one.');
-        // Show permission UI
-      }
-    })
-    .catch(function(err) {
-      console.error('Service Worker registration or token retrieval failed:', err);
-    });
-}
+messaging.onBackgroundMessage(function(payload) {
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    const notificationTitle = payload.data.title;
+    const notificationOptions = {
+        body: payload.data.body,
+    };
 
-
-  // Import the Firebase modules
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
-  import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging.js';
-
-
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const messaging = getMessaging(app);
+    self.registration.showNotification(notificationTitle, notificationOptions);
+});

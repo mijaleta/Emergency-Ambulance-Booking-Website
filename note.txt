@@ -14,3 +14,14 @@ ambulancebooking-4d761
        });
    }
  </script>
+
+
+
+// app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files
+// app.use(express.static(path.join(__dirname, 'public'), {
+//   extensions: ['html', 'js', 'mjs'] // Include .mjs extension
+// }));
+// Set up views rendering
+// app.use('/users', usersRouter);
+// Set up static files serving from the public folder
