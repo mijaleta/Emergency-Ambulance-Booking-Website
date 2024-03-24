@@ -279,10 +279,16 @@
 
 
 
- <script type="module">
+ <script type="module" src="">
+         // Import the Firebase compatibility libraries
+         // import firebase from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js';
+         // import 'https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js';
+         // import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
+           // Import the Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
   import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging.js';
-
+             
+               // Your firebaseConfig remains unchanged
                const firebaseConfig = {
                  apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
                  authDomain: "ambulancebooking-812cd.firebaseapp.com",

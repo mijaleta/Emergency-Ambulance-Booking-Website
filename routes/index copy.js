@@ -5,6 +5,8 @@ const {isAdmin,isDispatcher} = require('../controllers/createadmin');
 const nodemailer = require('nodemailer')
 const router = express.Router();
 const User = require('../models/user')
+const Ambulance = require('../models/ambulance')
+const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 
@@ -136,97 +138,6 @@ router.post('/updateUser', async (req, res) => {
 });
 
 
-  router.post('/updateUserDispatcher', async (req, res) => {
-    try {
-        const { name, mobile_number, username, email, role } = req.body;
-  
-        // Find the user with role 'dispatcher'
-        const user = await User.findOne({ role: 'dispatcher' });
-  
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-  
-        // Update user details
-        user.name = name;
-        user.mobile_number = mobile_number;
-        user.username = username;
-        user.email = email;
-        user.role = role;
-  
-        // Save the updated user
-        await user.save();
-  
-        // Pass the user object to the view when rendering
-        res.redirect('adminDispatcher'); // Pass the user object to the view
-  
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-  });
-  
-  router.post('/updateUserDriver', async (req, res) => {
-    try {
-        const { name, mobile_number, username, email, role } = req.body;
-  
-        // Find the user with role 'dispatcher'
-        const user = await User.findOne({ role: 'driver' });
-  
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-  
-        // Update user details
-        user.name = name;
-        user.mobile_number = mobile_number;
-        user.username = username;
-        user.email = email;
-        user.role = role;
-  
-        // Save the updated user
-        await user.save();
-  
-        // Pass the user object to the view when rendering
-        res.redirect('adminDriver'); // Pass the user object to the view
-  
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-  });
-
-
-
-  router.post('/updateUserNurse', async (req, res) => {
-    try {
-        const { name, mobile_number, username, email, role } = req.body;
-  
-        // Find the user with role 'dispatcher'
-        const user = await User.findOne({ role: 'nurse' });
-  
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-  
-        // Update user details
-        user.name = name;
-        user.mobile_number = mobile_number;
-        user.username = username;
-        user.email = email;
-        user.role = role;
-  
-        // Save the updated user
-        await user.save();
-  
-        // Pass the user object to the view when rendering
-        res.redirect('adminNurse'); // Pass the user object to the view
-  
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-  });
   // Route to fetch dispatcher users and render the table
 // Route to fetch dispatcher users and render the table
 router.get('/adminDispatcher', async (req, res) => {
@@ -323,9 +234,7 @@ router.delete('/deleteUser/:userId', async (req, res) => {
   router.get('/dispatcherDashboard', isDispatcher,(req, res) => {
     res.render('dispatcherDashboard'); // Renders the index view
   });
-  router.get('/dispatcherAmbulance', isDispatcher,(req, res) => {
-    res.render('dispatcherAmbulance'); // Renders the index view
-  });
+
   router.get('/dispatcherContact',isDispatcher, (req, res) => {
     res.render('dispatcherContact'); // Renders the index view
   });
@@ -341,6 +250,55 @@ router.delete('/deleteUser/:userId', async (req, res) => {
 
 
 
+
+  router.post('/add-ambulance', async (req, res) => {
+    try {
+      const { type, available } = req.body;
+      const ambulance = new Ambulance({ type, available });
+      await ambulance.save();
+      res.status(201).json({ message: 'Ambulance added successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Route to update an ambulance
+router.post('/updateAmbulance', async (req, res) => {
+  try {
+      const { ambulanceId, type, available } = req.body;
+
+      // Find the ambulance by ID and update its details
+      const updatedAmbulance = await Ambulance.findByIdAndUpdate(ambulanceId, { type, available }, { new: true });
+
+      // Send the updated ambulance object in the response
+      res.redirect('dispatcherAmbulance')
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+  // retrieve ambulance data 
+  // Route to fetch ambulance information
+router.get('/dispatcherAmbulance', async (req, res) => {
+  try {
+    const ambulances = await Ambulance.find();
+    res.render('dispatcherAmbulance', { ambulances }); // Render the ambulances using a template engine
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+// Route to delete an ambulance
+router.delete('/deleteAmbulance/:ambulanceId', async (req, res) => {
+  try {
+      const ambulanceId = req.params.ambulanceId;
+      await Ambulance.findByIdAndDelete(ambulanceId);
+      res.sendStatus(200); // Send success status if deletion is successful
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
 
 
 
@@ -590,5 +548,123 @@ router.post('/forgot-password', async (req, res) => {
       res.redirect('/login');
     });
   });
+
+
+
+  // POST a new booking request
+// router.post('/patientRequest', async (req, res) => {
+//   try {
+//     const { location, contactInfo, urgencyLevel } = req.body;
+//     const bookingRequest = new BookingRequest({
+//       location,
+//       contactInfo,
+//       urgencyLevel
+//     });
+//     const savedRequest = await bookingRequest.save();
+//     // Emit event to dispatcher dashboard
+//     if (req.user && req.user.role === 'dispatcher') {
+//       req.io.emit('new-booking', savedRequest);
+//       console.log('New booking request emitted');
+//     }
+//     // Check if the request comes from a mobile device or app
+//     const isMobileDevice = req.headers['user-agent'].toLowerCase().match(/mobile|android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/);
+//     const isMobileApp = req.headers['x-requested-with'] === 'XMLHttpRequest'; // Custom header set by the mobile app
+
+//     if (isMobileDevice || isMobileApp) {
+//       // Respond with JSON data for mobile devices or apps
+//       res.status(200).json({
+//         message: 'Booking request submitted successfully',
+//         data: {
+//           bookingRequest: savedRequest.toObject(),
+//           recommendation: urgencyLevel
+//         }
+//       });
+//     } else {
+//       // Render the appropriate recommendation page for web clients
+//       switch (urgencyLevel) {
+//         case 'low':
+//           res.render('l ow_recommendation', { bookingRequest: savedRequest.toObject() });
+//           break;
+//         case 'medium':
+//           res.render('medium_recommendation', { bookingRequest: savedRequest.toObject() });
+//           break;
+//         case 'high':
+//           res.render('high_recommendation', { bookingRequest: savedRequest.toObject() });
+//           break;
+//         default:
+//           res.status(400).send('Invalid urgency level');
+//       }
+//     }
+//   } catch (error) {
+//     console.error('Error submitting booking request:', error);
+//     res.status(500).send('An internal server error occurred');
+//   }
+// });
+
+// POST a new booking request
+
+// POST a new booking request
+
+// 
+
+
+
+// router.post('/patientRequest', async (req, res) => {
+//   try {
+//     const { location, contactInfo, urgencyLevel } = req.body;
+//     const bookingRequest = new BookingRequest({
+//       location,
+//       contactInfo,
+//       urgencyLevel
+//     });
+//     const savedRequest = await bookingRequest.save();
+//     res.status(200).json({
+//       message: 'Booking request submitted successfully',
+//       data: {
+//         location,
+//         contactInfo,
+//         urgencyLevel
+//       }
+//     });
+//   } catch (error) {
+//     console.error('Error submitting booking request:', error);
+//     res.status(500).send('An internal server error occurred');
+//   }
+// });
+
+
+
+
+// Save a notification when a booking request is created
+router.post('/patientRequest', async (req, res) => {
+  try {
+    const { location, contactInfo, urgencyLevel } = req.body;
+    const bookingRequest = new BookingRequest({
+      location,
+      contactInfo,
+      urgencyLevel,
+    });
+    const savedRequest = await bookingRequest.save();
+    res.status(200).json({
+      message: 'Booking request submitted successfully',
+      data: savedRequest
+    });
+  } catch (error) {
+    console.error('Error submitting booking request:', error);
+    res.status(500).send('An internal server error occurred');
+  }
+});
+
+// for firebase notification 
+// var admin = require("firebase-admin");
+// var serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
+
+
+
+
+
 
 module.exports = router;

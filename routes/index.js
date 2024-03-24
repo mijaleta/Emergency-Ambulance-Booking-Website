@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer')
 const router = express.Router();
 const User = require('../models/user')
 const Ambulance = require('../models/ambulance')
-
+const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 
@@ -230,21 +230,21 @@ router.delete('/deleteUser/:userId', async (req, res) => {
 
 
 
-// for dispatcher
-  router.get('/dispatcherDashboard', isDispatcher,(req, res) => {
+// for dispatcher isDispatcher
+  router.get('/dispatcherDashboard',(req, res) => {
     res.render('dispatcherDashboard'); // Renders the index view
   });
 
-  router.get('/dispatcherContact',isDispatcher, (req, res) => {
+  router.get('/dispatcherContact', (req, res) => {
     res.render('dispatcherContact'); // Renders the index view
   });
-  router.get('/dispatcherDispatcher',isDispatcher, (req, res) => {
+  router.get('/dispatcherDispatcher', (req, res) => {
     res.render('dispatcherDispatcher'); // Renders the index view
   });
-  router.get('/dispatcherMap',isDispatcher, (req, res) => {
+  router.get('/dispatcherMap', (req, res) => {
     res.render('dispatcherMap'); // Renders the index view
   });
-  router.get('/dispatcherSettings',isDispatcher, (req, res) => {
+  router.get('/dispatcherSettings', (req, res) => {
     res.render('dispatcherSettings'); // Renders the index view
   });
 
@@ -548,5 +548,149 @@ router.post('/forgot-password', async (req, res) => {
       res.redirect('/login');
     });
   });
+
+
+
+  // POST a new booking request
+// router.post('/patientRequest', async (req, res) => {
+//   try {
+//     const { location, contactInfo, urgencyLevel } = req.body;
+//     const bookingRequest = new BookingRequest({
+//       location,
+//       contactInfo,
+//       urgencyLevel
+//     });
+//     const savedRequest = await bookingRequest.save();
+//     // Emit event to dispatcher dashboard
+//     if (req.user && req.user.role === 'dispatcher') {
+//       req.io.emit('new-booking', savedRequest);
+//       console.log('New booking request emitted');
+//     }
+//     // Check if the request comes from a mobile device or app
+//     const isMobileDevice = req.headers['user-agent'].toLowerCase().match(/mobile|android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/);
+//     const isMobileApp = req.headers['x-requested-with'] === 'XMLHttpRequest'; // Custom header set by the mobile app
+
+//     if (isMobileDevice || isMobileApp) {
+//       // Respond with JSON data for mobile devices or apps
+//       res.status(200).json({
+//         message: 'Booking request submitted successfully',
+//         data: {
+//           bookingRequest: savedRequest.toObject(),
+//           recommendation: urgencyLevel
+//         }
+//       });
+//     } else {
+//       // Render the appropriate recommendation page for web clients
+//       switch (urgencyLevel) {
+//         case 'low':
+//           res.render('l ow_recommendation', { bookingRequest: savedRequest.toObject() });
+//           break;
+//         case 'medium':
+//           res.render('medium_recommendation', { bookingRequest: savedRequest.toObject() });
+//           break;
+//         case 'high':
+//           res.render('high_recommendation', { bookingRequest: savedRequest.toObject() });
+//           break;
+//         default:
+//           res.status(400).send('Invalid urgency level');
+//       }
+//     }
+//   } catch (error) {
+//     console.error('Error submitting booking request:', error);
+//     res.status(500).send('An internal server error occurred');
+//   }
+// });
+
+// POST a new booking request
+
+// POST a new booking request
+
+// 
+
+
+
+// router.post('/patientRequest', async (req, res) => {
+//   try {
+//     const { location, contactInfo, urgencyLevel } = req.body;
+//     const bookingRequest = new BookingRequest({
+//       location,
+//       contactInfo,
+//       urgencyLevel
+//     });
+//     const savedRequest = await bookingRequest.save();
+//     res.status(200).json({
+//       message: 'Booking request submitted successfully',
+//       data: {
+//         location,
+//         contactInfo,
+//         urgencyLevel
+//       }
+//     });
+//   } catch (error) {
+//     console.error('Error submitting booking request:', error);
+//     res.status(500).send('An internal server error occurred');
+//   }
+// });
+
+
+
+// for firebase notification 
+
+
+var admin = require("firebase-admin");
+var serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+// Save a notification when a booking request is created
+router.post('/patientRequest', async (req, res) => {
+  try {
+    const { location, contactInfo, urgencyLevel } = req.body;
+    const bookingRequest = new BookingRequest({
+      location,
+      contactInfo,
+      urgencyLevel
+    });
+
+    const savedRequest = await bookingRequest.save();
+    // Send the response immediately after saving the request
+    res.status(200).json({
+      message: 'Booking request submitted successfully',
+      data: savedRequest
+    });
+
+    // Send notification to dispatcher in the background
+    const message = {
+      notification: {
+        title: "New Ambulance Request",
+        body: "A new ambulance request has been received."
+      },
+      topic: "dispatcher" // Topic to which dispatcher is subscribed
+    };
+
+    admin.messaging().send(message)
+      .then((response) => {
+        console.log("Notification sent successfully:", response);
+      }).catch((error) => {
+        console.error("Error sending notification:", error);
+      });
+
+  } catch (error) {
+    console.error('Error submitting booking request:', error);
+    // Make sure to only send one response per request
+    if (!res.headersSent) {
+      res.status(500).json({ message: 'An internal server error occurred' });
+    }
+  }
+});
+
+
+
+
+
+
+
+
+
 
 module.exports = router;

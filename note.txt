@@ -1,0 +1,16 @@
+fcm
+ambulancebooking-4d761
+
+
+     <!-- Register the service worker for Firebase messaging -->
+  <script>
+   if ('serviceWorker' in navigator) {
+     navigator.serviceWorker.register('/firebase-messaging-sw.js')
+       .then(function(registration) {
+         console.log('Service Worker Registered!', registration);
+       })
+       .catch(function(err) {
+         console.log('Service Worker registration failed: ', err);
+       });
+   }
+ </script>

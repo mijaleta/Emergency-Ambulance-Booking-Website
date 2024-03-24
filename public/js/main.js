@@ -8,12 +8,10 @@ if ('serviceWorker' in navigator) {
     })
     .then(function(registration) {
       console.log('Service Worker is active', registration);
-      // Import the Firebase app module here
-      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
       // Initialize Firebase here and get the token
       const app = initializeApp(firebaseConfig);
       const messaging = getMessaging(app);
-      return getToken(messaging, { vapidKey: 'your-vapid-key' });
+      return getToken(messaging, { vapidKey: 'BMbALCuu9k_sjxT-t4I2uWBDPwnsI8Zbc3Em0XobSWX5ZjSd8PVBAGpxoGYyBaxLk0PwCMSyvrbrKpH-qIgpQjc' });
     })
     .then(function(currentToken) {
       if (currentToken) {
@@ -28,14 +26,3 @@ if ('serviceWorker' in navigator) {
       console.error('Service Worker registration or token retrieval failed:', err);
     });
 }
-
-
-  // Import the Firebase modules
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
-  import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging.js';
-
-
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const messaging = getMessaging(app);

@@ -15,6 +15,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const app = express();
 // app.use('/users', usersRouter);
 // Set up static files serving from the public folder
+// app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public')));
 // Set up views rendering
 app.set('views', [
@@ -72,6 +73,13 @@ passport.deserializeUser(async function (id, done) {
 app.use('/', indexRouter);
 // for authentication
 // Start the server
+
+
+
+
+
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
