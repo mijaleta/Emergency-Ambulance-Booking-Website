@@ -276,86 +276,103 @@
 
 <!-- (e.g., dispatcherDashboard.ejs) -->
 
-      <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js"></script>
-      
-      <!-- <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging.js"></script> -->
-      
-      <script>
-        // Your Firebase initialization and messaging logic goes here
-        var firebaseConfig = {
-          apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
-          authDomain: "ambulancebooking-812cd.firebaseapp.com",
-          projectId: "ambulancebooking-812cd",
-          storageBucket: "ambulancebooking-812cd.appspot.com",
-          messagingSenderId: "887269267926",
-          appId: "1:887269267926:web:fff487690a9b8364e02c77",
-          measurementId: "G-H5CN5R5BLD"
-        };
-      
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const messaging = firebase.messaging();
-      
-        // Check if notification permissions are granted
-        if (Notification.permission === 'default') {
-          Notification.requestPermission()
-            .then(permission => {
-              if (permission === 'granted') {
-                console.log('Notification permission granted.');
-                // Proceed to get the token
-                messaging.getToken({ vapidKey: 'BMbALCuu9k_sjxT-t4I2uWBDPwnsI8Zbc3Em0XobSWX5ZjSd8PVBAGpxoGYyBaxLk0PwCMSyvrbrKpH-qIgpQjc' })
-                  .then(currentToken => {
-                    if (currentToken) {
-                      console.log('Token retrieved:', currentToken);
-                      // Send the token to your server to subscribe to the 'dispatcher' topic
-                    } else {
-                      console.log('No registration token available. Request permission to generate one.');
-                      // Show permission UI or handle accordingly
-                    }
-                  })
-                  .catch(err => {
-                    console.error('Token retrieval failed:', err);
-                  });
-              } else {
-                console.log('Notification permission denied.');
-                // Handle permission denied scenario
-                // Show permission UI or handle accordingly
-              }
-            })
-            .catch(err => {
-              console.error('Error requesting notification permission:', err);
-            });
-        } else if (Notification.permission === 'granted') {
-          console.log('Notification permission already granted.');
-          // Proceed to get the token
-          messaging.getToken({ vapidKey: 'BMbALCuu9k_sjxT-t4I2uWBDPwnsI8Zbc3Em0XobSWX5ZjSd8PVBAGpxoGYyBaxLk0PwCMSyvrbrKpH-qIgpQjc' })
-            .then(currentToken => {
-              if (currentToken) {
-                console.log('Token retrieved:', currentToken);
-                // Send the token to your server to subscribe to the 'dispatcher' topic
-              } else {
-                console.log('No registration token available. Request permission to generate one.');
-                // Show permission UI or handle accordingly
-              }
-            })
-            .catch(err => {
-              console.error('Token retrieval failed:', err);
-            });
-        } else {
-          console.log('Notification permission denied.');
-          // Handle permission denied scenario
-          // Show permission UI or handle accordingly
-        }
-      
-        // Handle incoming messages
-        messaging.onMessage((payload) => {
-          console.log('Message received:', payload);
-          // Display the notification content in the dashboard
-          alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
-        });
-      </script>
+<!-- Include Firebase SDK -->
+<!-- Include Firebase SDK -->
+<!-- Include Firebase SDK -->
+
+    <!-- Include Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js"></script>
+
+<script>
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
+    authDomain: "ambulancebooking-812cd.firebaseapp.com",
+    projectId: "ambulancebooking-812cd",
+    storageBucket: "ambulancebooking-812cd.appspot.com",
+    messagingSenderId: "887269267926",
+    appId: "1:887269267926:web:fff487690a9b8364e02c77",
+    measurementId: "G-H5CN5R5BLD"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  // Function to request permission and retrieve token
+  const requestPermissionAndToken = async () => {
+    try {
+      const permission = await Notification.requestPermission();
+      console.log('Permission:', permission);
+      if (permission === 'granted') {
+        const token = await messaging.getToken();
+        console.log('Token:', token);
+        // Send the token to your backend for notification delivery
+        sendTokenToServer(token);
+      } else {
+        console.log('Permission denied');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  // Request permission and retrieve token when the page loads
+  window.addEventListener('load', () => {
+    requestPermissionAndToken();
+  });
+
+  // Function to send the token to the backend
+  function sendTokenToServer(token) {
+    // Make a POST request to your backend with the token
+    fetch('/registerToken', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ token: token }) // Include the token in the request body
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to send token to server');
+      }
+      console.log('Token sent to server successfully');
+    })
+    .catch(error => {
+      console.error('Error sending token to server:', error);
+    });
+  }
+
+  // Handle incoming messages
+  messaging.onMessage((payload) => {
+    console.log('Message received:', payload);
+    // Display the notification content in the dashboard
+    displayNotification(payload);
+  });
+
+  // Function to display notification
+  function displayNotification(payload) {
+    // Display the notification in your dashboard UI
+    // You can customize this based on your UI requirements
+    // For example:
+    alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
+  }
+
+  // Handle token refresh manually by periodically checking for a new token
+  setInterval(async () => {
+    try {
+      const token = await messaging.getToken();
+      console.log('Refreshed Token:', token);
+      // Send the refreshed token to your backend for notification delivery
+      sendTokenToServer(token);
+    } catch (error) {
+      console.error('Error refreshing token:', error);
+    }
+  }, 60 * 60 * 1000); // Check for token refresh every hour
+</script>
+
+
       
        
        

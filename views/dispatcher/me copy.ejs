@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+
+
+
+
+
+
+    <!-- Include Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js"></script>
+
+<script>
+  // Firebase configuration
+  const firebaseConfig = {
+  apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
+  authDomain: "ambulancebooking-812cd.firebaseapp.com",
+  projectId: "ambulancebooking-812cd",
+  storageBucket: "ambulancebooking-812cd.appspot.com",
+  messagingSenderId: "887269267926",
+  appId: "1:887269267926:web:fff487690a9b8364e02c77",
+  measurementId: "G-H5CN5R5BLD"
+};
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  // Subscribe to the 'dispatcher' topic
+  messaging.subscribeToTopic('all')
+    .then(() => {
+      console.log('Successfully subscribed to dispatcher topic.');
+    })
+    .catch((error) => {
+      console.error('Error subscribing to dispatcher topic:', error);
+    });
+
+  // Handle incoming messages
+  messaging.onMessage((payload) => {
+    console.log('Message received:', payload);
+    displayNotification(payload);
+  });
+
+  // Function to display notification
+  function displayNotification(payload) {
+    const notificationContainer = document.getElementById('notification-container');
+    const notificationElement = document.createElement('div');
+    notificationElement.classList.add('notification');
+    notificationElement.innerHTML = `
+      <h3>${payload.notification.title}</h3>
+      <p>${payload.notification.body}</p>
+    `;
+    notificationContainer.appendChild(notificationElement);
+  }
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

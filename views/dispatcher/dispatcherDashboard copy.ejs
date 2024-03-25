@@ -274,50 +274,59 @@
 
 
 
+<!-- (e.g., dispatcherDashboard.ejs) -->
 
-      <!-- Inside your EJS file (e.g., dispatcherDashboard.ejs) -->
+<!-- Include Firebase SDK -->
+<!-- Include Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js"></script>
 
+<script>
+  // Your Firebase initialization and messaging logic goes here
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
+  authDomain: "ambulancebooking-812cd.firebaseapp.com",
+  projectId: "ambulancebooking-812cd",
+  storageBucket: "ambulancebooking-812cd.appspot.com",
+  messagingSenderId: "887269267926",
+  appId: "1:887269267926:web:fff487690a9b8364e02c77",
+  measurementId: "G-H5CN5R5BLD"
+};
 
-
- <script type="module" >
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
-  import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging.js';
-
-               const firebaseConfig = {
-                 apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
-                 authDomain: "ambulancebooking-812cd.firebaseapp.com",
-                 projectId: "ambulancebooking-812cd",
-                 storageBucket: "ambulancebooking-812cd.appspot.com",
-                 messagingSenderId: "887269267926",
-                 appId: "1:887269267926:web:fff487690a9b8364e02c77",
-                 measurementId: "G-H5CN5R5BLD"
-               };
-             
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const messaging = getMessaging(app);
-             
-               // Get token
-               getToken(messaging, { vapidKey: 'BMbALCuu9k_sjxT-t4I2uWBDPwnsI8Zbc3Em0XobSWX5ZjSd8PVBAGpxoGYyBaxLk0PwCMSyvrbrKpH-qIgpQjc' })
-                 .then((currentToken) => {
-                   if (currentToken) {
-                     console.log('Token retrieved:', currentToken);
-                     // Send the token to your server to subscribe to the 'dispatcher' topic
-                   } else {
-                     console.log('No registration token available. Request permission to generate one.');
-                     // Show permission UI
-                   }
-                 }).catch((err) => {
-                   console.error('Token retrieval failed:', err);
-                 });
-             
-               // Handle incoming messages
-               onMessage(messaging, (payload) => {
-                 console.log('Message received:', payload);
-                 // Display the notification content in the dashboard
-                 alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
-               });
-             </script>
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  // Subscribe to the 'dispatcher' topic
+  messaging.subscribeToTopic('all')
+    .then(() => {
+      console.log('Successfully subscribed to dispatcher topic.');
+    })
+    .catch((error) => {
+      console.error('Error subscribing to dispatcher topic:', error);
+    });
+
+  // Handle incoming messages
+  messaging.onMessage((payload) => {
+    console.log('Message received:', payload);
+    // Display the notification content in the dashboard
+    displayNotification(payload);
+  });
+
+  // Function to display notification
+  function displayNotification(payload) {
+    // Display the notification in your dashboard UI
+    // You can customize this based on your UI requirements
+    // For example:
+    alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
+  }
+</script>
+
+
+      
+       
+       
    <!-- jQuery -->
    <script src="../js/jquery.min.js"></script>
    <script src="../js/popper.min.js"></script>
@@ -341,7 +350,7 @@
    <!-- custom js -->
    <script src="../js/chart_custom_style1.js"></script>
    <script src="../js/custom.js"></script>
-   <script src="../js/main.mjs"></script>
+   <script src="../js/main.js"></script>
 
 </body>
 

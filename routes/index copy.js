@@ -230,21 +230,21 @@ router.delete('/deleteUser/:userId', async (req, res) => {
 
 
 
-// for dispatcher
-  router.get('/dispatcherDashboard', isDispatcher,(req, res) => {
+// for dispatcher isDispatcher
+  router.get('/dispatcherDashboard',(req, res) => {
     res.render('dispatcherDashboard'); // Renders the index view
   });
 
-  router.get('/dispatcherContact',isDispatcher, (req, res) => {
+  router.get('/dispatcherContact', (req, res) => {
     res.render('dispatcherContact'); // Renders the index view
   });
-  router.get('/dispatcherDispatcher',isDispatcher, (req, res) => {
+  router.get('/dispatcherDispatcher', (req, res) => {
     res.render('dispatcherDispatcher'); // Renders the index view
   });
-  router.get('/dispatcherMap',isDispatcher, (req, res) => {
+  router.get('/dispatcherMap', (req, res) => {
     res.render('dispatcherMap'); // Renders the index view
   });
-  router.get('/dispatcherSettings',isDispatcher, (req, res) => {
+  router.get('/dispatcherSettings', (req, res) => {
     res.render('dispatcherSettings'); // Renders the index view
   });
 
@@ -634,7 +634,14 @@ router.post('/forgot-password', async (req, res) => {
 
 
 
+// for firebase notification 
 
+
+var admin = require("firebase-admin");
+var serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 // Save a notification when a booking request is created
 router.post('/patientRequest', async (req, res) => {
   try {
@@ -642,25 +649,49 @@ router.post('/patientRequest', async (req, res) => {
     const bookingRequest = new BookingRequest({
       location,
       contactInfo,
-      urgencyLevel,
+      urgencyLevel
     });
+
     const savedRequest = await bookingRequest.save();
+    // Send the response immediately after saving the request
     res.status(200).json({
       message: 'Booking request submitted successfully',
       data: savedRequest
     });
+
+    // Send notification to dispatcher in the background
+    const message = {
+      notification: {
+        title: "New Ambulance Request",
+        body: "A new ambulance request has been received."
+      },
+      topic: "all"// Topic to which dispatcher is subscribed
+      
+
+
+    };
+
+    admin.messaging().send(message)
+      .then((response) => {
+        console.log("Notification sent successfully:", response);
+      }).catch((error) => {
+        console.error("Error sending notification:", error);
+      });
+
   } catch (error) {
     console.error('Error submitting booking request:', error);
-    res.status(500).send('An internal server error occurred');
+    // Make sure to only send one response per request
+    if (!res.headersSent) {
+      res.status(500).json({ message: 'An internal server error occurred' });
+    }
   }
 });
 
-// for firebase notification 
-// var admin = require("firebase-admin");
-// var serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount)
-// });
+
+router.get('/me' ,(req,res)=>{
+  res.render('me')
+})
+
 
 
 
