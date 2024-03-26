@@ -11,9 +11,27 @@ const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 
 // for authentication 
+router.get('/',(req,res)=>{res.render('indexl')})
 router.get('/login', (req, res) => {
-res.render('login'); // Renders the index view
+res.render('loginl'); // Renders the index view
 });
+router.get('/about', (req, res) => {
+  res.render('aboutl'); // Renders the index view
+  });
+  router.get('/contact', (req, res) => {
+    res.render('contactl'); // Renders the index view
+    });
+    router.get('/service', (req, res) => {
+      res.render('servicel'); // Renders the index view
+      });
+      router.get('/request', (req, res) => {
+        res.render('requestl'); // Renders the index view
+        });
+      router.get('/register', (req, res) => {
+        res.render('registerl'); // Renders the index view
+        });
+
+
 
 // login route
 router.post('/login', passport.authenticate('local'), (req, res) => {
@@ -281,9 +299,22 @@ router.post('/updateAmbulance', async (req, res) => {
 router.get('/dispatcherAmbulance', async (req, res) => {
   try {
     const ambulances = await Ambulance.find();
-    res.render('dispatcherAmbulance', { ambulances }); // Render the ambulances using a template engine
+    const bookingRequests = await BookingRequest.find().exec();
+    res.render('dispatcherAmbulance', { ambulances ,bookingRequests }); // Render the ambulances using a template engine
+
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Route to handle detailed view of a booking request
+router.get('/booking-requests/:id', async (req, res) => {
+  try {
+      const bookingRequest = await BookingRequest.findById(req.params.id).exec();
+      res.render('bookingRequestDetail', { bookingRequest });
+  } catch (error) {
+      console.error("Error retrieving booking request details:", error);
+      res.status(500).send("Internal server error");
   }
 });
 
@@ -636,7 +667,6 @@ router.post('/forgot-password', async (req, res) => {
 
 // for firebase notification 
 
-
 const admin = require("firebase-admin");
 const serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
 
@@ -644,8 +674,32 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
+// Define schema and model for token
+const tokenSchema = new mongoose.Schema({
+  token: String
+});
+const Token = mongoose.model("Token", tokenSchema);
+
+// Handle token registration
+router.post("/registerToken", (req, res) => {
+  const token = req.body.token;
+  console.log("Received token:", token);
+
+  // Save the token to MongoDB
+  const newToken = new Token({ token });
+  newToken.save()
+    .then(() => {
+      console.log("Token saved to MongoDB");
+      res.sendStatus(200); // Send a success response
+    })
+    .catch((error) => {
+      console.error("Error saving token to MongoDB:", error);
+      res.status(500).json({ error: "An internal server error occurred" });
+    });
+});
+
 // Save a notification when a booking request is created
-router.post('/patientRequest', async (req, res) => {
+router.post("/patientRequest", async (req, res) => {
   try {
     const { location, contactInfo, urgencyLevel } = req.body;
     const bookingRequest = new BookingRequest({
@@ -655,20 +709,14 @@ router.post('/patientRequest', async (req, res) => {
     });
 
     const savedRequest = await bookingRequest.save();
-    
-    // Send the response immediately after saving the request
-    res.status(200).json({
-      message: 'Booking request submitted successfully',
-      data: savedRequest
-    });
 
-    // Send notification to the device using its token
+    // Send notification to all registered tokens
     const message = {
       notification: {
         title: "New Ambulance Request",
         body: "A new ambulance request has been received."
       },
-      token: "d8oJ0qPSzJ9GTWcUz5WVA5:APA91bEivZ1SPPfIoJYz0IMMfFs9yTK1HnDXCqV7JUor3YdUuhJmXIqZpzGlx0gUfyccFQBhdNWierZl8JbkOVqqDhNq8lOyuTiRHOLajSUpKWQVxkNcXkvrI-dgUP8SrOXVs7s_X0sB"
+      topic: "all" // Send to all devices subscribed to the topic 'all'
     };
 
     admin.messaging().send(message)
@@ -679,21 +727,18 @@ router.post('/patientRequest', async (req, res) => {
         console.error("Error sending notification:", error);
       });
 
+    // Send the response immediately after saving the request
+    res.status(200).json({
+      message: "Booking request submitted successfully",
+      data: savedRequest
+    });
+
   } catch (error) {
-    console.error('Error submitting booking request:', error);
-    // Make sure to only send one response per request
+    console.error("Error submitting booking request:", error);
     if (!res.headersSent) {
-      res.status(500).json({ message: 'An internal server error occurred' });
+      res.status(500).json({ message: "An internal server error occurred" });
     }
   }
-});
-
-// Handle token registration
-router.post('/registerToken', (req, res) => {
-  const token = req.body.token;
-  console.log('Received token:', token);
-  // Save the token to your database or perform any necessary actions
-  res.sendStatus(200); // Send a success response
 });
 
 router.get('/me' ,(req,res)=>{

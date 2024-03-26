@@ -8,47 +8,24 @@
 <body>
   <h1>nxjasjknd</h1>
 <!-- Include Firebase SDK -->
+<!-- Include Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js"></script>
 
 <script>
   // Firebase configuration
   const firebaseConfig = {
-    apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
-    authDomain: "ambulancebooking-812cd.firebaseapp.com",
-    projectId: "ambulancebooking-812cd",
-    storageBucket: "ambulancebooking-812cd.appspot.com",
-    messagingSenderId: "887269267926",
-    appId: "1:887269267926:web:fff487690a9b8364e02c77",
-    measurementId: "G-H5CN5R5BLD"
-  };
-
+  apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
+  authDomain: "ambulancebooking-812cd.firebaseapp.com",
+  projectId: "ambulancebooking-812cd",
+  storageBucket: "ambulancebooking-812cd.appspot.com",
+  messagingSenderId: "887269267926",
+  appId: "1:887269267926:web:fff487690a9b8364e02c77",
+  measurementId: "G-H5CN5R5BLD"
+};
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const messaging = firebase.messaging();
-
-  // Function to request permission and retrieve token
-  const requestPermissionAndToken = async () => {
-    try {
-      const permission = await Notification.requestPermission();
-      console.log('Permission:', permission);
-      if (permission === 'granted') {
-        const token = await messaging.getToken();
-        console.log('Token:', token);
-        // Send the token to your backend for notification delivery
-        sendTokenToServer(token);
-      } else {
-        console.log('Permission denied');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  // Request permission and retrieve token when the page loads
-  window.addEventListener('load', () => {
-    requestPermissionAndToken();
-  });
 
   // Function to send the token to the backend
   function sendTokenToServer(token) {
@@ -65,39 +42,53 @@
         throw new Error('Failed to send token to server');
       }
       console.log('Token sent to server successfully');
+      // Subscribe to the 'all' topic after sending token
+      subscribeToTopic('all');
     })
     .catch(error => {
       console.error('Error sending token to server:', error);
+      alert('Error sending token to server: ' + error.message); // Display error in alert
     });
   }
 
-  // Handle incoming messages
-  messaging.onMessage((payload) => {
-    console.log('Message received:', payload);
-    // Display the notification content in the dashboard
-    displayNotification(payload);
-  });
-
-  // Function to display notification
-  function displayNotification(payload) {
-    // Display the notification in your dashboard UI
-    // You can customize this based on your UI requirements
-    // For example:
-    alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
+  // Function to subscribe to a topic
+  function subscribeToTopic(topic) {
+    // Subscribe to the topic
+    messaging.subscribeToTopic(topic)
+      .then(() => {
+        console.log('Successfully subscribed to topic:', topic);
+      })
+      .catch((error) => {
+        console.error('Error subscribing to topic:', error);
+      });
   }
 
-  // Handle token refresh manually by periodically checking for a new token
-  setInterval(async () => {
+  // Request permission and retrieve token when the page loads
+  window.addEventListener('load', async () => {
     try {
-      const token = await messaging.getToken();
-      console.log('Refreshed Token:', token);
-      // Send the refreshed token to your backend for notification delivery
-      sendTokenToServer(token);
+      const permission = await Notification.requestPermission();
+      console.log('Permission:', permission);
+      if (permission === 'granted') {
+        const token = await messaging.getToken();
+        console.log('Token:', token);
+        // Send the token to your backend for notification delivery
+        sendTokenToServer(token);
+      } else {
+        console.log('Permission denied');
+      }
     } catch (error) {
-      console.error('Error refreshing token:', error);
+      console.error('Error:', error);
     }
-  }, 60 * 60 * 1000); // Check for token refresh every hour
+  });
+
+  // For testing, display alert when a message is received
+  messaging.onMessage((payload) => {
+    alert('Message received: ' + JSON.stringify(payload));
+  });
 </script>
+
+
+
 
 <!-- Include your other scripts -->
 <script src="../js/main.js"></script>

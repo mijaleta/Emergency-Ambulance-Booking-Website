@@ -20,7 +20,8 @@ app.use(express.static(path.join(__dirname, 'public'), {
 app.set('views', [
     path.join(__dirname, 'views', 'dispatcher'),
     path.join(__dirname, 'views', 'admin'),
-    path.join(__dirname, 'views', 'home')
+    path.join(__dirname, 'views', 'home'),
+    path.join(__dirname, 'views', 'landing')
   ]);
 app.set('view engine', 'ejs'); // Assuming you're using EJS as the template engine
 

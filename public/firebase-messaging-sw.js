@@ -2,6 +2,7 @@
 importScripts('https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js');
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
   authDomain: "ambulancebooking-812cd.firebaseapp.com",

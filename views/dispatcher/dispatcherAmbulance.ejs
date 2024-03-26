@@ -372,6 +372,54 @@
                                 </div>
                         </div>
                     </div>
+
+
+
+<!-- the following is the style for the patient request  -->
+
+
+
+                    <div class="row mt-4">
+                        <!-- Patient request information  -->
+                        <div class="col-md-12">
+                                <div class="white_shd full margin_bottom_30">
+                                <div class="full padding_infor_info">
+                                    <h2 class="mb-4">Patient Request</h2>
+                                <div class="table_row">
+                                    <div class="table-responsive">
+                                            <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Location </th>
+                                                <th>Contact Information</th>
+                                                <th>Urgency Level</th>
+                                                <!-- <th>time</th> -->
+                                                <th>action</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <% bookingRequests.forEach(bookingRequest => { %>
+                                                <tr>
+                                                    <td><%= bookingRequest.location %></td>
+                                                    <td><%= bookingRequest.contactInfo %></td>
+                                                    <td><%= bookingRequest.urgencyLevel %></td>
+                                                    <!-- <td><%= bookingRequest.createdAt %></td> -->
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" >detail</button>
+                                                        <button class="btn btn-success">Suspend</button>
+                                                        <button class="btn btn-danger" >Delete</button>
+                                                      </td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                            </table>
+                                    </div>
+                                </div>
+                                </div>
+                                </div>
+                        </div>
+                    </div>
                     </div>
 
                     <!-- footer -->

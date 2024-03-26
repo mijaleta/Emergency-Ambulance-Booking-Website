@@ -637,11 +637,13 @@ router.post('/forgot-password', async (req, res) => {
 // for firebase notification 
 
 
-var admin = require("firebase-admin");
-var serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
+const admin = require("firebase-admin");
+const serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
+
 // Save a notification when a booking request is created
 router.post('/patientRequest', async (req, res) => {
   try {
@@ -653,28 +655,27 @@ router.post('/patientRequest', async (req, res) => {
     });
 
     const savedRequest = await bookingRequest.save();
+    
     // Send the response immediately after saving the request
     res.status(200).json({
       message: 'Booking request submitted successfully',
       data: savedRequest
     });
 
-    // Send notification to dispatcher in the background
+    // Send notification to the device using its token
     const message = {
       notification: {
         title: "New Ambulance Request",
         body: "A new ambulance request has been received."
       },
-      topic: "all"// Topic to which dispatcher is subscribed
-      
-
-
+      token: "doK-ofkSIzCieZC58GREma:APA91bGnj2oKUqxrdDcKPYoCat4fjSVKGJOfF2jabgyPlFeKy3mmdZS7ereohINpfrSE2OesfeC2k6NzP6ziJ7bR9AaRXiDUb7YxLKw9xSHuGRImw5ZzgI8VRbFsaS-IbZvn9YjN0USz"
     };
 
     admin.messaging().send(message)
       .then((response) => {
         console.log("Notification sent successfully:", response);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error("Error sending notification:", error);
       });
 
@@ -687,15 +688,17 @@ router.post('/patientRequest', async (req, res) => {
   }
 });
 
+// Handle token registration
+router.post('/registerToken', (req, res) => {
+  const token = req.body.token;
+  console.log('Received token:', token);
+  // Save the token to your database or perform any necessary actions
+  res.sendStatus(200); // Send a success response
+});
 
 router.get('/me' ,(req,res)=>{
   res.render('me')
 })
-
-
-
-
-
 
 
 module.exports = router;
