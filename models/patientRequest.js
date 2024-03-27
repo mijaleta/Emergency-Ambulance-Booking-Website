@@ -7,7 +7,7 @@ const bookingRequestSchema = new mongoose.Schema({
     urgencyLevel: { type: String, enum: ['low', 'medium', 'high'], required: true },
     status: { type: String, enum: ['pending', 'dispatched', 'completed'], default: 'pending' },
     createdAt: { type: Date, default: Date.now },
-    dispatcher: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } // Reference to dispatcher
+
 
 });
 module.exports = mongoose.model('BookingRequest', bookingRequestSchema);

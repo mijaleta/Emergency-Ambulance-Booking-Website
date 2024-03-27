@@ -1,0 +1,22 @@
+<!-- bookingRequestDetail.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Request Details</title>
+</head>
+<body>
+    <h1>Booking Request Details</h1>
+    <ul>
+        <li><strong>Location:</strong> <%= bookingRequest.location %></li>
+        <li><strong>Contact Info:</strong> <%= bookingRequest.contactInfo %></li>
+        <li><strong>Urgency Level:</strong> <%= bookingRequest.urgencyLevel %></li>
+        <li><strong>Status:</strong> <%= bookingRequest.status %></li>
+        <li><strong>Created At:</strong> <%= bookingRequest.createdAt %></li>
+    </ul>
+    <!-- Add a button or link to navigate back to the previous page -->
+    <a href="/">Back to Home</a>
+</body>
+</html>

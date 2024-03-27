@@ -406,7 +406,13 @@
                                                     <td><%= bookingRequest.urgencyLevel %></td>
                                                     <!-- <td><%= bookingRequest.createdAt %></td> -->
                                                     <td>
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" >detail</button>
+                                                        <!-- <button onclick="window.location.href='/booking-requests/<%= bookingRequest._id %>'">View Details</button>
+                                                        <a href="/booking-requests/<%= bookingRequest._id %>" class="button">View Details</a> -->
+                                                        <button class="btn btn-primary" >
+                                                            <a href="/booking-requests/<%= bookingRequest._id %>" target="_blank" >View Details</a>
+                                                        </button>
+                                                        
+                                                        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" >detail</button> -->
                                                         <button class="btn btn-success">Suspend</button>
                                                         <button class="btn btn-danger" >Delete</button>
                                                       </td>

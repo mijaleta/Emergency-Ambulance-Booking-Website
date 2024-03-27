@@ -31,7 +31,16 @@ router.get('/about', (req, res) => {
         res.render('registerl'); // Renders the index view
         });
 
-
+// Route to handle detailed view of a booking request
+router.get('/booking-requests/:id', async (req, res) => {
+  try {
+      const bookingRequest = await BookingRequest.findById(req.params.id).exec();
+      res.render('bookingRequestDetail', { bookingRequest });
+  } catch (error) {
+      console.error("Error retrieving booking request details:", error);
+      res.status(500).send("Internal server error");
+  }
+});
 
 // login route
 router.post('/login', passport.authenticate('local'), (req, res) => {
