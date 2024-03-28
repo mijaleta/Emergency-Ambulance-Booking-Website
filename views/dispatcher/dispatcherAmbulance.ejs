@@ -414,7 +414,9 @@
                                                         
                                                         <!-- <button type="button" class="btn btn-primary" data-toggle="modal" >detail</button> -->
                                                         <button class="btn btn-success">Suspend</button>
-                                                        <button class="btn btn-danger" >Delete</button>
+                                                        <button class="btn btn-danger" onclick="deleteBookingRequest('<%= bookingRequest._id %>')">Delete</button>
+
+                                                        <!-- <button class="btn btn-danger" >Delete</button> -->
                                                       </td>
                                                 </tr>
                                             <% }); %>
@@ -472,6 +474,27 @@ function deleteAmbulance(ambulanceId) {
         });
     }
 }
+
+
+function deleteBookingRequest(bookingRequestId) {
+    if (confirm('Are you sure you want to delete this booking request?')) {
+        fetch('/booking-requests/' + bookingRequestId, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                // Refresh the page or update the booking request list as needed
+                location.reload(); // Refresh the page after deletion
+            } else {
+                console.error('Failed to delete booking request');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+}
+
 
 
     </script>

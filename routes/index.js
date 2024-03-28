@@ -10,6 +10,8 @@ const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 
+
+
 // for authentication 
 router.get('/',(req,res)=>{res.render('indexl')})
 router.get('/login', (req, res) => {
@@ -41,6 +43,19 @@ router.get('/booking-requests/:id', async (req, res) => {
       res.status(500).send("Internal server error");
   }
 });
+
+// Route to handle deletion of a booking request
+router.delete('/booking-requests/:id', async (req, res) => {
+  try {
+    console.log(req.params.id)
+      await BookingRequest.findByIdAndDelete(req.params.id);
+      res.sendStatus(204); // Send a 204 No Content response after successful deletion
+  } catch (error) {
+      console.error("Error deleting booking request:", error);
+      res.status(500).send("Internal server error");
+  }
+});
+
 
 // login route
 router.post('/login', passport.authenticate('local'), (req, res) => {
@@ -329,16 +344,17 @@ router.get('/booking-requests/:id', async (req, res) => {
 
 
 
-// Route to delete an ambulance
-router.delete('/deleteAmbulance/:ambulanceId', async (req, res) => {
+// Route to delete a booking request
+router.delete('/booking-requests/:id', async (req, res) => {
   try {
-      const ambulanceId = req.params.ambulanceId;
-      await Ambulance.findByIdAndDelete(ambulanceId);
+      const bookingRequestId = req.params.id;
+      await BookingRequest.findByIdAndDelete(bookingRequestId);
       res.sendStatus(200); // Send success status if deletion is successful
   } catch (error) {
       res.status(500).json({ error: error.message });
   }
 });
+
 
 
 
@@ -510,14 +526,11 @@ router.post('/forgot-password', async (req, res) => {
     }
   }
 });
-
-
-  
+ 
   // Route for handling password reset form
   router.get('/reset-password/:token', async (req, res) => {
     try {
       const token = req.params.token;
-  
       // Find the user with the provided token
       const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
       if (!user) {

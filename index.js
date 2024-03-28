@@ -13,6 +13,9 @@ const indexRouter = require('./routes/index')
 const LocalStrategy = require('passport-local').Strategy;
 // Initialize Express app
 const app = express();
+const methodOverride = require('method-override');
+// after initializing your express app
+app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, 'public'), {
   extensions: ['html', 'js', 'mjs'] // Include .mjs extension
