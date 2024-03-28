@@ -29,9 +29,9 @@ router.get('/about', (req, res) => {
       router.get('/request', (req, res) => {
         res.render('requestl'); // Renders the index view
         });
-      router.get('/register', (req, res) => {
-        res.render('registerl'); // Renders the index view
-        });
+      // router.get('/register', (req, res) => {
+      //   res.render('registerl'); // Renders the index view
+      //   });
 
 // Route to handle detailed view of a booking request
 router.get('/booking-requests/:id', async (req, res) => {
