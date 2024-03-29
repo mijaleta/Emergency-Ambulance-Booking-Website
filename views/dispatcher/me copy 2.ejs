@@ -33,7 +33,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials: 'include',
+        credentials: 'include', // Corrected: Moved outside of headers
         body: JSON.stringify({ token: token })
       })
       .then(response => {
@@ -67,6 +67,6 @@
       alert('Message received: ' + JSON.stringify(payload));
     });
   </script>
-  <script src="../js/main.js"></script>
+<script src="../js/main.js"></script>
 </body>
 </html>

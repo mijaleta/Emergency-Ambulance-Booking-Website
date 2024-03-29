@@ -300,76 +300,55 @@
   firebase.initializeApp(firebaseConfig);
   const messaging = firebase.messaging();
 
-  // Function to request permission and retrieve token
-  const requestPermissionAndToken = async () => {
-    try {
-      const permission = await Notification.requestPermission();
-      console.log('Permission:', permission);
-      if (permission === 'granted') {
-        const token = await messaging.getToken();
-        console.log('Token:', token);
-        // Send the token to your backend for notification delivery
-        sendTokenToServer(token);
-      } else {
-        console.log('Permission denied');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
-  // Request permission and retrieve token when the page loads
-  window.addEventListener('load', () => {
-    requestPermissionAndToken();
-  });
+// Existing Firebase initialization and configuration...
 
-  // Function to send the token to the backend
-  function sendTokenToServer(token) {
-    // Make a POST request to your backend with the token
-    fetch('/registerToken', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ token: token }) // Include the token in the request body
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to send token to server');
-      }
-      console.log('Token sent to server successfully');
-    })
-    .catch(error => {
-      console.error('Error sending token to server:', error);
-    });
-  }
-1
-  // Handle incoming messages
-  messaging.onMessage((payload) => {
-    console.log('Message received:', payload);
-    // Display the notification content in the dashboard
-    displayNotification(payload);
-  });
-
-  // Function to display notification
-  function displayNotification(payload) {
-    // Display the notification in your dashboard UI
-    // You can customize this based on your UI requirements
-    // For example:
-    alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
-  }
-
-  // Handle token refresh manually by periodically checking for a new token
-  setInterval(async () => {
-    try {
+// Function to request permission and retrieve token
+const requestPermissionAndToken = async () => {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
       const token = await messaging.getToken();
-      console.log('Refreshed Token:', token);
-      // Send the refreshed token to your backend for notification delivery
+      // Send the token to your backend for notification delivery
       sendTokenToServer(token);
-    } catch (error) {
-      console.error('Error refreshing token:', error);
+    } else {
+      console.log('Permission denied');
     }
-  }, 60 * 60 * 1000); // Check for token refresh every hour
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+// Request permission and retrieve token when the page loads
+window.addEventListener('load', requestPermissionAndToken);
+
+// Function to send the token to the backend
+function sendTokenToServer(token) {
+  // Make a POST request to your backend with the token
+  fetch('/registerToken', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ token: token }) // Include the token in the request body
+  })
+  .then(response => response.json())
+  .then(data => console.log('Token sent to server successfully', data))
+  .catch(error => console.error('Error sending token to server:', error));
+}
+
+// Handle incoming messages
+messaging.onMessage((payload) => {
+  console.log('Message received:', payload);
+  // Display the notification content
+  displayNotification(payload);
+});
+
+// Function to display notification
+function displayNotification(payload) {
+  alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
+}
+
 </script>
 
 

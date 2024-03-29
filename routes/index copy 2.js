@@ -707,7 +707,7 @@ router.post('/patientRequest', async (req, res) => {
     });
 
     const savedRequest = await bookingRequest.save();
-
+    
     // Send the response immediately after saving the request
     res.status(200).json({
       message: 'Booking request submitted successfully',
@@ -720,7 +720,7 @@ router.post('/patientRequest', async (req, res) => {
     // Check if there are users to notify
     if (usersToNotify.length > 0) {
       // Create an array to hold all the tokens
-      const tokens = usersToNotify.map(user => user.fcmTokens).flat().filter(token => token != null);
+      const tokens = usersToNotify.map(user => user.notificationToken).filter(token => token != null);
 
       // Check if there are valid tokens
       if (tokens.length > 0) {

@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema({
     enum: ['admin', 'nurse', 'driver', 'dispatcher'],
     required: true
   },
+  fcmTokens: {
+    type: [String], // Changed to an array of strings
+    default: []
+  },
+
+
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   passwordChanged: { type: Boolean, default: false } // New field to track password change
