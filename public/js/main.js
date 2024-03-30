@@ -66,12 +66,11 @@ function sendTokenToServer(token) {
 
 
 
-// Listen for messages from the service worker
+// Listen for messages from service worker
 navigator.serviceWorker.addEventListener('message', function(event) {
   if (event.data && event.data.type === 'incrementNotificationCount') {
     console.log('Received message from service worker:', event.data);
-
-    // Function to increase the bell icon count
+    // Increase the bell icon count
     increaseNotificationCount();
   }
 });
@@ -85,6 +84,32 @@ function increaseNotificationCount() {
 }
 
 
+// // Handle foreground messages
+// messaging.onMessage((payload) => {
+//   console.log('Foreground message received:', payload);
+
+//   // Update UI or perform other actions as needed
+//   increaseNotificationCount();
+// });
 
 
 
+// Create a broadcast channel
+const channel = new BroadcastChannel('notificationChannel');
+
+// Listen for messages from broadcast channel
+channel.addEventListener('message', function(event) {
+  if (event.data && event.data.type === 'incrementNotificationCount') {
+    console.log('Received message from service worker:', event.data);
+    // Increase the bell icon count
+    increaseNotificationCount();
+  }
+});
+
+// Function to increase the bell icon count
+function increaseNotificationCount() {
+  const notificationCountElement = document.getElementById('notificationCount');
+  let currentCount = parseInt(notificationCountElement.textContent);
+  currentCount++;
+  notificationCountElement.textContent = currentCount;
+}

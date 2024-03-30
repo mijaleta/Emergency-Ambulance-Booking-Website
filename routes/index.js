@@ -331,6 +331,17 @@ router.get('/dispatcherAmbulance', async (req, res) => {
   }
 });
 
+
+router.get('/patientRequest', async (req, res) => {
+  try {
+    const ambulances = await Ambulance.find();
+    const bookingRequests = await BookingRequest.find().exec();
+    res.render('patientRequest', { ambulances ,bookingRequests }); // Render the ambulances using a template engine
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 // Route to handle detailed view of a booking request
 router.get('/booking-requests/:id', async (req, res) => {
   try {

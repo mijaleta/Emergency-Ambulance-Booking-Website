@@ -15,24 +15,40 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 // Function to post message to the client
-// Handle background messages
-// Handle background messages
-messaging.onBackgroundMessage(async function(payload) {
-  console.log('[firebase-messaging-sw.js] Received background message', payload);
+function postMessageToClient(message) {
+  return self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage(message);
+      console.log('Message sent to client:', message);
 
-  // Post message to the specific client to increment bell icon count
-  const client = await self.clients.get(payload.clientId);
-  if (client) {
-    client.postMessage({
-      type: 'incrementNotificationCount'
     });
-  }
+  });
+}
 
-  // Display notification
-  const notificationTitle = payload.data.title;
-  const notificationOptions = {
-    body: payload.data.body,
-  };
-  return self.registration.showNotification(notificationTitle, notificationOptions);
+self.addEventListener('push', function(event) {
+  const payload = event.data ? event.data.json() : {};
+  console.log('[Service Worker] Received background message:', payload);
+
+  // Post message to client to increment bell icon count
+// Post message to client to increment bell icon count
+self.clients.matchAll().then(clients => {
+  clients.forEach(client => {
+    client.postMessage({ type: 'incrementNotificationCount' });
+  });
 });
 
+
+// Create a broadcast channel
+const channel = new BroadcastChannel('notificationChannel');
+
+// Post message to broadcast channel to increment bell icon count
+channel.postMessage({ type: 'incrementNotificationCount' });
+
+
+  // Display notification
+  const notificationTitle = payload.data.title || 'Background Message Title';
+  const notificationOptions = {
+    body: payload.data.body || 'Background Message body.',
+  };
+  event.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
+});
