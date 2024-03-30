@@ -63,9 +63,6 @@ function sendTokenToServer(token) {
 
 
 
-
-
-
 // Listen for messages from service worker
 navigator.serviceWorker.addEventListener('message', function(event) {
   if (event.data && event.data.type === 'incrementNotificationCount') {
@@ -84,17 +81,6 @@ function increaseNotificationCount() {
 }
 
 
-// // Handle foreground messages
-// messaging.onMessage((payload) => {
-//   console.log('Foreground message received:', payload);
-
-//   // Update UI or perform other actions as needed
-//   increaseNotificationCount();
-// });
-
-
-
-// Create a broadcast channel
 const channel = new BroadcastChannel('notificationChannel');
 
 // Listen for messages from broadcast channel
