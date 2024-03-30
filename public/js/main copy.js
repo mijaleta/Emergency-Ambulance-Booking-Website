@@ -62,27 +62,25 @@ function sendTokenToServer(token) {
 }
 
 
-
-
-
-
-// Listen for messages from the service worker
-navigator.serviceWorker.addEventListener('message', function(event) {
-  if (event.data && event.data.type === 'incrementNotificationCount') {
-    console.log('Received message from service worker:', event.data);
-
-    // Function to increase the bell icon count
-    increaseNotificationCount();
-  }
+// Handle incoming messages
+messaging.onMessage((payload) => {
+  
+  alert('Message received: ' + JSON.stringify(payload));
+  console.log('Message received:', payload);
+  // Increase the bell icon count
+  increaseNotificationCount();
 });
 
 // Function to increase the bell icon count
 function increaseNotificationCount() {
   const notificationCountElement = document.getElementById('notificationCount');
+  // Get the current count and increment it by 1
   let currentCount = parseInt(notificationCountElement.textContent);
   currentCount++;
+  // Update the count in the UI
   notificationCountElement.textContent = currentCount;
 }
+
 
 
 

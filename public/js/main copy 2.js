@@ -66,7 +66,7 @@ function sendTokenToServer(token) {
 
 
 
-// Listen for messages from the service worker
+// Listen for messages from service worker
 navigator.serviceWorker.addEventListener('message', function(event) {
   if (event.data && event.data.type === 'incrementNotificationCount') {
     console.log('Received message from service worker:', event.data);
@@ -83,8 +83,6 @@ function increaseNotificationCount() {
   currentCount++;
   notificationCountElement.textContent = currentCount;
 }
-
-
 
 
 

@@ -17,6 +17,7 @@ const methodOverride = require('method-override');
 // after initializing your express app
 app.use(methodOverride('_method'));
 
+
 app.use(express.static(path.join(__dirname, 'public'), {
   extensions: ['html', 'js', 'mjs'] // Include .mjs extension
 }));
@@ -26,6 +27,7 @@ app.set('views', [
     path.join(__dirname, 'views', 'home'),
     path.join(__dirname, 'views', 'landing')
   ]);
+
 app.set('view engine', 'ejs'); // Assuming you're using EJS as the template engine
 
 app.use(express.json());

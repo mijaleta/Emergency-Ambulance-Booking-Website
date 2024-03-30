@@ -46,7 +46,6 @@
         console.error('Error sending token to server:', error);
       });
     }
-
     // Request permission and retrieve token when the page loads
     window.addEventListener('load', async () => {
       try {
@@ -62,8 +61,15 @@
       }
     });
 
-    // For testing, display alert when a message is received
-    messaging.onMessage((payload) => {
+// Handle incoming messages
+messaging.onMessage((payload) => {
+  console.log('Message received:', payload);
+  // Display the notification content
+  displayNotification(payload);
+});
+
+// Handle incoming messages
+messaging.onMessage((payload) => {
       alert('Message received: ' + JSON.stringify(payload));
     });
   </script>

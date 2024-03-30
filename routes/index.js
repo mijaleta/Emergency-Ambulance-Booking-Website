@@ -725,13 +725,22 @@ router.post('/patientRequest', async (req, res) => {
       // Check if there are valid tokens
       if (tokens.length > 0) {
         // Send a notification to each token
+        // const message = {
+        //   notification: {
+        //     title: "New Ambulance Request",
+        //     body: "A new ambulance request has been received."
+        //   },
+        //   tokens: tokens // Array of FCM tokens
+        // };
+
         const message = {
-          notification: {
+          data: {
             title: "New Ambulance Request",
             body: "A new ambulance request has been received."
           },
           tokens: tokens // Array of FCM tokens
         };
+        
 
         admin.messaging().sendMulticast(message)
           .then(response => console.log("Notifications sent successfully:", response))

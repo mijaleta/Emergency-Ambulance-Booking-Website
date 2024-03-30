@@ -100,7 +100,7 @@
                      <div class="right_topbar">
                         <div class="icon_info">
                            <ul>
-                              <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                              <li><a href="#"><i id="bellIcon" class="fa fa-bell-o"></i><span id="notificationCount" class="badge">0</span></a></li>
                               <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
                               <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
                            </ul>
@@ -338,16 +338,11 @@ function sendTokenToServer(token) {
 }
 
 // Handle incoming messages
-messaging.onMessage((payload) => {
-  console.log('Message received:', payload);
-  // Display the notification content
-  displayNotification(payload);
-});
+// messaging.onMessage((payload) => {
+//       alert('Message received: ' + JSON.stringify(payload));
+//     });
 
-// Function to display notification
-function displayNotification(payload) {
-  alert(`Title: ${payload.notification.title}\nBody: ${payload.notification.body}`);
-}
+
 
 </script>
 

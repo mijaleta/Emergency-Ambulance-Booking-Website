@@ -1,8 +1,7 @@
-// Import and configure the Firebase SDK
 importScripts('https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js');
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+// Initialize Firebase app in the service worker
 const firebaseConfig = {
   apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
   authDomain: "ambulancebooking-812cd.firebaseapp.com",
@@ -14,13 +13,31 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
+
+// Function to post message to the client
+function postMessageToClient(message) {
+  return self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage(message);
+      console.log('Message sent to client:', message);
+
+    });
+  });
+}
+
+// Handle background messages
 messaging.onBackgroundMessage(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
+
+  // Post message to client to increment bell icon count
+  postMessageToClient({
+    type: 'incrementNotificationCount'
+  });
+
+  // Display notification
   const notificationTitle = payload.data.title;
   const notificationOptions = {
     body: payload.data.body,
-    
   };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  return self.registration.showNotification(notificationTitle, notificationOptions);
 });
