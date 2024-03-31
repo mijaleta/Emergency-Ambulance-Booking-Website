@@ -9,11 +9,54 @@ const Ambulance = require('../models/ambulance')
 const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
+const Notification = require('../models/Notification');
+
+
 
 // for authentication 
+router.get('/',(req,res)=>{res.render('indexl')})
 router.get('/login', (req, res) => {
-res.render('login'); // Renders the index view
+res.render('loginl'); // Renders the index view
 });
+router.get('/about', (req, res) => {
+  res.render('aboutl'); // Renders the index view
+  });
+  router.get('/contact', (req, res) => {
+    res.render('contactl'); // Renders the index view
+    });
+    router.get('/service', (req, res) => {
+      res.render('servicel'); // Renders the index view
+      });
+      router.get('/request', (req, res) => {
+        res.render('requestl'); // Renders the index view
+        });
+      // router.get('/register', (req, res) => {
+      //   res.render('registerl'); // Renders the index view
+      //   });
+
+// Route to handle detailed view of a booking request
+router.get('/booking-requests/:id', async (req, res) => {
+  try {
+      const bookingRequest = await BookingRequest.findById(req.params.id).exec();
+      res.render('bookingRequestDetail', { bookingRequest });
+  } catch (error) {
+      console.error("Error retrieving booking request details:", error);
+      res.status(500).send("Internal server error");
+  }
+});
+
+// Route to handle deletion of a booking request
+router.delete('/booking-requests/:id', async (req, res) => {
+  try {
+    console.log(req.params.id)
+      await BookingRequest.findByIdAndDelete(req.params.id);
+      res.sendStatus(204); // Send a 204 No Content response after successful deletion
+  } catch (error) {
+      console.error("Error deleting booking request:", error);
+      res.status(500).send("Internal server error");
+  }
+});
+
 
 // login route
 router.post('/login', passport.authenticate('local'), (req, res) => {
@@ -231,7 +274,7 @@ router.delete('/deleteUser/:userId', async (req, res) => {
 
 
 // for dispatcher isDispatcher
-  router.get('/dispatcherDashboard',(req, res) => {
+  router.get('/dispatcherDashboard',isDispatcher,(req, res) => {
     res.render('dispatcherDashboard'); // Renders the index view
   });
 
@@ -281,24 +324,49 @@ router.post('/updateAmbulance', async (req, res) => {
 router.get('/dispatcherAmbulance', async (req, res) => {
   try {
     const ambulances = await Ambulance.find();
-    res.render('dispatcherAmbulance', { ambulances }); // Render the ambulances using a template engine
+    const bookingRequests = await BookingRequest.find().exec();
+    res.render('dispatcherAmbulance', { ambulances ,bookingRequests }); // Render the ambulances using a template engine
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 
-
-// Route to delete an ambulance
-router.delete('/deleteAmbulance/:ambulanceId', async (req, res) => {
+router.get('/patientRequest', async (req, res) => {
   try {
-      const ambulanceId = req.params.ambulanceId;
-      await Ambulance.findByIdAndDelete(ambulanceId);
+    const ambulances = await Ambulance.find();
+    const bookingRequests = await BookingRequest.find().exec();
+    res.render('patientRequest', { ambulances ,bookingRequests }); // Render the ambulances using a template engine
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// Route to handle detailed view of a booking request
+router.get('/booking-requests/:id', async (req, res) => {
+  try {
+      const bookingRequest = await BookingRequest.findById(req.params.id).exec();
+      res.render('bookingRequestDetail', { bookingRequest });
+  } catch (error) {
+      console.error("Error retrieving booking request details:", error);
+      res.status(500).send("Internal server error");
+  }
+});
+
+
+
+// Route to delete a booking request
+router.delete('/booking-requests/:id', async (req, res) => {
+  try {
+      const bookingRequestId = req.params.id;
+      await BookingRequest.findByIdAndDelete(bookingRequestId);
       res.sendStatus(200); // Send success status if deletion is successful
   } catch (error) {
       res.status(500).json({ error: error.message });
   }
 });
+
 
 
 
@@ -325,7 +393,7 @@ router.delete('/deleteAmbulance/:ambulanceId', async (req, res) => {
 // isAdmin,
 router.post('/register',  async (req, res) => {
   try {
-    const { username, email, role, name, mobile_number} = req.body;
+    const { username, email, role, name, mobile_number,fcmToken} = req.body;
 
     if (!username || !email || !role || !mobile_number || !name) {
       return res.status(400).send('Please provide all required fields');
@@ -346,6 +414,7 @@ router.post('/register',  async (req, res) => {
       role,
       name,
       mobile_number,
+      fcmToken, // Save the FCM token here
       passwordChanged: false,
     });
 
@@ -470,14 +539,11 @@ router.post('/forgot-password', async (req, res) => {
     }
   }
 });
-
-
-  
+ 
   // Route for handling password reset form
   router.get('/reset-password/:token', async (req, res) => {
     try {
       const token = req.params.token;
-  
       // Find the user with the provided token
       const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
       if (!user) {
@@ -636,7 +702,6 @@ router.post('/forgot-password', async (req, res) => {
 
 // for firebase notification 
 
-
 const admin = require("firebase-admin");
 const serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
 
@@ -644,7 +709,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-// Save a notification when a booking request is created
 router.post('/patientRequest', async (req, res) => {
   try {
     const { location, contactInfo, urgencyLevel } = req.body;
@@ -655,48 +719,81 @@ router.post('/patientRequest', async (req, res) => {
     });
 
     const savedRequest = await bookingRequest.save();
-    
+
     // Send the response immediately after saving the request
     res.status(200).json({
       message: 'Booking request submitted successfully',
       data: savedRequest
     });
 
-    // Send notification to the device using its token
-    const message = {
-      notification: {
-        title: "New Ambulance Request",
-        body: "A new ambulance request has been received."
-      },
-      token: "doK-ofkSIzCieZC58GREma:APA91bGnj2oKUqxrdDcKPYoCat4fjSVKGJOfF2jabgyPlFeKy3mmdZS7ereohINpfrSE2OesfeC2k6NzP6ziJ7bR9AaRXiDUb7YxLKw9xSHuGRImw5ZzgI8VRbFsaS-IbZvn9YjN0USz"
-    };
+    // Retrieve all users who should be notified
+    const usersToNotify = await User.find({ role: 'dispatcher' }); // Adjust the query to match your needs
 
-    admin.messaging().send(message)
-      .then((response) => {
-        console.log("Notification sent successfully:", response);
-      })
-      .catch((error) => {
-        console.error("Error sending notification:", error);
-      });
+    // Check if there are users to notify
+    if (usersToNotify.length > 0) {
+      // Create an array to hold all the tokens
+      const tokens = usersToNotify.map(user => user.fcmTokens).flat().filter(token => token != null);
+
+      // Check if there are valid tokens
+      if (tokens.length > 0) {
+        // Send a notification to each token
+        // const message = {
+        //   notification: {
+        //     title: "New Ambulance Request",
+        //     body: "A new ambulance request has been received."
+        //   },
+        //   tokens: tokens // Array of FCM tokens
+        // };
+
+        const message = {
+          data: {
+            title: "New Ambulance Request",
+            body: "A new ambulance request has been received."
+          },
+          tokens: tokens // Array of FCM tokens
+        };
+        
+
+        admin.messaging().sendMulticast(message)
+          .then(response => console.log("Notifications sent successfully:", response))
+          .catch(error => console.error("Error sending notifications:", error));
+      }
+    }
 
   } catch (error) {
     console.error('Error submitting booking request:', error);
-    // Make sure to only send one response per request
     if (!res.headersSent) {
       res.status(500).json({ message: 'An internal server error occurred' });
     }
   }
 });
 
-// Handle token registration
+
 router.post('/registerToken', (req, res) => {
-  const token = req.body.token;
-  console.log('Received token:', token);
-  // Save the token to your database or perform any necessary actions
-  res.sendStatus(200); // Send a success response
+  const { token } = req.body;
+
+  if (req.isAuthenticated()) {
+    User.findByIdAndUpdate(req.user._id, { $addToSet: { fcmTokens: token } }, { new: true })
+      .then(user => {
+        res.status(200).send('Token updated successfully');
+      })
+      .catch(err => {
+        console.error('Error updating token:', err);
+        res.status(500).send('Error updating token');
+      });
+  } else {
+    res.status(401).send('User not authenticated');
+  }
 });
 
-router.get('/me' ,(req,res)=>{
+
+
+
+
+// i am also seeingt the following
+
+
+router.get('/me' ,isDispatcher,(req,res)=>{
   res.render('me')
 })
 
