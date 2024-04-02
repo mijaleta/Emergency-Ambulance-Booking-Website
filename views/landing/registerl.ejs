@@ -9,7 +9,7 @@
     <meta content="Free HTML Templates" name="description">
 
     <!-- Favicon -->
-    <link href="imgl/favicon.ico" rel="icon">
+    <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -22,14 +22,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="libl/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="libl/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="cssl/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="cssl/style.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -75,7 +75,7 @@
     <div class="container-fluid sticky-top bg-white shadow-sm mb-5">
         <div class="container">
             <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
-                <a href="/" class="navbar-brand">
+                <a href="index.html" class="navbar-brand">
                     <h1 class="m-0 text-uppercase text-success"><i class="fa fa-clinic-medical me-2"></i>Ambulance</h1>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -87,7 +87,7 @@
                         <a href="#about" class="nav-item nav-link">About</a>
                         <a href="#service" class="nav-item nav-link">Service</a>
                         <a href="#contact" class="nav-item nav-link active">Contact</a>
-                        <a href="/" class="nav-item nav-link">Login</a>
+                        <a href="login.html" class="nav-item nav-link">Login</a>
 
                     </div>
                 </div>
@@ -97,47 +97,48 @@
     <!-- Navbar End -->
 
 
-    <!-- Contact Start -->
+    <!-- Register Start -->
     <div class="container-fluid pt-5">
         <div class="container">
             <div class="text-center mx-auto mb-5" style="max-width: 500px;">
                 <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5">Please Fill Your
                     Information</h5>
-                <h1 class="display-4"> Login</h1>
+                <h1 class="display-4"> Register</h1>
             </div>
         </div>
 
         <div class="row justify-content-center position-relative" style="margin-top: -100px; z-index: 1;">
             <div class="col-lg-8">
                 <div class="bg-white rounded p-5 m-5 mb-0">
-                    <form action="login" method="post">
+                    <form>
                         <div class="row g-3">
                             <div class="col-12">
-                                <input type="tel" class="form-control bg-light border-0" name="username" placeholder=" username"
+                                <input type="text" class="form-control bg-light border-0" placeholder=" Full Name"
                                     style="height: 55px;">
                             </div>
                             <div class="col-12 ">
-                                <input type="password" class="form-control bg-light border-0" name="password" placeholder="Password"
+                                <input type="email" class="form-control bg-light border-0" placeholder="Your Email"
                                     style="height: 55px;">
                             </div>
-
                             <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Login</button>
+                                <input type="tel" class="form-control bg-light border-0" placeholder=" Phone Number"
+                                    style="height: 55px;">
                             </div>
-                            <div class="row">
-                                <div class="col-7">
-                                    <p>Don't have an account? <a href="/registerl" class="nav-item nav-link">Sign
-                                            up</a></p>
-                                </div>
-
-                                <div class="col-5"  p>
-                                    <a href="forgot-password" class="btn btn-secondary mt-4 py-3" >
-                                        Forgot Password </a>
-                                </div>
+                            <div class="col-12 ">
+                                <input type="password" class="form-control bg-light border-0" placeholder="Password"
+                                    style="height: 55px;">
                             </div>
+                            <div class="col-12 ">
+                                <input type="password" class="form-control bg-light border-0"
+                                    placeholder="Confirm Password" style="height: 55px;">
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit">Sign up</button>
 
-
-
+                            </div>
+                            <div class="col-12 ">
+                                <p>Already have an account?<a href="login.html" class="nav-item nav-link">Login</a></p>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -145,7 +146,7 @@
         </div>
     </div>
     </div>
-    <!-- Contact End -->
+    <!-- Register End -->
 
 
     <!-- Footer Start -->
@@ -199,15 +200,15 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="libl/easing/easing.min.js"></script>
-    <script src="libl/waypoints/waypoints.min.js"></script>
-    <script src="libl/owlcarousel/owl.carousel.min.js"></script>
-    <script src="libl/tempusdominus/js/moment.min.js"></script>
-    <script src="libl/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="libl/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="jsl/main.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

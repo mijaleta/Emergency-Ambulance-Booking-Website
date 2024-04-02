@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer')
 const router = express.Router();
 const User = require('../models/user')
 const Ambulance = require('../models/ambulance')
+const Contact = require('../models/contact')
 const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
@@ -17,12 +18,16 @@ router.get('/',(req,res)=>{res.render('indexl')})
 router.get('/login', (req, res) => {
 res.render('loginl'); // Renders the index view
 });
+router.get('/forgot-password', (req, res) => {
+  res.render('forgetPasswordl'); // Renders the index view
+  });
 router.get('/about', (req, res) => {
   res.render('aboutl'); // Renders the index view
   });
-  router.get('/contact', (req, res) => {
-    res.render('contactl'); // Renders the index view
-    });
+  
+  // router.get('/contact', (req, res) => {
+  //   res.render('contactl'); // Renders the index view
+  //   });
     router.get('/service', (req, res) => {
       res.render('servicel'); // Renders the index view
       });
@@ -32,6 +37,28 @@ router.get('/about', (req, res) => {
       // router.get('/register', (req, res) => {
       //   res.render('registerl'); // Renders the index view
       //   });
+      router.post('/contact', (req, res) => {
+        const { name, email, subject, message } = req.body;
+    
+        // Create a new Contact object
+        const contact = new Contact({
+            name,
+            email,
+            subject,
+            message
+        });
+    
+        // Save the form data to MongoDB
+        contact.save()
+            .then(() => {
+                res.send('Form submitted successfully!');
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).send('Error submitting form data');
+            });
+    });
+    
 
 // Route to handle detailed view of a booking request
 router.get('/booking-requests/:id', async (req, res) => {
@@ -478,9 +505,9 @@ router.get('/change-password/:userId', (req, res) => {
 
   // reset password logic here
   // Route for handling forgot password request
-  router.get('/forgot-password', (req, res) => {
-    res.render('forgotPassword');
-  });
+  // router.get('/forgot-password', (req, res) => {
+  //   res.render('forgotPassword');
+  // });
   
 // Route to handle forgot password form submission
 router.post('/forgot-password', async (req, res) => {
