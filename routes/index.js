@@ -347,6 +347,20 @@ router.post('/updateAmbulance', async (req, res) => {
 });
   // retrieve ambulance data 
   // Route to fetch ambulance information
+
+  
+// DELETE ambulance route
+router.delete('/deleteAmbulance/:ambulanceId', async (req, res) => {
+  try {
+    const { ambulanceId } = req.params;
+    await Ambulance.findByIdAndDelete(ambulanceId);
+    res.status(200).json({ message: 'Ambulance deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 router.get('/dispatcherAmbulance', async (req, res) => {
   try {
     const ambulances = await Ambulance.find();
@@ -619,12 +633,6 @@ router.post('/forgot-password', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
-
-
-
-
-
-
 
 
 

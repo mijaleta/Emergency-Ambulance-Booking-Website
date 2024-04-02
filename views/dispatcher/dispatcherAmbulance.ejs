@@ -178,6 +178,10 @@
                         </div>
                         </div>
 
+
+
+
+
                     <!-- Registration Form Modal -->
                     <div class="modal" id="dispatchModal">
                         <div class="modal-dialog">
@@ -335,6 +339,8 @@
 </div>
 
 
+
+
                     <div class="row mt-4">
                         <!-- Ambulance Information section -->
                         <div class="col-md-12">
@@ -376,59 +382,8 @@
 
 
 
-<!-- the following is the style for the patient request  -->
+<!-- end of patient request  detail -->
 
-
-
-                    <div class="row mt-4">
-                        <!-- Patient request information  -->
-                        <div class="col-md-12">
-                                <div class="white_shd full margin_bottom_30">
-                                <div class="full padding_infor_info">
-                                    <h2 class="mb-4">Patient Request</h2>
-                                <div class="table_row">
-                                    <div class="table-responsive">
-                                            <table class="table table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th>Location </th>
-                                                <th>Contact Information</th>
-                                                <th>Urgency Level</th>
-                                                <!-- <th>time</th> -->
-                                                <th>action</th>
-
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <% bookingRequests.forEach(bookingRequest => { %>
-                                                <tr>
-                                                    <td><%= bookingRequest.location %></td>
-                                                    <td><%= bookingRequest.contactInfo %></td>
-                                                    <td><%= bookingRequest.urgencyLevel %></td>
-                                                    <!-- <td><%= bookingRequest.createdAt %></td> -->
-                                                    <td>
-                                                        <!-- <button onclick="window.location.href='/booking-requests/<%= bookingRequest._id %>'">View Details</button>
-                                                        <a href="/booking-requests/<%= bookingRequest._id %>" class="button">View Details</a> -->
-                                                        <button class="btn btn-primary" >
-                                                            <a href="/booking-requests/<%= bookingRequest._id %>" target="_blank" >View Details</a>
-                                                        </button>
-                                                        
-                                                        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" >detail</button> -->
-                                                        <button class="btn btn-success">Suspend</button>
-                                                        <button class="btn btn-danger" onclick="deleteBookingRequest('<%= bookingRequest._id %>')">Delete</button>
-
-                                                        <!-- <button class="btn btn-danger" >Delete</button> -->
-                                                      </td>
-                                                </tr>
-                                            <% }); %>
-                                        </tbody>
-                                            </table>
-                                    </div>
-                                </div>
-                                </div>
-                                </div>
-                        </div>
-                    </div>
                     </div>
 
                     <!-- footer -->
@@ -476,25 +431,6 @@ function deleteAmbulance(ambulanceId) {
     }
 }
 
-
-function deleteBookingRequest(bookingRequestId) {
-    if (confirm('Are you sure you want to delete this booking request?')) {
-        fetch('/booking-requests/' + bookingRequestId, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (response.ok) {
-                // Refresh the page or update the booking request list as needed
-                location.reload(); // Refresh the page after deletion
-            } else {
-                console.error('Failed to delete booking request');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-}
 
 
     </script>
