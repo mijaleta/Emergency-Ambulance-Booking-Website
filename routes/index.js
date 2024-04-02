@@ -61,15 +61,28 @@ router.get('/about', (req, res) => {
     
 
 // Route to handle detailed view of a booking request
+// router.get('/booking-requests/:id', async (req, res) => {
+//   try {
+//       const bookingRequest = await BookingRequest.findById(req.params.id).exec();
+//       res.render('bookingRequestDetail', { bookingRequest });
+//   } catch (error) {
+//       console.error("Error retrieving booking request details:", error);
+//       res.status(500).send("Internal server error");
+//   }
+// });
+
+
+// Backend route to fetch booking request details
 router.get('/booking-requests/:id', async (req, res) => {
   try {
       const bookingRequest = await BookingRequest.findById(req.params.id).exec();
-      res.render('bookingRequestDetail', { bookingRequest });
+      res.json({ bookingRequest });
   } catch (error) {
       console.error("Error retrieving booking request details:", error);
-      res.status(500).send("Internal server error");
+      res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 // Route to handle deletion of a booking request
 router.delete('/booking-requests/:id', async (req, res) => {

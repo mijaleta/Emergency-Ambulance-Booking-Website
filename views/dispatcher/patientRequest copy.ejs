@@ -143,38 +143,7 @@
             </div>
 
 
-<!-- copy -->
-<!-- detail Modal -->
-<div class="container mt-5">
-                        
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel"><strong>Detailed Information</strong></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-            <ul>
-                <li class="clr1"><strong class="clr">Location:</strong> Saris</li>
-                <li class="clr1"><strong class="clr">Contact Info:</strong> 0969362312</li>
-                <li class="clr1"><strong class="clr">Urgency Level:</strong> Medium</li>
-                <li class="clr1"><strong class="clr">Status:</strong> Pending</li>
-                <li class="clr1"><strong class="clr">Created At:</strong>23/07/2016</li>
-            </ul>
-            </div>
-            <div class="modal-footer d-flex">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Back</button>
-            </div>
-        </div>
-        </div>
-    </div>
-</div>
-<!-- end copy -->
+
 
 
 <!-- request detail -->
@@ -182,7 +151,6 @@
 <!-- Your existing dashboard HTML code here -->
 
 <!-- Detail Modal -->
-
 <div class="modal fade" id="bookingRequestModal" tabindex="-1" role="dialog" aria-labelledby="bookingRequestModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -194,11 +162,11 @@
             </div>
             <div class="modal-body">
                 <ul>
-                    <li  ><strong >Location:</strong> <span id="location"></span></li>
-                    <li  ><strong >Contact Info:</strong> <span id="contactInfo"></span></li>
-                    <li  ><strong >Urgency Level:</strong> <span id="urgencyLevel"></span></li>
-                    <li  ><strong >Status:</strong> <span id="status"></span></li>
-                    <li  ><strong >Created At:</strong> <span id="createdAt"></span></li>
+                    <li><strong>Location:</strong> <span id="location"></span></li>
+                    <li><strong>Contact Info:</strong> <span id="contactInfo"></span></li>
+                    <li><strong>Urgency Level:</strong> <span id="urgencyLevel"></span></li>
+                    <li><strong>Status:</strong> <span id="status"></span></li>
+                    <li><strong>Created At:</strong> <span id="createdAt"></span></li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -209,12 +177,12 @@
     </div>
 </div>
 
-
-
-]
+<!-- end of patient request detail -->
 
 
 <!-- the following is the style for the patient request  -->
+
+
 
                     <div class="row mt-4">
                         <!-- Patient request information  -->
@@ -253,8 +221,7 @@
                                                                 <a href="/booking-requests/<%= bookingRequest._id %>" target="_blank" >View Details</a>
                                                             </button> -->
                                                             
-                                                            <!-- <button class="btn btn-primary" id="viewDetailButton" onclick="populateBookingRequestModal('<%= bookingRequest._id %>')">View Details</button> -->
-                                                            <button class="btn btn-primary viewDetailButton" data-booking-request-id="<%= bookingRequest._id %>">View Details</button>
+                                                            <button class="btn btn-primary" onclick="populateBookingRequestModal('<%= bookingRequest._id %>')">View Details</button>
 
                                                             <!-- <button type="button" class="btn btn-primary" data-toggle="modal" >detail</button> -->
                                                             <button class="btn btn-success">Suspend</button>
@@ -320,39 +287,30 @@ function deleteBookingRequest(bookingRequestId) {
 // JavaScript code
 
 // Function to populate the modal with booking request details
-        // Function to populate the modal with booking request details
-        function populateBookingRequestModal(bookingRequestId) {
-        // Fetch booking request details from the server
-        fetch(`/booking-requests/${bookingRequestId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch booking request details');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const bookingRequest = data.bookingRequest;
-                document.getElementById('location').textContent = bookingRequest.location;
-                document.getElementById('contactInfo').textContent = bookingRequest.contactInfo;
-                document.getElementById('urgencyLevel').textContent = bookingRequest.urgencyLevel;
-                document.getElementById('status').textContent = bookingRequest.status;
-                document.getElementById('createdAt').textContent = bookingRequest.createdAt;
-                // Show the modal
-                $('#bookingRequestModal').modal('show');
-            })
-            .catch(error => {
-                console.error('Error fetching booking request details:', error);
-                alert('Failed to fetch booking request details');
-            });
-    }
+function populateBookingRequestModal(bookingRequest) {
+    document.getElementById('location').textContent = bookingRequest.location;
+    document.getElementById('contactInfo').textContent = bookingRequest.contactInfo;
+    document.getElementById('urgencyLevel').textContent = bookingRequest.urgencyLevel;
+    document.getElementById('status').textContent = bookingRequest.status;
+    document.getElementById('createdAt').textContent = bookingRequest.createdAt;
+}
 
-    // Event listener for the "View Details" button
-    document.addEventListener('click', function(event) {
-        if (event.target.matches('.viewDetailButton')) {
-            const bookingRequestId = event.target.dataset.bookingRequestId;
-            populateBookingRequestModal(bookingRequestId);
-        }
-    });
+// Event listener for the "View Detail" button
+document.getElementById('viewDetailButton').addEventListener('click', function() {
+    // Fetch booking request details from the server (assuming the bookingRequest variable is available)
+    fetch('/booking-requests/' + bookingRequest.id)
+        .then(response => response.json())
+        .then(data => {
+            // Populate the modal with the fetched booking request details
+            populateBookingRequestModal(data.bookingRequest);
+            // Show the modal
+            $('#bookingRequestModal').modal('show');
+        })
+        .catch(error => {
+            console.error('Error fetching booking request details:', error);
+        });
+});
+
 
     </script>
 
