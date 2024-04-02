@@ -51,7 +51,7 @@ router.get('/about', (req, res) => {
         // Save the form data to MongoDB
         contact.save()
             .then(() => {
-                res.send('Form submitted successfully!');
+                res.render('contact-success')
             })
             .catch(err => {
                 console.error(err);
@@ -549,7 +549,7 @@ router.post('/forgot-password', async (req, res) => {
 
     if (req.accepts('html')) {
       // Redirect to a confirmation message for web clients
-      res.send('Password reset email sent! Please check your inbox.');
+      res.render('email-success ')
     } else {
       // Respond with JSON for API clients (e.g., mobile app)
       res.json({ success: true, message: 'Password reset email sent!' });
