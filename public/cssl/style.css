@@ -1,6 +1,6 @@
 /********** Template CSS **********/
 :root {
-    --primary: #13C5DD;
+    --primary: #6fb8c4;
     --secondary: #354F8E;
     --light: #EFF5F9;
     --dark: #1D2A4D;
@@ -52,7 +52,7 @@
     border-radius: 50% 50% 0 0;
     z-index: 99;
 }
-
+ 
 .navbar-light .navbar-nav .nav-link {
     font-family: 'Jost', sans-serif;
     position: relative;
@@ -95,9 +95,11 @@
         padding: 10px 0;
     }
 }
-
 .hero-header {
-    background: url(../imgl/ambulance-ad.jpg) top right no-repeat;
+    height: 100vh;
+}
+.hero-header {
+    background: url( "https://ayo.ju.edu.et/assets/assets/image/aayyoo/Topview.jpg") top right no-repeat;
     background-size: cover;
 }
 
@@ -176,32 +178,5 @@
     background: var(--dark);
 }
 
-.testimonial-carousel .owl-dots {
-    margin-top: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-.testimonial-carousel .owl-dot {
-    position: relative;
-    display: inline-block;
-    margin: 0 5px;
-    width: 20px;
-    height: 20px;
-    background: var(--light);
-    border: 2px solid var(--primary);
-    border-radius: 20px;
-    transition: .5s;
-}
-
-.testimonial-carousel .owl-dot.active {
-    width: 40px;
-    height: 40px;
-    background: var(--primary);
-}
-
-.testimonial-carousel .owl-item img {
-    width: 150px;
-    height: 150px;
-}
+ 

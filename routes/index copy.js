@@ -9,7 +9,6 @@ const Ambulance = require('../models/ambulance')
 const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
-const Notification = require('../models/Notification');
 
 
 
@@ -788,6 +787,7 @@ router.post('/registerToken', (req, res) => {
 
 
 
+// for notification purpose
 
 
 // i am also seeingt the following
