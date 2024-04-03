@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer')
 const router = express.Router();
 const User = require('../models/user')
 const Ambulance = require('../models/ambulance')
+const Contact = require('../models/contact')
 const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
@@ -17,12 +18,16 @@ router.get('/',(req,res)=>{res.render('indexl')})
 router.get('/login', (req, res) => {
 res.render('loginl'); // Renders the index view
 });
+router.get('/forgot-password', (req, res) => {
+  res.render('forgetPasswordl'); // Renders the index view
+  });
 router.get('/about', (req, res) => {
   res.render('aboutl'); // Renders the index view
   });
-  router.get('/contact', (req, res) => {
-    res.render('contactl'); // Renders the index view
-    });
+  
+  // router.get('/contact', (req, res) => {
+  //   res.render('contactl'); // Renders the index view
+  //   });
     router.get('/service', (req, res) => {
       res.render('servicel'); // Renders the index view
       });
@@ -32,17 +37,52 @@ router.get('/about', (req, res) => {
       // router.get('/register', (req, res) => {
       //   res.render('registerl'); // Renders the index view
       //   });
+      router.post('/contact', (req, res) => {
+        const { name, email, subject, message } = req.body;
+    
+        // Create a new Contact object
+        const contact = new Contact({
+            name,
+            email,
+            subject,
+            message
+        });
+    
+        // Save the form data to MongoDB
+        contact.save()
+            .then(() => {
+                res.render('contact-success')
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).send('Error submitting form data');
+            });
+    });
+    
 
 // Route to handle detailed view of a booking request
+// router.get('/booking-requests/:id', async (req, res) => {
+//   try {
+//       const bookingRequest = await BookingRequest.findById(req.params.id).exec();
+//       res.render('bookingRequestDetail', { bookingRequest });
+//   } catch (error) {
+//       console.error("Error retrieving booking request details:", error);
+//       res.status(500).send("Internal server error");
+//   }
+// });
+
+
+// Backend route to fetch booking request details
 router.get('/booking-requests/:id', async (req, res) => {
   try {
       const bookingRequest = await BookingRequest.findById(req.params.id).exec();
-      res.render('bookingRequestDetail', { bookingRequest });
+      res.json({ bookingRequest });
   } catch (error) {
       console.error("Error retrieving booking request details:", error);
-      res.status(500).send("Internal server error");
+      res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 // Route to handle deletion of a booking request
 router.delete('/booking-requests/:id', async (req, res) => {
@@ -320,6 +360,20 @@ router.post('/updateAmbulance', async (req, res) => {
 });
   // retrieve ambulance data 
   // Route to fetch ambulance information
+
+  
+// DELETE ambulance route
+router.delete('/deleteAmbulance/:ambulanceId', async (req, res) => {
+  try {
+    const { ambulanceId } = req.params;
+    await Ambulance.findByIdAndDelete(ambulanceId);
+    res.status(200).json({ message: 'Ambulance deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 router.get('/dispatcherAmbulance', async (req, res) => {
   try {
     const ambulances = await Ambulance.find();
@@ -478,9 +532,9 @@ router.get('/change-password/:userId', (req, res) => {
 
   // reset password logic here
   // Route for handling forgot password request
-  router.get('/forgot-password', (req, res) => {
-    res.render('forgotPassword');
-  });
+  // router.get('/forgot-password', (req, res) => {
+  //   res.render('forgotPassword');
+  // });
   
 // Route to handle forgot password form submission
 router.post('/forgot-password', async (req, res) => {
@@ -522,7 +576,7 @@ router.post('/forgot-password', async (req, res) => {
 
     if (req.accepts('html')) {
       // Redirect to a confirmation message for web clients
-      res.send('Password reset email sent! Please check your inbox.');
+      res.render('email-success ')
     } else {
       // Respond with JSON for API clients (e.g., mobile app)
       res.json({ success: true, message: 'Password reset email sent!' });
@@ -592,12 +646,6 @@ router.post('/forgot-password', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
-
-
-
-
-
-
 
 
 

@@ -336,7 +336,9 @@ function deleteBookingRequest(bookingRequestId) {
                 document.getElementById('contactInfo').textContent = bookingRequest.contactInfo;
                 document.getElementById('urgencyLevel').textContent = bookingRequest.urgencyLevel;
                 document.getElementById('status').textContent = bookingRequest.status;
-                document.getElementById('createdAt').textContent = bookingRequest.createdAt;
+            // Convert createdAt to day, month, year format
+            const createdAt = new Date(bookingRequest.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('createdAt').textContent = createdAt;
                 // Show the modal
                 $('#bookingRequestModal').modal('show');
             })

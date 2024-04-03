@@ -327,7 +327,7 @@
             <div class="row justify-content-center position-relative" style="margin-top: -50px; z-index: 1;">
                 <div class="col-lg-8">
                     <div class="bg-white rounded p-5 m-5 mb-0">
-                        <form action="contact" method="post">
+                        <!-- <form action="contact" method="post">
                             <div class="row g-3">
                                 <div class="col-12 col-sm-6">
                                     <input type="text" class="form-control bg-light border-0" name="name" placeholder="Your Name"
@@ -349,7 +349,57 @@
                                     <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
                                 </div>
                             </div>
+                        </form> -->
+
+                        <form id="contactForm" action="contact" method="post">
+                            <div class="row g-3">
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" class="form-control bg-light border-0" name="name" id="name" placeholder="Your Name" style="height: 55px;">
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="email" class="form-control bg-light border-0" name="email" id="email" placeholder="Your Email" style="height: 55px;">
+                                </div>
+                                <div class="col-12">
+                                    <input type="text" class="form-control bg-light border-0" name="subject" id="subject" placeholder="Subject" style="height: 55px;">
+                                </div>
+                                <div class="col-12">
+                                    <textarea class="form-control bg-light border-0" name="message" id="message" rows="5" placeholder="Message"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3" type="submit" id="submitButton">Send Message</button>
+                                </div>
+                            </div>
                         </form>
+                        
+                        <script>
+                            document.getElementById('contactForm').addEventListener('submit', function(event) {
+                                // Prevent form submission
+                                event.preventDefault();
+                                
+                                // Validate form fields
+                                var name = document.getElementById('name').value.trim();
+                                var email = document.getElementById('email').value.trim();
+                                var subject = document.getElementById('subject').value.trim();
+                                var message = document.getElementById('message').value.trim();
+                                
+                                // Check if any field is empty
+                                if (name === '' || email === '' || subject === '' || message === '') {
+                                    alert('All fields are required!');
+                                    return;
+                                }
+                                
+                                // Check email format
+                                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                if (!emailRegex.test(email)) {
+                                    alert('Please enter a valid email address!');
+                                    return;
+                                }
+                                
+                                // If all validations pass, submit the form
+                                document.getElementById('contactForm').submit();
+                            });
+                        </script>
+                        
                     </div>
                 </div>
             </div>
