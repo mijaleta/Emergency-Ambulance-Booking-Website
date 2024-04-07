@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduled Bookings</title>
+</head>
+<body>
+    <h1>Scheduled Bookings</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Booking Request</th>
+                <th>Ambulance</th>
+                <th>Driver</th>
+                <th>Nurse</th>
+                <th>Pickup Time</th>
+                <th>Destination</th>
+                <th>Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <% schedules.forEach(schedule => { %>
+                <tr>
+                    <td><%= schedule.bookingRequest.urgencyLevel %></td>
+                    <td><%= schedule.ambulance.type %></td>
+                    <td><%= schedule.driver.name %></td>
+                    <% if (schedule.nurse) { %>
+                        <td><%= schedule.nurse.name %></td>
+                    <% } else { %>
+                        <td>N/A</td>
+                    <% } %>
+                    <td><%= schedule.pickupTime %></td>
+                    <td><%= schedule.destination %></td>
+                    <td><%= schedule.status %></td>
+
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>

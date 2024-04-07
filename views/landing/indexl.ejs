@@ -370,8 +370,57 @@
                                 </div>
                             </div>
                         </form>
+                        <style>
+
+</style>
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        // Prevent form submission
+        event.preventDefault();
+
+        // Validate form fields
+        var name = document.getElementById('name').value.trim();
+        var email = document.getElementById('email').value.trim();
+        var subject = document.getElementById('subject').value.trim();
+        var message = document.getElementById('message').value.trim();
+
+        // Check if any field is empty
+        if (name === '') {
+             document.getElementById('name').classList.add('error');
+
+            document.getElementById('name').focus();
+            return;
+        }
+        
+        if (email === '') {
+            document.getElementById('email').focus();
+            return;
+        }
+
+        if (subject === '') {
+            document.getElementById('subject').focus();
+            return;
+        }
+
+        if (message === '') {
+            document.getElementById('message').focus();
+            return;
+        }
+
+        // Check email format
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            document.getElementById('email').focus();
+            return;
+        }
+
+        // If all validations pass, submit the form
+        document.getElementById('contactForm').submit();
+    });
+</script>
+
                         
-                        <script>
+                        <!-- <script>
                             document.getElementById('contactForm').addEventListener('submit', function(event) {
                                 // Prevent form submission
                                 event.preventDefault();
@@ -398,7 +447,9 @@
                                 // If all validations pass, submit the form
                                 document.getElementById('contactForm').submit();
                             });
-                        </script>
+                        </script> -->
+
+
                         
                     </div>
                 </div>

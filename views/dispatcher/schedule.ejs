@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>scheduling for the emergency booking </title>
+</head>
+<body>
+    
+<!-- views/schedule.ejs -->
+<form action="/schedule" method="post">
+    <!-- Dropdown for booking requests -->
+    
+    <label for="ambulance">Booking:</label>
+    <select name="bookingRequest" multiple>
+        <% bookings.forEach(booking => { %>
+            <option value="<%= booking._id %>"><%= booking.urgencyLevel %></option>
+        <% }); %>
+    </select>
+    <label for="ambulance">Ambulance:</label>
+
+    <select name="ambulance"  multiple>
+        <% ambulances.forEach(ambulance => { %>
+            <option value="<%= ambulance._id %>"><%= ambulance.type %></option>
+        <% }); %>
+    </select>
+    <label for="ambulance">Drivers:</label>
+
+    <select name="driver" multiple>
+        <% drivers.forEach(driver => { %>
+            <option value="<%= driver._id %>"><%= driver.name %></option>
+        <% }); %>
+    </select>
+    <label for="ambulance">Nurse:</label>
+
+    
+    <select name="nurse" multiple>
+        <% nurses.forEach(nurse => { %>
+            <option value="<%= nurse._id %>"><%= nurse.name %></option>
+        <% }); %>
+    </select>
+    <select name="status" id="status">
+        <option value="assigned">Assigned</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
+    </select>
+
+    <label for="pickupTime">Pickup Time:</label>
+    <input type="datetime-local" name="pickupTime" id="pickupTime">
+
+    <label for="destination">Destination:</label>
+    <input type="text" name="destination" id="destination">
+
+    <!-- Other dropdowns for ambulance, driver, nurse, status, pickup time, destination -->
+
+    <button type="submit">Schedule</button>
+</form>
+
+
+</body>
+</html>
