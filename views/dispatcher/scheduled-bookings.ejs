@@ -10,32 +10,33 @@
     <table>
         <thead>
             <tr>
-                <th>Booking Request</th>
+                <th>Day</th>
                 <th>Ambulance</th>
                 <th>Driver</th>
                 <th>Nurse</th>
-                <th>Pickup Time</th>
-                <th>Destination</th>
-                <th>Status</th>
-
+                <th>Time</th>
             </tr>
         </thead>
         <tbody>
-            <% schedules.forEach(schedule => { %>
-                <tr>
-                    <td><%= schedule.bookingRequest.urgencyLevel %></td>
-                    <td><%= schedule.ambulance.type %></td>
-                    <td><%= schedule.driver.name %></td>
-                    <% if (schedule.nurse) { %>
-                        <td><%= schedule.nurse.name %></td>
-                    <% } else { %>
-                        <td>N/A</td>
+            <% let first = true; %>
+            <% Object.keys(schedules).forEach(day => { %>
+                <% schedules[day].forEach((schedule, index) => { %>
+                    <% if (first) { %>
+                        <td rowspan="<%= schedules[day].length %>"><%= day %></td>
+                        <% first = false; %>
                     <% } %>
-                    <td><%= schedule.pickupTime %></td>
-                    <td><%= schedule.destination %></td>
-                    <td><%= schedule.status %></td>
-
-                </tr>
+                    <tr>
+                        <td><%= schedule.ambulance.type %></td>
+                        <td><%= schedule.driver.name %></td>
+                        <% if (schedule.nurse) { %>
+                            <td><%= schedule.nurse.name %></td>
+                        <% } else { %>
+                            <td>N/A</td>
+                        <% } %>
+                        <td><%= formatTime(schedule.pickupTime) %></td>
+                    </tr>
+                <% }); %>
+                <% first = true; %>
             <% }); %>
         </tbody>
     </table>

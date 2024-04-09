@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- basic -->
     <meta charset="utf-8">
@@ -29,287 +30,374 @@
     <!-- custom css -->
     <link rel="stylesheet" href="../css/custom.css" />
     <link rel="stylesheet" href="../css/custom/register.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+
 <body class="dashboard dashboard_1">
     <div class="full_container">
         <div class="inner_container">
-        <!-- Sidebar  -->
-        <nav id="sidebar">
-            <div class="sidebar_blog_1">
-                <div class="sidebar-header">
-                    <div class="logo_section">
-                    <a href="/"><img class="logo_icon img-responsive" src="../images/logo/logo_icon.png" alt="#" /></a>
+            <!-- Sidebar  -->
+            <nav id="sidebar">
+                <div class="sidebar_blog_1">
+                    <div class="sidebar-header">
+                        <div class="logo_section">
+                            <a href="/"><img class="logo_icon img-responsive" src="../images/logo/logo_icon.png"
+                                    alt="#" /></a>
+                        </div>
+                    </div>
+                    <div class="sidebar_user_info">
+                        <div class="icon_setting"></div>
+                        <div class="user_profle_side">
+                            <div class="user_img"><img class="img-responsive" src="../images/layout_img/user.jpg"
+                                    alt="#" /></div>
+                            <div class="user_info">
+                                <h6>Dispatcher</h6>
+                                <p><span class="online_animation"></span> Online</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="sidebar_user_info">
-                    <div class="icon_setting"></div>
-                    <div class="user_profle_side">
-                    <div class="user_img"><img class="img-responsive" src="../images/layout_img/user.jpg" alt="#" /></div>
-                    <div class="user_info">
-                        <h6>Dispatcher</h6>
-                        <p><span class="online_animation"></span> Online</p>
-                    </div>
-                    </div>
+                <div class="sidebar_blog_2">
+                    <h4>Ambulance Mgt</h4>
+                    <ul class="list-unstyled components">
+                        <li class="active">
+                            <a href="dispatcherDashboard" aria-expanded="false"><i
+                                    class="fa fa-dashboard yellow_color"></i> <span>Dispatcher Dashboard</span></a>
+                        </li>
+                        <li><a href="dispatcherAmbulance"><i class="fa fa-table purple_color2"></i>
+                                <span>Ambulances</span></a></li>
+                        <li><a href="patientRequest"><i class="fa fa-table purple_color2"></i> <span>Patient
+                                    Request</span></a></li>
+                        <li><a href="ArchivedPatientRequest"><i class="fa fa-table purple_color2"></i> <span>Archived
+                                    Patient Request</span></a></li>
+                        <li><a href="dispatcherContact"><i class="fa fa-paper-plane red_color"></i>
+                                <span>Contact</span></a></li>
+                        <li><a href="dispatcherMap"><i class="fa fa-map purple_color2"></i> <span>Map</span></a></li>
+                        <li><a href="dispatcherSettings"><i class="fa fa-cog yellow_color"></i>
+                                <span>Settings</span></a></li>
+                    </ul>
                 </div>
-            </div>
-            <div class="sidebar_blog_2">
-                <h4>Ambulance Mgt</h4>
-                <ul class="list-unstyled components">
-                    <li class="active">
-                    <a href="dispatcherDashboard" aria-expanded="false"><i class="fa fa-dashboard yellow_color"></i> <span>Dispatcher Dashboard</span></a></li>
-                    <li><a href="dispatcherAmbulance"><i class="fa fa-table purple_color2"></i> <span>Ambulances</span></a></li>
-                    <li><a href="patientRequest"><i class="fa fa-table purple_color2"></i> <span>Patient Request</span></a></li>
-                    <li><a href="dispatcherContact"><i class="fa fa-paper-plane red_color"></i> <span>Contact</span></a></li>
-                    <li><a href="dispatcherMap"><i class="fa fa-map purple_color2"></i> <span>Map</span></a></li>
-                    <li><a href="dispatcherSettings"><i class="fa fa-cog yellow_color"></i> <span>Settings</span></a></li>
-                </ul>
-            </div>
-        </nav>
-        <!-- end sidebar -->
-        <!-- right content -->
-        <div id="content">
-            <!-- topbar -->
-            <div class="topbar">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <div class="full">
-                    <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
-                    <div class="logo_section">
-                        <a href="dispatcherDashboard"><img class="img-responsive" src="../images/logo/logo11.png" alt="#" /></a>
-                    </div>
-                    <div class="right_topbar">
-                        <div class="icon_info">
-                            <ul>
-                                <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">0</span></a></li>
-                                <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
-                                <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
-                            </ul>
-                            <ul class="user_profile_dd">
-                                <li>
-                                <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="../images/layout_img/user.jpg" alt="#" /><span class="name_user">Mr. X</span></a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="dispatcherDashboard">My Profile</a>
-                                    <a class="dropdown-item" href="dispatcherSettings">Settings</a>
-                                    <a class="dropdown-item" href="dispatcherDashboard">Help</a>
-                                    <a class="dropdown-item" href="logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
+            </nav>
+            <!-- end sidebar -->
+            <!-- right content -->
+            <div id="content">
+                <!-- topbar -->
+                <div class="topbar">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <div class="full">
+                            <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i
+                                    class="fa fa-bars"></i></button>
+                            <div class="logo_section">
+                                <a href="dispatcherDashboard"><img class="img-responsive"
+                                        src="../images/logo/logo11.png" alt="#" /></a>
+                            </div>
+                            <div class="right_topbar">
+                                <div class="icon_info">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">0</span></a>
+                                        </li>
+                                        <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a>
+                                        </li>
+                                    </ul>
+                                    <ul class="user_profile_dd">
+                                        <li>
+                                            <a class="dropdown-toggle" data-toggle="dropdown"><img
+                                                    class="img-responsive rounded-circle"
+                                                    src="../images/layout_img/user.jpg" alt="#" /><span
+                                                    class="name_user">Mr. X</span></a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="dispatcherDashboard">My Profile</a>
+                                                <a class="dropdown-item" href="dispatcherSettings">Settings</a>
+                                                <a class="dropdown-item" href="dispatcherDashboard">Help</a>
+                                                <a class="dropdown-item" href="logout"><span>Log Out</span> <i
+                                                        class="fa fa-sign-out"></i></a>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
-                                </li>
-                            </ul>
+                            </div>
                         </div>
-                    </div>
-                    </div>
-                </nav>
-            </div>
-            <!-- end topbar -->
-            <!-- dashboard inner -->
+                    </nav>
+                </div>
+                <!-- end topbar -->
+                <!-- dashboard inner -->
 
-            <!-- dashboard inner -->
-            <div class="midde_cont">
-                <div class="container-fluid">
-                    <div class="row column_title">
-                    <div class="col-md-12">
-                        <div class="page_title">
-                            <h2>Dispatcher</h2>
-                        </div>
-                    </div>
-                    </div>
-                    <!-- <a href="./register.html" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add User</a>
-                    <a href="./index.html" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Home</a> -->
-        
-                    <!-- popup start -->
-
-                    <div class="d-flex">
-                        <div class="container mt-2">
-                            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registrationModal">
-                            Add Ambulance</button> -->
+                <!-- dashboard inner -->
+                <div class="midde_cont">
+                    <div class="container-fluid">
+                        <div class="row column_title">
+                            <div class="col-md-12">
+                                <div class="page_title">
+                                    <h2>Dispatcher</h2>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- <div class="container mt-2">
+                        <div class="d-flex">
+                            <div class="container mt-2">
+                            </div>
+
+                            <!-- <div class="container mt-2">
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#dispatchModal">
                             Dispatch Ambulance</button>
                         </div> -->
+                        </div>
+
+                        <!-- popup end -->
+
                     </div>
-                    
-
-
-
-
-                    <!-- popup end -->
-
                 </div>
-            </div>
+
+
+                <!-- copy -->
+                <!-- detail Modal -->
+                <div class="container mt-5">
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel"><strong>Detailed Information</strong>
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul>
+                                        <li class="clr1"><strong class="clr">Location:</strong> Saris</li>
+                                        <li class="clr1"><strong class="clr">Contact Info:</strong> 0969362312</li>
+                                        <li class="clr1"><strong class="clr">Urgency Level:</strong> Medium</li>
+                                        <li class="clr1"><strong class="clr">Status:</strong> Pending</li>
+                                        <li class="clr1"><strong class="clr">Created At:</strong>23/07/2016</li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer d-flex">
+                                    <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Back</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end copy -->
+
+
+                <!-- request detail -->
+                <!-- dashboard.ejs -->
+                <!-- Your existing dashboard HTML code here -->
+
+                <!-- Detail Modal -->
+
+                <div class="modal fade" id="bookingRequestModal" tabindex="-1" role="dialog"
+                    aria-labelledby="bookingRequestModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="bookingRequestModalLabel"><strong>Booking Request
+                                        Details</strong></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <ul>
+                                    <li><strong>Location:</strong> <span id="location"></span></li>
+                                    <li><strong>Contact Info:</strong> <span id="contactInfo"></span></li>
+                                    <li><strong>Urgency Level:</strong> <span id="urgencyLevel"></span></li>
+                                    <li><strong>Status:</strong> <span id="status"></span></li>
+                                    <li><strong>Created At:</strong> <span id="createdAt"></span></li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Back</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
 
+                ]
 
 
-<!-- request detail -->
-<!-- dashboard.ejs -->
-<!-- Your existing dashboard HTML code here -->
+                <!-- the following is the style for the patient request  -->
 
-<!-- Detail Modal -->
-<div class="modal fade" id="bookingRequestModal" tabindex="-1" role="dialog" aria-labelledby="bookingRequestModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="bookingRequestModalLabel"><strong>Booking Request Details</strong></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <ul>
-                    <li><strong>Location:</strong> <span id="location"></span></li>
-                    <li><strong>Contact Info:</strong> <span id="contactInfo"></span></li>
-                    <li><strong>Urgency Level:</strong> <span id="urgencyLevel"></span></li>
-                    <li><strong>Status:</strong> <span id="status"></span></li>
-                    <li><strong>Created At:</strong> <span id="createdAt"></span></li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Back</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- end of patient request detail -->
-
-
-<!-- the following is the style for the patient request  -->
-
-
-
-                    <div class="row mt-4">
-                        <!-- Patient request information  -->
-                        <div class="col-md-12">
-                                <div class="white_shd full margin_bottom_30">
-                                <div class="full padding_infor_info">
-                                    <h2 class="mb-4">Patient Request</h2>
+                <div class="row mt-4">
+                    <!-- Patient request information  -->
+                    <div class="col-md-12">
+                        <div class="white_shd full margin_bottom_30">
+                            <div class="full padding_infor_info">
+                                <h2 class="mb-4">Patient Request</h2>
                                 <div class="table_row">
                                     <div class="table-responsive">
-                                            <table class="table table-striped">
+                                        <table class="table table-striped">
                                             <thead>
-                                            <tr>
-                                                <th>Location </th>
-                                                <th>Contact Information</th>
-                                                <th>Urgency Level</th>
-                                                <!-- <th>time</th> -->
-                                                <th>action</th>
+                                                <tr>
+                                                    <th>Location </th>
+                                                    <th>Contact Information</th>
+                                                    <th>Urgency Level</th>
+                                                    <!-- <th>time</th> -->
+                                                    <th>action</th>
 
-                                            </tr>
+                                                </tr>
                                             </thead>
-                                            <tbody>
-                                                <% 
-                                                    // Sort bookingRequests array by createdAt field in descending order
-                                                    bookingRequests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); 
-                                                    bookingRequests.forEach(bookingRequest => { 
-                                                %>
+                                            <tbody id="tableBody">
+                                                <% // Sort bookingRequests array by createdAt field in descending order
+                                                    bookingRequests.sort((a, b)=> new Date(b.createdAt) - new
+                                                    Date(a.createdAt));
+                                                    bookingRequests.forEach(bookingRequest => {
+                                                    %>
                                                     <tr>
-                                                        <td><%= bookingRequest.location %></td>
-                                                        <td><%= bookingRequest.contactInfo %></td>
-                                                        <td><%= bookingRequest.urgencyLevel %></td>
+                                                        <td>
+                                                            <%= bookingRequest.location %>
+                                                        </td>
+                                                        <td>
+                                                            <%= bookingRequest.contactInfo %>
+                                                        </td>
+                                                        <td>
+                                                            <%= bookingRequest.urgencyLevel %>
+                                                        </td>
                                                         <!-- <td><%= bookingRequest.createdAt %></td> -->
                                                         <td>
-                                                            <!-- <button onclick="window.location.href='/booking-requests/<%= bookingRequest._id %>'">View Details</button>
-                                                            <a href="/booking-requests/<%= bookingRequest._id %>" class="button">View Details</a> -->
-                                                            <!-- <button class="btn btn-primary" >
-                                                                <a href="/booking-requests/<%= bookingRequest._id %>" target="_blank" >View Details</a>
-                                                            </button> -->
-                                                            
-                                                            <button class="btn btn-primary" onclick="populateBookingRequestModal('<%= bookingRequest._id %>')">View Details</button>
+                                                            <button class="btn btn-primary viewDetailButton"
+                                                                data-booking-request-id="<%= bookingRequest._id %>">View
+                                                                Details</button>
 
                                                             <!-- <button type="button" class="btn btn-primary" data-toggle="modal" >detail</button> -->
                                                             <button class="btn btn-success">Suspend</button>
-                                                            <button class="btn btn-danger" onclick="deleteBookingRequest('<%= bookingRequest._id %>')">Delete</button>
-                                            
-                                                            <!-- <button class="btn btn-danger" >Delete</button> -->
+                                                            <form action="/archive/<%= bookingRequest._id %>" method="POST" style="display: inline;">
+                                                                <button type="submit" class="btn bg-secondary text-light">Archive</button>
+
+                                                            </form>
+                                                           
+                                                            
+
+
+                                                            <!-- PatientRequest.ejs -->
+
+
                                                         </td>
                                                     </tr>
-                                                <% }); %>
+                                                    <% }); %>
                                             </tbody>
-                                            
-                                            </table>
+
+                                        </table>
                                     </div>
+
+                                    <div id="paginationButtons" class="text-center">
+                                        <button class="btn btn-primary" onclick="previousPage()">Previous</button>
+                                        <button class="btn btn-primary" onclick="nextPage()">Next</button>
+                                    </div>
+
+                                    <script>
+                                        // Function to paginate table rows
+                                        function paginateRows(pageNumber, pageSize) {
+                                            var rows = document.getElementById('tableBody').querySelectorAll('tr');
+                                            var startIndex = (pageNumber - 1) * pageSize;
+                                            var endIndex = startIndex + pageSize;
+
+                                            for (var i = 0; i < rows.length; i++) {
+                                                if (i >= startIndex && i < endIndex) {
+                                                    rows[i].style.display = '';
+                                                } else {
+                                                    rows[i].style.display = 'none';
+                                                }
+                                            }
+                                        }
+
+                                        // Function to show next page
+                                        function nextPage() {
+                                            currentPage++;
+                                            paginateRows(currentPage, pageSize);
+                                        }
+
+                                        // Function to show previous page
+                                        function previousPage() {
+                                            currentPage--;
+                                            paginateRows(currentPage, pageSize);
+                                        }
+
+                                        // Define initial pagination state
+                                        var pageSize = 4; // Number of rows per page
+                                        var currentPage = 1; // Current page
+                                        paginateRows(currentPage, pageSize);
+                                    </script>
                                 </div>
-                                </div>
-                                </div>
+                            </div>
                         </div>
                     </div>
-                    </div>
-
-                    <!-- footer -->
-                <div class="container-fluid">
-                    <div class="footer">
-                            <p>Copyright © 2024 Designed by Ambulance Devs Team. All rights reserved.<br><br>
-                               
-                            </p>
-                    </div>
-                    </div>
                 </div>
-            <!-- end dashboard inner -->
+            </div>
+
+            <!-- footer -->
+            <div class="container-fluid">
+                <div class="footer">
+                    <p>Copyright © 2024 Designed by Ambulance Devs Team. All rights reserved.<br><br>
+
+                    </p>
+                </div>
+            </div>
         </div>
-        </div>
+        <!-- end dashboard inner -->
+    </div>
+    </div>
     </div>
 
     <script>
 
 
+        // Function to populate the modal with booking request details
+        function populateBookingRequestModal(bookingRequestId) {
+            // Fetch booking request details from the server
+            fetch(`/booking-requests/${bookingRequestId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch booking request details');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const bookingRequest = data.bookingRequest;
+                    document.getElementById('location').textContent = bookingRequest.location;
+                    document.getElementById('contactInfo').textContent = bookingRequest.contactInfo;
+                    document.getElementById('urgencyLevel').textContent = bookingRequest.urgencyLevel;
+                    document.getElementById('status').textContent = bookingRequest.status;
+                    // Convert createdAt to day, month, year format
+                    const createdAt = new Date(bookingRequest.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+                    document.getElementById('createdAt').textContent = createdAt;
+                    // Show the modal
+                    $('#bookingRequestModal').modal('show');
+                })
+                .catch(error => {
+                    console.error('Error fetching booking request details:', error);
+                    alert('Failed to fetch booking request details');
+                });
+        }
 
-// JavaScript code
-
-
-function deleteBookingRequest(bookingRequestId) {
-    if (confirm('Are you sure you want to delete this booking request?')) {
-        fetch('/booking-requests/' + bookingRequestId, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (response.ok) {
-                // Refresh the page or update the booking request list as needed
-                location.reload(); // Refresh the page after deletion
-            } else {
-                console.error('Failed to delete booking request');
+        // Event listener for the "View Details" button
+        document.addEventListener('click', function (event) {
+            if (event.target.matches('.viewDetailButton')) {
+                const bookingRequestId = event.target.dataset.bookingRequestId;
+                populateBookingRequestModal(bookingRequestId);
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
         });
-    }
-}
 
 
-// for viewing the detail of the request js part is here 
-// JavaScript code
 
-// Function to populate the modal with booking request details
-function populateBookingRequestModal(bookingRequest) {
-    document.getElementById('location').textContent = bookingRequest.location;
-    document.getElementById('contactInfo').textContent = bookingRequest.contactInfo;
-    document.getElementById('urgencyLevel').textContent = bookingRequest.urgencyLevel;
-    document.getElementById('status').textContent = bookingRequest.status;
-    document.getElementById('createdAt').textContent = bookingRequest.createdAt;
-}
 
-// Event listener for the "View Detail" button
-document.getElementById('viewDetailButton').addEventListener('click', function() {
-    // Fetch booking request details from the server (assuming the bookingRequest variable is available)
-    fetch('/booking-requests/' + bookingRequest.id)
-        .then(response => response.json())
-        .then(data => {
-            // Populate the modal with the fetched booking request details
-            populateBookingRequestModal(data.bookingRequest);
-            // Show the modal
-            $('#bookingRequestModal').modal('show');
-        })
-        .catch(error => {
-            console.error('Error fetching booking request details:', error);
-        });
-});
+// archived
+
+
 
 
     </script>
@@ -327,7 +415,7 @@ document.getElementById('viewDetailButton').addEventListener('click', function()
     <!-- select country -->
     <script src="../js/bootstrap-select.js"></script>
     <!-- owl carousel -->
-    <script src="../js/owl.carousel.js"></script> 
+    <script src="../js/owl.carousel.js"></script>
     <!-- chart js -->
     <script src="../js/Chart.min.js"></script>
     <script src="../js/Chart.bundle.min.js"></script>
@@ -342,4 +430,5 @@ document.getElementById('viewDetailButton').addEventListener('click', function()
     <script src="../js/chart_custom_style1.js"></script>
     <script src="../js/custom.js"></script>
 </body>
+
 </html>

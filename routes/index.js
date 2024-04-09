@@ -14,6 +14,34 @@ const bcrypt = require('bcrypt')
 
 
 
+router.post('/archiveA/:id', async (req, res) => {
+  try {
+      const ambulanceId = req.params.id;
+      console.log("Received request to archive ambulance with ID:", ambulanceId);
+
+      // Update the ambulance to set archived to true
+      const updatedAmbulance = await Ambulance.findByIdAndUpdate(ambulanceId, { archived: true });
+      console.log("Ambulance updated:", updatedAmbulance);
+
+      // Check if ambulance was found and updated
+      if (!updatedAmbulance) {
+          console.error("Ambulance not found or could not be updated.");
+          return res.sendStatus(404); // Respond with not found status
+      }
+
+      // Respond with success status
+      return res.sendStatus(200);
+  } catch (error) {
+      console.error('Error archiving ambulance:', error);
+      return res.sendStatus(500); // Respond with internal server error status
+  }
+});
+
+
+
+router.get("/ss",  (req, res) => {
+  res.send("asmkfm")
+  });
 // for authentication 
 router.get('/',(req,res)=>{res.render('indexl')})
 router.get('/login', (req, res) => {
@@ -418,26 +446,34 @@ router.delete('/deleteAmbulance/:ambulanceId', async (req, res) => {
 
 router.get('/dispatcherAmbulance', async (req, res) => {
   try {
-    const ambulances = await Ambulance.find().populate('driver', 'name');
+    // Find ambulances that are not archived
+    const ambulances = await Ambulance.find({ archived: false }).populate('driver', 'name');
+    
+    // Fetch all booking requests
     const bookingRequests = await BookingRequest.find().exec();
-    res.render('dispatcherAmbulance', { ambulances ,bookingRequests }); // Render the ambulances using a template engine
-
+    
+    // Render the dispatcherAmbulance template with the retrieved data
+    res.render('dispatcherAmbulance', { ambulances, bookingRequests });
   } catch (error) {
+    // Handle errors
     res.status(500).json({ error: error.message });
   }
 });
 
 
+
 router.get('/patientRequest', async (req, res) => {
   try {
     const ambulances = await Ambulance.find();
-    const bookingRequests = await BookingRequest.find().exec();
+    const bookingRequests = await BookingRequest.find({ archived: false });
     res.render('patientRequest', { ambulances ,bookingRequests }); // Render the ambulances using a template engine
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 // Route to handle detailed view of a booking request
 router.get('/booking-requests/:id', async (req, res) => {
   try {
@@ -690,19 +726,48 @@ router.post('/forgot-password', async (req, res) => {
   });
 
 
+  // retirved archieved 
+  // Route to render archived booking requests
+router.get('/ArchivedPatientRequest', async (req, res) => {
+  try {
+      // Find all archived booking requests
+      const archivedRequests = await BookingRequest.find({ archived: true });
+      res.render('ArchivedPatientRequest', { archivedRequests }); // Pass the data to the template
+  } catch (error) {
+      console.error('Error fetching archived booking requests:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/dispatcherAmbulance', async (req, res) => {
+  try {
+      // Find all archived booking requests
+      const archivedRequests = await BookingRequest.find({ archived: true });
+      res.render('dispatcherAmbulance', { archivedRequests }); // Pass the data to the template
+  } catch (error) {
+      console.error('Error fetching archived booking requests:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/ArchivedAmbulance', async (req, res) => {
+  try {
+    // Fetch archived ambulances from the database
+    const archivedAmbulances = await Ambulance.find({ archived: true }).populate('driver');
+    // Render the ArchivedAmbulance.ejs file and pass the archived ambulances data to it
+    res.render('ArchivedAmbulance', { ambulances: archivedAmbulances });
+  } catch (error) {
+    console.error('Error fetching archived ambulances:', error);
+    res.status(500).send('Internal Server Error'); // Respond with internal server error status
+  }
+});
 
 
-  // Route to Log out
-  router.get('/logout', function(req, res) {
-    req.logout(function(err) {
-      if(err) {
-        console.error('Error logging out:', err);
-        return res.status(500).send('Internal server error');
-      }
-      // Redirect the user to the login page after successful logout
-      res.redirect('/login');
-    });
-  });
+
+
+
+
+
 
 
 
@@ -729,6 +794,24 @@ router.post('/patientRequest', async (req, res) => {
       message: 'Booking request submitted successfully',
       data: savedRequest
     });
+
+  // Route to handle archiving a booking request
+router.post('/archive/:id', async (req, res) => {
+  try {
+      const bookingRequestId = req.params.id;
+      // Find the booking request by ID and update its 'archived' field to true
+      await BookingRequest.findByIdAndUpdate(bookingRequestId, { archived: true });
+      res.sendStatus(200); // Respond with success status
+  } catch (error) {
+      console.error('Error archiving booking request:', error);
+      res.sendStatus(500); // Respond with internal server error status
+  }
+});
+
+
+
+
+    
 
     // Retrieve all users who should be notified
     const usersToNotify = await User.find({ role: 'dispatcher' }); // Adjust the query to match your needs
@@ -790,52 +873,62 @@ router.post('/registerToken', (req, res) => {
   }
 });
 
+// archived patient request 
+
 
 
 // for notification purpose
-
 
 // i am also seeingt the following
 
 // the follwoing route is for the scheduling of the  the emergency ambulance booking 
 router.get('/schedule', async (req, res) => {
   try {
-      const bookings = await BookingRequest.find();
       const ambulances = await Ambulance.find();
       const drivers = await User.find({ role: 'driver' });
       const nurses = await User.find({ role: 'nurse' });
 
-      res.render('schedule', { bookings, ambulances, drivers, nurses });
+      res.render('schedule', { ambulances, drivers, nurses });
   } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
   }
 });
 
-router.get('/me' ,isDispatcher,(req,res)=>{
-  res.render('me')
-})
+
 
 router.post('/schedule', async (req, res) => {
   try {
-      const { bookingRequest, ambulance, driver, nurse, status, pickupTime, destination } = req.body;
+      const { ambulance, driver, nurse, status, shift } = req.body;
 
       // If multiple drivers or nurses are selected, they will be sent as an array
       // Convert them to arrays if not already
       const driversArray = Array.isArray(driver) ? driver : [driver];
       const nursesArray = Array.isArray(nurse) ? nurse : [nurse];
 
+      // Set the pickup time based on the selected shift (morning or evening)
+      let pickupTime;
+      const today = new Date();
+      if (shift === 'morning') {
+          // Morning shift (6 AM - 6 PM)
+          pickupTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 6, 0, 0); // Set to 6 AM
+      } else if (shift === 'evening') {
+          // Evening shift (6 PM - 6 AM next day)
+          pickupTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18, 0, 0); // Set to 6 PM
+          // Add one day to the date to make it the next day
+          pickupTime.setDate(pickupTime.getDate() + 1);
+      } else {
+          throw new Error('Invalid shift selection');
+      }
+
       // Create a new schedule entry for each combination of selected drivers and nurses
       for (const driverId of driversArray) {
           for (const nurseId of nursesArray) {
               const newSchedule = new Schedule({
-                  bookingRequest,
                   ambulance,
                   driver: driverId,
                   nurse: nurseId,
-                  status,
                   pickupTime,
-                  destination
               });
 
               await newSchedule.save();
@@ -850,14 +943,76 @@ router.post('/schedule', async (req, res) => {
 });
 
 
+
+// GET /scheduled-bookings
+// GET /scheduled-bookings
+// GET /scheduled-bookings
 router.get('/scheduled-bookings', async (req, res) => {
   try {
-      const schedules = await Schedule.find().populate('bookingRequest ambulance driver nurse');
-      res.render('scheduled-bookings', { schedules });
+    const schedules = await Schedule.find().populate('ambulance driver nurse');
+
+    // Group schedules by day
+    const groupedSchedules = {};
+    schedules.forEach(schedule => {
+      if (!groupedSchedules[schedule.day]) {
+          groupedSchedules[schedule.day] = [];
+      }
+      groupedSchedules[schedule.day].push(schedule);
+    });
+
+    // Limit the number of schedules per day and distribute excess schedules to subsequent days
+    const maxSchedulesPerDay = 6;
+    let excessSchedules = [];
+    Object.keys(groupedSchedules).forEach(day => {
+      const daySchedules = groupedSchedules[day];
+      if (daySchedules.length > maxSchedulesPerDay) {
+        excessSchedules = [...excessSchedules, ...daySchedules.splice(maxSchedulesPerDay)];
+      }
+    });
+
+    // Distribute excess schedules to subsequent days
+    let dayIndex = 0;
+    Object.keys(groupedSchedules).forEach(day => {
+      if (dayIndex + 1 < Object.keys(groupedSchedules).length) {
+        groupedSchedules[Object.keys(groupedSchedules)[dayIndex + 1]] = [...groupedSchedules[Object.keys(groupedSchedules)[dayIndex + 1]], excessSchedules.shift()];
+      }
+      dayIndex++;
+    });
+
+    // Define the formatTime function
+    function formatTime(pickupTime) {
+      const hour = pickupTime.getHours();
+      const period = hour < 12 ? 'AM' : 'PM';
+      const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+      return `${formattedHour}:00 ${period}`;
+    }
+
+    // Render the view and pass the grouped schedules and formatTime as local variables
+    res.render('scheduled-bookings', { schedules: groupedSchedules, formatTime });
   } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
+
+
+
+
+  // Route to Log out
+  router.get('/logout', function(req, res) {
+    req.logout(function(err) {
+      if(err) {
+        console.error('Error logging out:', err);
+        return res.status(500).send('Internal server error');
+      }
+      // Redirect the user to the login page after successful logout
+      res.redirect('/login');
+    });
+  });
+
+
 module.exports = router;
+
+
+
