@@ -1,14 +1,15 @@
-// models/Booking.js
-
 const mongoose = require('mongoose');
 
 const scheduleSchema = new mongoose.Schema({
-    // bookingRequest: { type: mongoose.Schema.Types.ObjectId, ref: 'BookingRequest', required: true }, // Reference to BookingRequest model
-    ambulance: { type: mongoose.Schema.Types.ObjectId, ref: 'Ambulance', required: true }, // Reference to Ambulance model
-    driver: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to User model (driver)
-    nurse: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Reference to User model (nurse)
-    pickupTime: { type: Date }, // Time when the ambulance is scheduled to pick up the patient
-    createdAt: { type: Date, default: Date.now } // Timestamp when the booking is created
+    ambulance: { type: mongoose.Schema.Types.ObjectId, ref: 'Ambulance', required: true },
+    driver: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    nurse: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    pickupTime: { type: Date },
+    createdAt: { type: Date, default: Date.now }, // Timestamp when the booking is created
+    status: { type: Boolean, default: false }, // Adding the status field with default value of true
+    dayOfWeek: { type: String, required: true }, // Adding the dayOfWeek field to store the selected day of the week
+    shift: { type: String, enum: ['Day', 'Night'], required: true } // Shift: Day or Night
+
 });
 
 module.exports = mongoose.model('Schedule', scheduleSchema);

@@ -1,72 +1,1027 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scheduling for Emergency Booking</title>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>Emergency Ambulance</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- site icon -->
+    <link rel="icon" href="../images/fevicon.png" type="image/png" />
+    <!-- bootstrap css -->
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <!-- site css -->
+    <link rel="stylesheet" href="../style.css" />
+    <!-- responsive css -->
+    <link rel="stylesheet" href="../css/responsive.css" />
+    <!-- color css -->
+    <link rel="stylesheet" href="../css/colors.css" />
+    <!-- select bootstrap -->
+    <link rel="stylesheet" href="../css/bootstrap-select.css" />
+    <!-- scrollbar css -->
+    <link rel="stylesheet" href="../css/perfect-scrollbar.css" />
+    <!-- custom css -->
+    <link rel="stylesheet" href="../css/custom.css" />
+    <link rel="stylesheet" href="../css/custom/register.css">
+    <link rel="stylesheet" href="../css/custom/schedule.css">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-<body>
-    <!-- views/schedule.ejs -->
-    <form action="/schedule" method="post">
-        <label for="ambulance">Ambulance:</label>
-        <select name="ambulance" multiple>
-            <% ambulances.forEach(ambulance => { %>
-                <option value="<%= ambulance._id %>">
-                    <%= ambulance.type %>
-                </option>
-            <% }); %>
-        </select>
-        <label for="driver">Drivers:</label>
-        <select name="driver" multiple>
-            <% drivers.forEach(driver => { %>
-                <option value="<%= driver._id %>">
-                    <%= driver.name %>
-                </option>
-            <% }); %>
-        </select>
-        <label for="nurse">Nurses:</label>
-        <select name="nurse" multiple>
-            <% nurses.forEach(nurse => { %>
-                <option value="<%= nurse._id %>">
-                    <%= nurse.name %>
-                </option>
-            <% }); %>
-        </select>
-        <label for="shift">Shift:</label>
-        <select name="shift" id="shift">
-            <option value="morning">Morning (6 AM - 6 PM)</option>
-            <option value="evening">Evening (6 PM - 6 AM next day)</option>
-        </select>
-        <button type="submit">Schedule</button>
-    </form>
+
+<body class="dashboard dashboard_1">
+    <div class="full_container">
+        <div class="inner_container">
+            <!-- Sidebar  -->
+            <nav id="sidebar">
+                <div class="sidebar_blog_1">
+                    <div class="sidebar-header">
+                        <div class="logo_section">
+                            <a href="/"><img class="logo_icon img-responsive" src="../images/logo/logo_icon.png"
+                                    alt="#" /></a>
+                        </div>
+                    </div>
+                    <div class="sidebar_user_info">
+                        <div class="icon_setting"></div>
+                        <div class="user_profle_side">
+                            <div class="user_img"><img class="img-responsive" src="../images/layout_img/user.jpg"
+                                    alt="#" /></div>
+                            <div class="user_info">
+                                <h6>Dispatcher</h6>
+                                <p><span class="online_animation"></span> Online</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar_blog_2">
+                    <h4>Ambulance Mgt</h4>
+                    <ul class="list-unstyled components">
+                        <li class="active">
+                            <a href="dispatcherDashboard" aria-expanded="false"><i
+                                    class="fa fa-dashboard yellow_color"></i> <span>Dispatcher Dashboard</span></a>
+                        </li>
+                        <li><a href="schedule "><i class="fa fa-table purple_color2"></i>
+                                <span>Schedule</span></a></li>
+                        <li><a href="dispatcherAmbulance"><i class="fa fa-table purple_color2"></i>
+                                <span>Ambulances</span></a></li>
+                        <li><a href="patientRequest"><i class="fa fa-table purple_color2"></i> <span>Patient
+                                    Request</span></a></li>
+
+                        <li><a href="dispatcherContact"><i class="fa fa-paper-plane red_color"></i>
+                                <span>Contact</span></a></li>
+                        <li><a href="dispatcherMap"><i class="fa fa-map purple_color2"></i> <span>Map</span></a></li>
+                        <li><a href="dispatcherSettings"><i class="fa fa-cog yellow_color"></i>
+                                <span>Settings</span></a></li>
+                        <li><a href="ArchivedPatientRequest"><i class="fa fa-table purple_color2"></i> <span>Archived
+                                    Patient Request</span></a></li>
+                        <li><a href="ArchivedAmbulance"><i class="fa fa-table purple_color2"></i> <span>Archived
+                                    Ambulance</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- end sidebar -->
+            <!-- right content -->
+            <div id="content">
+                <!-- topbar -->
+                <div class="topbar">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <div class="full">
+                            <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i
+                                    class="fa fa-bars"></i></button>
+                            <div class="logo_section">
+                                <a href="/dispatcherAmbulance"><img class="img-responsive"
+                                        src="../images/logo/logo11.png" alt="#" /></a>
+                            </div>
+                            <div class="right_topbar">
+                                <div class="icon_info">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">0</span></a>
+                                        </li>
+                                        <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a>
+                                        </li>
+                                    </ul>
+                                    <ul class="user_profile_dd">
+                                        <li>
+                                            <a class="dropdown-toggle" data-toggle="dropdown"><img
+                                                    class="img-responsive rounded-circle"
+                                                    src="../images/layout_img/user.jpg" alt="#" /><span
+                                                    class="name_user">Mr. X</span></a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="dispatcherDashboard">My Profile</a>
+                                                <a class="dropdown-item" href="dispatcherSettings">Settings</a>
+                                                <a class="dropdown-item" href="dispatcherDashboard">Help</a>
+                                                <a class="dropdown-item" href="logout"><span>Log Out</span> <i
+                                                        class="fa fa-sign-out"></i></a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <!-- end topbar -->
+                <!-- dashboard inner -->
+
+                <!-- dashboard inner -->
+                <div class="midde_cont">
+                    <div class="container-fluid">
+                        <div class="row column_title">
+                            <div class="col-md-12">
+                                <div class="page_title">
+                                    <h2>Schedule</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 event-schedule-area-two bg-color pad100">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="section-title text-center">
+                                        <div class="title-text">
+                                            <h2>Event Schedule</h2>
+                                        </div>
+                                        <p>
+                                            This is an Event schedule that serves as a roadmap for attendees and
+                                            organizers, ensuring <br>
+                                            smooth coordination and effective management throughout the event duration.
+                                        </p>
+                                    </div>
+                                </div>
+                                <!-- /.col end-->
+                            </div>
+                            <!-- row end-->
+                            <div class="row col-lg-12">
+                                <div class="col-lg-12">
+                                    <ul class="nav custom-tab" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active show" id="home-taThursday" data-toggle="tab"
+                                                href="#home" role="tab" aria-controls="home"
+                                                aria-selected="true">Mon</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#tuesday"
+                                                role="tab" aria-controls="profile" aria-selected="false">Tues</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#wednesday"
+                                                role="tab" aria-controls="contact" aria-selected="false">Wed</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#thrusday"
+                                                role="tab" aria-controls="contact" aria-selected="false">Thur</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#friday"
+                                                role="tab" aria-controls="contact" aria-selected="false">Fri</a>
+                                        </li>
+                                        <li class="nav-item d-none d-lg-block">
+                                            <a class="nav-link" id="sunday-tab" data-toggle="tab" href="#saturday"
+                                                role="tab" aria-controls="saturday" aria-selected="false">Sat</a>
+                                        </li>
+                                        <li class="nav-item mr-0 d-none d-lg-block">
+                                            <a class="nav-link" id="sunday-tab" data-toggle="tab" href="#sunday"
+                                                role="tab" aria-controls="sunday" aria-selected="false">Sun</a>
+                                        </li>
+
+                                    </ul>
+
+                                    <div class="d-flex">
+                                        <!-- search code -->
+                                        <div class="input-group">
+                                            <div class="form-outline" data-mdb-input-init>
+                                                <input id="search-input" type="search" id="form1"
+                                                    class="form-control" />
+                                                <label class="form-label" for="form1">Search</label>
+                                            </div>
+                                            <button id="search-button" type="button" class="btn btn-primary">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- schedule button -->
+                                        <div class="container mt-2 col-lg-4">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#schedulemodal">
+                                                Create Schedule</button>
+                                        </div>
+                                    </div>
+
+
+
+                                    <!-- create Schedule -->
+
+                                    <div class="modal" id="schedulemodal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Create Schedule</h4>
+                                                    <button type="button" class="close"
+                                                        data-dismiss="modal">&times;</button>
+                                                </div>
+
+                                                <!-- Modal Body -->
+                                                <div class="modal-body">
+                                                    <!-- Your registration form content goes here -->
+                                                    
+
+                                                    <form action="/schedule" method="post">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="dayOfWeek">Day of the Week</label>
+                                                            <select name="dayOfWeek" class="form-control">
+                                                                <option value="Monday">Monday</option>
+                                                                <option value="Tuesday">Tuesday</option>
+                                                                <option value="Wednesday">Wednesday</option>
+                                                                <option value="Thursday">Thursday</option>
+                                                                <option value="Friday">Friday</option>
+                                                                <option value="Saturday">Saturday</option>
+                                                                <option value="Sunday">Sunday</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label for="shift">Shift:</label>
+                                                            <select name="shift" class="form-control">
+                                                                <option value="Day">Day</option>
+                                                                <option value="Night">Night</option>
+                                                            </select>
+                                                        </div>
+                                                        
+                                                        <div class="form-group col-md-12">
+                                                            <label for="pickupTime">Pickup Time</label>
+                                                            <input type="datetime-local" class="form-control" id="pickupTime" name="pickupTime">
+                                                        </div>
+                                                    
+                                                        <div class="form-group col-md-12">
+                                                            <label for="ambulance">Ambulance:</label>
+                                                            <select name="ambulance" class="form-control">
+                                                                <% ambulances.forEach(ambulance => { %>
+                                                                    <option value="<%= ambulance._id %>"><%= ambulance.type %></option>
+                                                                <% }); %>
+                                                            </select>
+                                                        </div>
+                                                    
+                                                        <div class="form-group col-md-12">
+                                                            <label for="driver">Drivers:</label>
+                                                            <select name="driver" class="form-control">
+                                                                <% drivers.forEach(driver => { %>
+                                                                    <option value="<%= driver._id %>"><%= driver.name %></option>
+                                                                <% }); %>
+                                                            </select>
+                                                        </div>
+                                                    
+                                                        <div class="form-group col-md-12">
+                                                            <label for="nurse">Nurses:</label>
+                                                            <select name="nurse" class="form-control">
+                                                                <% nurses.forEach(nurse => { %>
+                                                                    <option value="<%= nurse._id %>"><%= nurse.name %></option>
+                                                                <% }); %>
+                                                            </select>
+                                                        </div>
+                                                        
+                                                        <div class="regr">
+                                                            <div class="form-group">
+                                                                <!-- Additional checkboxes or other form elements can be added here -->
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary">Add to schedule</button>
+                                                        </div>
+                                                    </form>
+                                                    
+                                                    
+                                                </div>
+
+                                                <!-- Modal Footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="tab-content col-lg-12" id="myTabContent">
+                                        <div class="tab-pane fade active show" id="home" role="tabpanel">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col">Ambulance</th>
+                                                            <th scope="col">Driver</th>
+                                                            <th scope="col">Nurse</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="col-lg-12">
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Monday' && schedule.shift === 'Day') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                        
+                                                        
+                                                    <tr><td><h1>NIGHT SCHEDULE</h1></td></tr>
+
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Monday' && schedule.shift === 'Night') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tuesday" role="tabpanel"
+                                            aria-labelledby="profile-tab">
+                                            <div class="tab-pane fade active show" id="home" role="tabpanel">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Date</th>
+                                                                <th scope="col">Ambulance</th>
+                                                                <th scope="col">Driver</th>
+                                                                <th scope="col">Nurse</th>
+                                                                <th scope="col">Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="col-lg-12">
+                                                            <% schedules.forEach(schedule => { %>
+                                                                <% if (schedule.dayOfWeek === 'Tuesday' && schedule.shift === 'Day') { %>
+                                                                    <tr class="inner-box">
+                                                                        <th scope="row">
+                                                                            <div class="event-date">
+                                                                                <% if (schedule.pickupTime) { %>
+                                                                                    <%= schedule.pickupTime.toDateString() %>
+                                                                                <% } else { %>
+                                                                                    N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                                <% } %>  
+                                                                            </div>
+                                                                        </th>
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <!-- Button for dispatch -->
+                                                                            <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                                Dispatch
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                <% } %>
+                                                            <% }); %>
+                                                            
+                                                            
+    
+                                                            <% schedules.forEach(schedule => { %>
+                                                                <% if (schedule.dayOfWeek === 'Tuesday' && schedule.shift === 'Night') { %>
+                                                                    <tr class="inner-box">
+                                                                        <th scope="row">
+                                                                            <div class="event-date">
+                                                                                <% if (schedule.pickupTime) { %>
+                                                                                    <%= schedule.pickupTime.toDateString() %>
+                                                                                <% } else { %>
+                                                                                    N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                                <% } %>  
+                                                                            </div>
+                                                                        </th>
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <!-- Button for dispatch -->
+                                                                            <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                                Dispatch
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                <% } %>
+                                                            <% }); %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="wednesday" role="tabpanel"
+                                            aria-labelledby="contact-tab">
+                                             <div class="tab-pane fade active show" id="home" role="tabpanel">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col">Ambulance</th>
+                                                            <th scope="col">Driver</th>
+                                                            <th scope="col">Nurse</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="col-lg-12">
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Wednesday' && schedule.shift === 'Day') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                        
+                                                        
+
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Wednesday' && schedule.shift === 'Night') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="thrusday" role="tabpanel"
+                                            aria-labelledby="contact-tab">
+                                             <div class="tab-pane fade active show" id="home" role="tabpanel">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col">Ambulance</th>
+                                                            <th scope="col">Driver</th>
+                                                            <th scope="col">Nurse</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="col-lg-12">
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Thursday' && schedule.shift === 'Day') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                        
+                                                        
+
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Thursday' && schedule.shift === 'Night') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="friday" role="tabpanel"
+                                            aria-labelledby="contact-tab">
+                                             <div class="tab-pane fade active show" id="home" role="tabpanel">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col">Ambulance</th>
+                                                            <th scope="col">Driver</th>
+                                                            <th scope="col">Nurse</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="col-lg-12">
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Friday' && schedule.shift === 'Day') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                        
+                                                        
+
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Friday' && schedule.shift === 'Night') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="saturday" role="tabpanel"
+                                            aria-labelledby="saturday-tab">
+                                             <div class="tab-pane fade active show" id="home" role="tabpanel">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col">Ambulance</th>
+                                                            <th scope="col">Driver</th>
+                                                            <th scope="col">Nurse</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="col-lg-12">
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Saturday' && schedule.shift === 'Day') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                        
+                                                        
+
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Saturday' && schedule.shift === 'Night') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="sunday" role="tabpanel"
+                                            aria-labelledby="sunday-tab">
+                                             <div class="tab-pane fade active show" id="home" role="tabpanel">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col">Ambulance</th>
+                                                            <th scope="col">Driver</th>
+                                                            <th scope="col">Nurse</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="col-lg-12">
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Sunday' && schedule.shift === 'Day') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                        
+                                                        
+
+                                                        <% schedules.forEach(schedule => { %>
+                                                            <% if (schedule.dayOfWeek === 'Sunday' && schedule.shift === 'Night') { %>
+                                                                <tr class="inner-box">
+                                                                    <th scope="row">
+                                                                        <div class="event-date">
+                                                                            <% if (schedule.pickupTime) { %>
+                                                                                <%= schedule.pickupTime.toDateString() %>
+                                                                            <% } else { %>
+                                                                                N/A <!-- or any other message you want to display when pickupTime is null -->
+                                                                            <% } %>  
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.ambulance.type %></span> <!-- Display the ambulance type -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="r-no">
+                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Button for dispatch -->
+                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                            Dispatch
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <!-- /col end-->
+                            </div>
+                            <!-- /row end-->
+                        </div>
+                    </div>
+
+                    <!-- footer -->
+                    <div class="container-fluid">
+                        <div class="footer">
+                            <p>Copyright © 2024 Designed by Ambulance Devs Team. All rights reserved.<br><br>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end dashboard inner -->
+            </div>
+        </div>
+    </div>
+    <!-- jQuery -->
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- wow animation -->
+    <script src="../js/animate.js"></script>
+    <!-- select country -->
+    <script src="../js/bootstrap-select.js"></script>
+    <!-- owl carousel -->
+    <script src="../js/owl.carousel.js"></script>
+    <!-- chart js -->
+    <script src="../js/Chart.min.js"></script>
+    <script src="../js/Chart.bundle.min.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/analyser.js"></script>
+    <!-- nice scrollbar -->
+    <script src="../js/perfect-scrollbar.min.js"></script>
     <script>
-        // JavaScript to adjust the displayed text of the shift options
-        document.addEventListener('DOMContentLoaded', function() {
-            const shiftSelect = document.getElementById('shift');
-            const options = shiftSelect.options;
-            const currentDateTime = new Date();
-    
-            for (let i = 0; i < options.length; i++) {
-                const option = options[i];
-                const value = option.value;
-                let text;
-    
-                if (value === 'morning') {
-                    text = `Morning (${formatTime(6)} AM - ${formatTime(18)} PM)`;
-                } else if (value === 'evening') {
-                    text = `Evening (${formatTime(18)} PM - ${formatTime(6, true)} AM next day)`;
-                }
-    
-                option.text = text;
-            }
-        });
-    
-        // Function to format time
-        function formatTime(hour, nextDay = false) {
-            const hours = nextDay ? hour + 24 : hour;
-            return hours < 12 ? hours + ' AM' : (hours === 12 ? '12 PM' : hours - 12 + ' PM');
-        }
+        var ps = new PerfectScrollbar('#sidebar');
     </script>
-    
+    <!-- custom js -->
+    <script src="../js/chart_custom_style1.js"></script>
+    <script src="../js/custom.js"></script>
 </body>
+
 </html>

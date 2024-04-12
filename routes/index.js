@@ -877,65 +877,29 @@ router.post('/registerToken', (req, res) => {
 
 
 
-// for notification purpose
 
-// i am also seeingt the following
-
-// the follwoing route is for the scheduling of the  the emergency ambulance booking 
-router.get('/schedule', async (req, res) => {
-  try {
-      const ambulances = await Ambulance.find();
-      const drivers = await User.find({ role: 'driver' });
-      const nurses = await User.find({ role: 'nurse' });
-
-      res.render('schedule', { ambulances, drivers, nurses });
-  } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
-  }
-});
 
 
 
 router.post('/schedule', async (req, res) => {
   try {
-      const { ambulance, driver, nurse, status, shift } = req.body;
+      const { ambulance, driver, nurse, pickupTime, dayOfWeek, shift } = req.body;
 
-      // If multiple drivers or nurses are selected, they will be sent as an array
-      // Convert them to arrays if not already
-      const driversArray = Array.isArray(driver) ? driver : [driver];
-      const nursesArray = Array.isArray(nurse) ? nurse : [nurse];
+      // Create a new schedule entry
+      const newSchedule = new Schedule({
+          ambulance,
+          driver,
+          nurse,
+          pickupTime,
+          dayOfWeek,
+          shift // Include the shift field in the new schedule entry
+      });
 
-      // Set the pickup time based on the selected shift (morning or evening)
-      let pickupTime;
-      const today = new Date();
-      if (shift === 'morning') {
-          // Morning shift (6 AM - 6 PM)
-          pickupTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 6, 0, 0); // Set to 6 AM
-      } else if (shift === 'evening') {
-          // Evening shift (6 PM - 6 AM next day)
-          pickupTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18, 0, 0); // Set to 6 PM
-          // Add one day to the date to make it the next day
-          pickupTime.setDate(pickupTime.getDate() + 1);
-      } else {
-          throw new Error('Invalid shift selection');
-      }
+      // Save the new schedule entry to the database
+      await newSchedule.save();
 
-      // Create a new schedule entry for each combination of selected drivers and nurses
-      for (const driverId of driversArray) {
-          for (const nurseId of nursesArray) {
-              const newSchedule = new Schedule({
-                  ambulance,
-                  driver: driverId,
-                  nurse: nurseId,
-                  pickupTime,
-              });
-
-              await newSchedule.save();
-          }
-      }
-
-      res.redirect('/scheduled-bookings'); // Redirect to a page to view scheduled bookings
+      // Redirect to a page to view scheduled bookings or send a success message
+      res.redirect('/schedule');
   } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
@@ -943,57 +907,28 @@ router.post('/schedule', async (req, res) => {
 });
 
 
-
-// GET /scheduled-bookings
-// GET /scheduled-bookings
-// GET /scheduled-bookings
-router.get('/scheduled-bookings', async (req, res) => {
+router.get('/schedule', async (req, res) => {
   try {
+    // Fetch all necessary data in one go
+    const ambulances = await Ambulance.find();
+    const drivers = await User.find({ role: 'driver' });
+    const nurses = await User.find({ role: 'nurse' });
     const schedules = await Schedule.find().populate('ambulance driver nurse');
 
-    // Group schedules by day
-    const groupedSchedules = {};
-    schedules.forEach(schedule => {
-      if (!groupedSchedules[schedule.day]) {
-          groupedSchedules[schedule.day] = [];
-      }
-      groupedSchedules[schedule.day].push(schedule);
-    });
-
-    // Limit the number of schedules per day and distribute excess schedules to subsequent days
-    const maxSchedulesPerDay = 6;
-    let excessSchedules = [];
-    Object.keys(groupedSchedules).forEach(day => {
-      const daySchedules = groupedSchedules[day];
-      if (daySchedules.length > maxSchedulesPerDay) {
-        excessSchedules = [...excessSchedules, ...daySchedules.splice(maxSchedulesPerDay)];
-      }
-    });
-
-    // Distribute excess schedules to subsequent days
-    let dayIndex = 0;
-    Object.keys(groupedSchedules).forEach(day => {
-      if (dayIndex + 1 < Object.keys(groupedSchedules).length) {
-        groupedSchedules[Object.keys(groupedSchedules)[dayIndex + 1]] = [...groupedSchedules[Object.keys(groupedSchedules)[dayIndex + 1]], excessSchedules.shift()];
-      }
-      dayIndex++;
-    });
-
-    // Define the formatTime function
-    function formatTime(pickupTime) {
-      const hour = pickupTime.getHours();
-      const period = hour < 12 ? 'AM' : 'PM';
-      const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-      return `${formattedHour}:00 ${period}`;
-    }
-
-    // Render the view and pass the grouped schedules and formatTime as local variables
-    res.render('scheduled-bookings', { schedules: groupedSchedules, formatTime });
+    // Pass all the data to the 'schedule' template
+    res.render('schedule', { ambulances, drivers, nurses, schedules });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+
+
+
+
+
 
 
 
@@ -1010,6 +945,8 @@ router.get('/scheduled-bookings', async (req, res) => {
       res.redirect('/login');
     });
   });
+
+
 
 
 module.exports = router;

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduling for Emergency Booking</title>
+</head>
+<body>
+    <!-- views/schedule.ejs -->
+    <form action="/schedule" method="post">
+        <label for="ambulance">Ambulance:</label>
+        <select name="ambulance" multiple>
+            <% ambulances.forEach(ambulance => { %>
+                <option value="<%= ambulance._id %>">
+                    <%= ambulance.type %>
+                </option>
+            <% }); %>
+        </select>
+        <label for="driver">Drivers:</label>
+        <select name="driver" multiple>
+            <% drivers.forEach(driver => { %>
+                <option value="<%= driver._id %>">
+                    <%= driver.name %>
+                </option>
+            <% }); %>
+        </select>
+        <label for="nurse">Nurses:</label>
+        <select name="nurse" multiple>
+            <% nurses.forEach(nurse => { %>
+                <option value="<%= nurse._id %>">
+                    <%= nurse.name %>
+                </option>
+            <% }); %>
+        </select>
+        <label for="shift">Shift:</label>
+        <select name="shift" id="shift">
+            <option value="morning">Morning (6 AM - 6 PM)</option>
+            <option value="evening">Evening (6 PM - 6 AM next day)</option>
+        </select>
+        <button type="submit">Schedule</button>
+    </form>
+    <script>
+        // JavaScript to adjust the displayed text of the shift options
+        document.addEventListener('DOMContentLoaded', function() {
+            const shiftSelect = document.getElementById('shift');
+            const options = shiftSelect.options;
+            const currentDateTime = new Date();
+    
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                const value = option.value;
+                let text;
+    
+                if (value === 'morning') {
+                    text = `Morning (${formatTime(6)} AM - ${formatTime(18)} PM)`;
+                } else if (value === 'evening') {
+                    text = `Evening (${formatTime(18)} PM - ${formatTime(6, true)} AM next day)`;
+                }
+    
+                option.text = text;
+            }
+        });
+    
+        // Function to format time
+        function formatTime(hour, nextDay = false) {
+            const hours = nextDay ? hour + 24 : hour;
+            return hours < 12 ? hours + ' AM' : (hours === 12 ? '12 PM' : hours - 12 + ' PM');
+        }
+    </script>
+    
+</body>
+</html>
