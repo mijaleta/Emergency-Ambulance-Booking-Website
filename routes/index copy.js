@@ -6,13 +6,52 @@ const nodemailer = require('nodemailer')
 const router = express.Router();
 const User = require('../models/user')
 const Ambulance = require('../models/ambulance')
+const Schedule = require('../models/schedule')
 const Contact = require('../models/contact')
 const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 
+router.post('/archive/:id', async (req, res) => {
+  try {
+      const bookingRequestId = req.params.id;
+      // Find the booking request by ID and update its 'archived' field to true
+      await BookingRequest.findByIdAndUpdate(bookingRequestId, { archived: true });
+      res.sendStatus(200); // Respond with success status
+  } catch (error) {
+      console.error('Error archiving booking request:', error);
+      res.sendStatus(500); // Respond with internal server error status
+  }
+});
+
+router.post('/archiveA/:id', async (req, res) => {
+  try {
+      const ambulanceId = req.params.id;
+      console.log("Received request to archive ambulance with ID:", ambulanceId);
+
+      // Update the ambulance to set archived to true
+      const updatedAmbulance = await Ambulance.findByIdAndUpdate(ambulanceId, { archived: true });
+      console.log("Ambulance updated:", updatedAmbulance);
+
+      // Check if ambulance was found and updated
+      if (!updatedAmbulance) {
+          console.error("Ambulance not found or could not be updated.");
+          return res.sendStatus(404); // Respond with not found status
+      }
+
+      // Respond with success status
+      return res.sendStatus(200);
+  } catch (error) {
+      console.error('Error archiving ambulance:', error);
+      return res.sendStatus(500); // Respond with internal server error status
+  }
+});
 
 
+
+router.get("/ss",  (req, res) => {
+  res.send("asmkfm")
+  });
 // for authentication 
 router.get('/',(req,res)=>{res.render('indexl')})
 router.get('/login', (req, res) => {
@@ -417,26 +456,34 @@ router.delete('/deleteAmbulance/:ambulanceId', async (req, res) => {
 
 router.get('/dispatcherAmbulance', async (req, res) => {
   try {
-    const ambulances = await Ambulance.find().populate('driver', 'name');
+    // Find ambulances that are not archived
+    const ambulances = await Ambulance.find({ archived: false }).populate('driver', 'name');
+    
+    // Fetch all booking requests
     const bookingRequests = await BookingRequest.find().exec();
-    res.render('dispatcherAmbulance', { ambulances ,bookingRequests }); // Render the ambulances using a template engine
-
+    
+    // Render the dispatcherAmbulance template with the retrieved data
+    res.render('dispatcherAmbulance', { ambulances, bookingRequests });
   } catch (error) {
+    // Handle errors
     res.status(500).json({ error: error.message });
   }
 });
 
 
+
 router.get('/patientRequest', async (req, res) => {
   try {
     const ambulances = await Ambulance.find();
-    const bookingRequests = await BookingRequest.find().exec();
+    const bookingRequests = await BookingRequest.find({ archived: false });
     res.render('patientRequest', { ambulances ,bookingRequests }); // Render the ambulances using a template engine
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 // Route to handle detailed view of a booking request
 router.get('/booking-requests/:id', async (req, res) => {
   try {
@@ -689,19 +736,48 @@ router.post('/forgot-password', async (req, res) => {
   });
 
 
+  // retirved archieved 
+  // Route to render archived booking requests
+router.get('/ArchivedPatientRequest', async (req, res) => {
+  try {
+      // Find all archived booking requests
+      const archivedRequests = await BookingRequest.find({ archived: true });
+      res.render('ArchivedPatientRequest', { archivedRequests }); // Pass the data to the template
+  } catch (error) {
+      console.error('Error fetching archived booking requests:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/dispatcherAmbulance', async (req, res) => {
+  try {
+      // Find all archived booking requests
+      const archivedRequests = await BookingRequest.find({ archived: true });
+      res.render('dispatcherAmbulance', { archivedRequests }); // Pass the data to the template
+  } catch (error) {
+      console.error('Error fetching archived booking requests:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/ArchivedAmbulance', async (req, res) => {
+  try {l
+    // Fetch archived ambulances from the database
+    const archivedAmbulances = await Ambulance.find({ archived: true }).populate('driver');
+    // Render the ArchivedAmbulance.ejs file and pass the archived ambulances data to it
+    res.render('ArchivedAmbulance', { ambulances: archivedAmbulances });
+  } catch (error) {
+    console.error('Error fetching archived ambulances:', error);
+    res.status(500).send('Internal Server Error'); // Respond with internal server error status
+  }
+});
 
 
-  // Route to Log out
-  router.get('/logout', function(req, res) {
-    req.logout(function(err) {
-      if(err) {
-        console.error('Error logging out:', err);
-        return res.status(500).send('Internal server error');
-      }
-      // Redirect the user to the login page after successful logout
-      res.redirect('/login');
-    });
-  });
+
+
+
+
+
 
 
 
@@ -728,6 +804,14 @@ router.post('/patientRequest', async (req, res) => {
       message: 'Booking request submitted successfully',
       data: savedRequest
     });
+
+  // Route to handle archiving a booking request
+
+
+
+
+
+    
 
     // Retrieve all users who should be notified
     const usersToNotify = await User.find({ role: 'dispatcher' }); // Adjust the query to match your needs
@@ -789,17 +873,83 @@ router.post('/registerToken', (req, res) => {
   }
 });
 
+// archived patient request 
 
 
-// for notification purpose
 
 
-// i am also seeingt the following
 
 
-router.get('/me' ,isDispatcher,(req,res)=>{
-  res.render('me')
-})
+
+router.post('/schedule', async (req, res) => {
+  try {
+      const { ambulance, driver, nurse, pickupTime, dayOfWeek, shift } = req.body;
+
+      // Create a new schedule entry
+      const newSchedule = new Schedule({
+          ambulance,
+          driver,
+          nurse,
+          pickupTime,
+          dayOfWeek,
+          shift // Include the shift field in the new schedule entry
+      });
+
+      // Save the new schedule entry to the database
+      await newSchedule.save();
+
+      // Redirect to a page to view scheduled bookings or send a success message
+      res.redirect('/schedule');
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
+router.get('/schedule', async (req, res) => {
+  try {
+    // Fetch all necessary data in one go
+    const ambulances = await Ambulance.find();
+    const drivers = await User.find({ role: 'driver' });
+    const nurses = await User.find({ role: 'nurse' });
+    const schedules = await Schedule.find().populate('ambulance driver nurse');
+
+    // Pass all the data to the 'schedule' template
+    res.render('schedule', { ambulances, drivers, nurses, schedules });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+  // Route to Log out
+  router.get('/logout', function(req, res) {
+    req.logout(function(err) {
+      if(err) {
+        console.error('Error logging out:', err);
+        return res.status(500).send('Internal server error');
+      }
+      // Redirect the user to the login page after successful logout
+      res.redirect('/login');
+    });
+  });
+
+
 
 
 module.exports = router;
+
+
+

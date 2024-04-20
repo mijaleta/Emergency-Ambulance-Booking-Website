@@ -346,12 +346,21 @@
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% if (schedule.driver) { %>
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% } else { %>
+                                                                                <span>No driver assigned</span>
+                                                                            <% } %>
+                                                                            <!-- Display the driver's name -->
                                                                         </div>
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                            <% if (schedule.nurse) { %>
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% } else { %>
+                                                                                <span>No nurse assigned</span>
+                                                                            <% } %>
                                                                         </div>
                                                                     </td>
                                                                     <td>
@@ -386,12 +395,20 @@
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% if (schedule.driver) { %>
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% } else { %>
+                                                                                <span>No driver assigned</span>
+                                                                            <% } %>
                                                                         </div>
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                            <% if (schedule.nurse) { %>
+                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the driver's name -->
+                                                                            <% } else { %>
+                                                                                <span>No nurse assigned</span>
+                                                                            <% } %>
                                                                         </div>
                                                                     </td>
                                                                     <td>
@@ -441,13 +458,20 @@
                                                                         </td>
                                                                         <td>
                                                                             <div class="r-no">
-                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                                <% if (schedule.driver) { %>
+                                                                                    <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                                <% } else { %>
+                                                                                    <span>No driver assigned</span>
+                                                                                <% } %>
                                                                             </div>
                                                                         </td>
                                                                         <td>
                                                                             <div class="r-no">
-                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
-                                                                            </div>
+                                                                                <% if (schedule.nurse) { %>
+                                                                                    <span><%= schedule.nurse.name %></span> <!-- Display the driver's name -->
+                                                                                <% } else { %>
+                                                                                    <span>No nurse assigned</span>
+                                                                                <% } %>                                                                            </div>
                                                                         </td>
                                                                         <td>
                                                                             <!-- Button for dispatch -->
@@ -480,13 +504,19 @@
                                                                         </td>
                                                                         <td>
                                                                             <div class="r-no">
-                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
-                                                                            </div>
+                                                                                <% if (schedule.driver) { %>
+                                                                                    <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                                <% } else { %>
+                                                                                    <span>No driver assigned</span>
+                                                                                <% } %>                                                                            </div>
                                                                         </td>
                                                                         <td>
                                                                             <div class="r-no">
-                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
-                                                                            </div>
+                                                                                <% if (schedule.nurse) { %>
+                                                                                    <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                                <% } else { %>
+                                                                                    <span>No nurse assigned</span>
+                                                                                <% } %>                                                                            </div>
                                                                         </td>
                                                                         <td>
                                                                             <!-- Button for dispatch -->
@@ -536,13 +566,19 @@
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
-                                                                        </div>
+                                                                            <% if (schedule.driver) { %>
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% } else { %>
+                                                                                <span>No driver assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
-                                                                        </div>
+                                                                            <% if (schedule.nurse) { %>
+                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                            <% } else { %>
+                                                                                <span>No nurse assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <!-- Button for dispatch -->
@@ -631,13 +667,19 @@
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
-                                                                        </div>
+                                                                            <% if (schedule.driver) { %>
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% } else { %>
+                                                                                <span>No driver assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
-                                                                        </div>
+                                                                            <% if (schedule.nurse) { %>
+                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                            <% } else { %>
+                                                                                <span>No nurse assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <!-- Button for dispatch -->
@@ -726,13 +768,19 @@
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
-                                                                        </div>
+                                                                            <% if (schedule.driver) { %>
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% } else { %>
+                                                                                <span>No driver assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
-                                                                        </div>
+                                                                            <% if (schedule.nurse) { %>
+                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                            <% } else { %>
+                                                                                <span>No nurse assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <!-- Button for dispatch -->
@@ -821,13 +869,19 @@
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
-                                                                        </div>
+                                                                            <% if (schedule.driver) { %>
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% } else { %>
+                                                                                <span>No driver assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
-                                                                        </div>
+                                                                            <% if (schedule.nurse) { %>
+                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                            <% } else { %>
+                                                                                <span>No nurse assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <!-- Button for dispatch -->
@@ -916,13 +970,19 @@
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
-                                                                        </div>
+                                                                            <% if (schedule.driver) { %>
+                                                                                <span><%= schedule.driver.name %></span> <!-- Display the driver's name -->
+                                                                            <% } else { %>
+                                                                                <span>No driver assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <div class="r-no">
-                                                                            <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
-                                                                        </div>
+                                                                            <% if (schedule.nurse) { %>
+                                                                                <span><%= schedule.nurse.name %></span> <!-- Display the nurse's name -->
+                                                                            <% } else { %>
+                                                                                <span>No nurse assigned</span>
+                                                                            <% } %>                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <!-- Button for dispatch -->

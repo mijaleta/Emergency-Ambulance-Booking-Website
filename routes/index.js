@@ -12,7 +12,17 @@ const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 
-
+router.post('/archive/:id', async (req, res) => {
+  try {
+      const bookingRequestId = req.params.id;
+      // Find the booking request by ID and update its 'archived' field to true
+      await BookingRequest.findByIdAndUpdate(bookingRequestId, { archived: true });
+      res.sendStatus(200); // Respond with success status
+  } catch (error) {
+      console.error('Error archiving booking request:', error);
+      res.sendStatus(500); // Respond with internal server error status
+  }
+});
 
 router.post('/archiveA/:id', async (req, res) => {
   try {
@@ -796,17 +806,7 @@ router.post('/patientRequest', async (req, res) => {
     });
 
   // Route to handle archiving a booking request
-router.post('/archive/:id', async (req, res) => {
-  try {
-      const bookingRequestId = req.params.id;
-      // Find the booking request by ID and update its 'archived' field to true
-      await BookingRequest.findByIdAndUpdate(bookingRequestId, { archived: true });
-      res.sendStatus(200); // Respond with success status
-  } catch (error) {
-      console.error('Error archiving booking request:', error);
-      res.sendStatus(500); // Respond with internal server error status
-  }
-});
+
 
 
 
@@ -905,6 +905,7 @@ router.post('/schedule', async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 router.get('/schedule', async (req, res) => {

@@ -1,10 +1,21 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1/ambulance-website', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('Successfully connected to MongoDB.'))
-.catch(err => console.error('Connection error:', err));
+require('dotenv').config()
+
+// mongoose.connect('mongodb://127.0.0.1/ambulance-website', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// })
+// .then(() => console.log('Successfully connected to MongoDB.'))
+// .catch(err => console.error('Connection error:', err));
+
+
+// now
+mongoose.connect(process.env.mongo_URI,{ useNewUrlParser: true,useUnifiedTopology: true }).then(() => {
+  console.log('MongoDB connected...');
+}).catch(err => {
+  console.log(err);
+});
+
 
 
 const userSchema = new mongoose.Schema({
