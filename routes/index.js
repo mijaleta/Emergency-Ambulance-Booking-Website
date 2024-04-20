@@ -308,7 +308,7 @@ router.post('/updateUser', async (req, res) => {
 
   try {
       // Find the user by username
-      let user = await User.findOne({ username });
+      let user = await User.findOne({ username }).maxTimeMS(20000);
 
       if (!user) {
           return res.status(404).json({ message: 'User not found' });
@@ -344,11 +344,6 @@ router.delete('/deleteUser/:userId', async (req, res) => {
 });
 
   
-
-
-
-
-
 
 
 // for dispatcher isDispatcher
@@ -540,7 +535,7 @@ router.post('/register',  async (req, res) => {
       return res.status(400).send('Please provide all required fields');
     }
 
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] }).maxTimeMS(20000);
     if (existingUser) {
       return res.status(400).send('User already exists');
     }
@@ -631,7 +626,7 @@ router.post('/forgot-password', async (req, res) => {
     // Generate a random token
     const token = crypto.randomBytes(20).toString('hex');
     // Find the user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).maxTimeMS(20000);
     if (!user) {
       // User not found with that email
       if (req.accepts('html')) {
@@ -686,7 +681,7 @@ router.post('/forgot-password', async (req, res) => {
     try {
       const token = req.params.token;
       // Find the user with the provided token
-      const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+      const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } }).maxTimeMS(20000);
       if (!user) {
         // Token is invalid or has expired
         return res.status(400).send('Invalid or expired token');
@@ -712,7 +707,7 @@ router.post('/forgot-password', async (req, res) => {
       }
   
       // Find the user with the provided token
-      const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+      const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } }).maxTimeMS(20000);
       if (!user) {
         // Token is invalid or has expired
         return res.status(400).send('Invalid or expired token');
