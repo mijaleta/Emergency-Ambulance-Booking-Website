@@ -965,6 +965,42 @@ router.get('/smsmessage', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// hahusms
+router.post('/send-sms', (req, res) => {
+  const apiSecret = '51228b36aec5d1ade0c459a4b90fe1d73707cc63'; // Replace with your actual API secret
+  const recipientNumber = req.body.recipientNumber; // Extract recipient number from the form
+  const messageText = req.body.messageText;
+ 
+
+  const message = {
+    secret: apiSecret,
+    mode: 'devices',
+    device: '78282884-a511-998c-3568-741020842078', // Replace with your device ID
+    sim: 1,
+    priority: 1,
+    phone: recipientNumber,
+    message: messageText,
+  };
+
+  // Send the SMS using the Hahu.io API
+  request.post(
+    {
+      url: 'https://hahu.io/api/send/sms',
+      qs: message,
+    },
+    (error, response, body) => {
+      if (error) {
+        console.error('Error sending SMS:', error);
+        console.log('respose',response);
+        res.status(500).json({ error: 'Failed to send SMS' });
+      } else {
+        console.log('SMS sent successfully:', body);
+        res.status(200).json({ success: true });
+      }
+    }
+  );
+});
+// hahusms
 
 // for☻ s☻ms notifications 
 
