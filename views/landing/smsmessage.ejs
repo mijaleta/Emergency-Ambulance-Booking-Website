@@ -9,6 +9,21 @@
     <h1>sms sending page</h1>
 
 
+
+
+    phone number: <textarea rows="2" cols="50" >
+        <%= mobile_number%>
+    </textarea>
+<br>
+    patient information: <textarea rows="2" cols="50" readonly>
+        <% if (bookingRequests.length > 0) { %>
+            <%= bookingRequests[bookingRequests.length - 1].contactInfo %>
+        <% } else { %>
+            No booking requests found.
+        <% } %>
+    </textarea>
+    <br>
+
     <button><h3>send</h3></button>
       <form action="/send-sms" method="post">
         <label for="recipientNumber">Recipient Number:</label>

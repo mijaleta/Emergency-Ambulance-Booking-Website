@@ -941,7 +941,7 @@ router.post('/dispatch/:id', async (req, res) => {
           res.redirect(`/smsmessage?mobile_number=${schedule.driver.mobile_number}`);
       } else {
           // If no driver assigned, handle accordingly (e.g., redirect with a message)
-          res.redirect('/smsmessage?mobile_number=No%20driver%20assigned');
+          res.redirect('/smsmessage?mobile_number=No%20mobile_number%20assigned');
       }
   } catch (error) {
       console.error(error);
