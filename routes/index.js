@@ -967,7 +967,10 @@ router.get('/smsmessage', async (req, res) => {
 });
 // hahusms
 router.post('/send-sms', (req, res) => {
-  const apiSecret = '51228b36aec5d1ade0c459a4b90fe1d73707cc63'; // Replace with your actual API secret
+
+
+  // const apiSecret = '51228b36aec5d1ade0c459a4b90fe1d73707cc63'; //hahu sami  api
+  const apiSecret = ' 90adae5bf84b095a6ce3acbe357e3c8ee18cc06b'; // hahu mire   api
   const recipientNumber = req.body.recipientNumber; // Extract recipient number from the form
   const messageText = req.body.messageText;
  
@@ -975,7 +978,8 @@ router.post('/send-sms', (req, res) => {
   const message = {
     secret: apiSecret,
     mode: 'devices',
-    device: '78282884-a511-998c-3568-741020842078', // Replace with your device ID
+    // device: '78282884-a511-998c-3568-741020842078', // hahu sami device ID
+    device: '00000000-0000-0000-b983-bc43e57968e9', // hahu mire  device ID
     sim: 1,
     priority: 1,
     phone: recipientNumber,
