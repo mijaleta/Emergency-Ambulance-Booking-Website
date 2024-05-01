@@ -11,7 +11,7 @@ const Contact = require('../models/contact')
 const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
-
+const request = require('request')
 router.post('/archive/:id', async (req, res) => {
   try {
       const bookingRequestId = req.params.id;
