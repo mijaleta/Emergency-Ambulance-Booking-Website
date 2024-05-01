@@ -853,7 +853,8 @@ router.post('/patientRequest', async (req, res) => {
 
 router.post('/registerToken', (req, res) => {
   const { token } = req.body;
-
+  // const { token } = req.body;
+  console.log('Received token:', token); // Log the received token
   if (req.isAuthenticated()) {
     User.findByIdAndUpdate(req.user._id, { $addToSet: { fcmTokens: token } }, { new: true })
       .then(user => {
@@ -920,6 +921,54 @@ router.get('/schedule', async (req, res) => {
 });
 
 
+// for sms notifications 
+
+
+
+
+// for s☻ms notifications 
+router.post('/dispatch/:id', async (req, res) => {
+  try {
+      const schedule = await Schedule.findById(req.params.id).populate('driver');
+      if (!schedule) {
+          return res.status(404).send('Schedule not found');
+      }
+      // Dispatch logic here
+
+      // Check if schedule has a driver
+      if (schedule.driver) {
+          // Redirect to the page where you want to show the driver's name
+          res.redirect(`/smsmessage?driverName=${schedule.driver.name}`);
+      } else {
+          // If no driver assigned, handle accordingly (e.g., redirect with a message)
+          res.redirect('/smsmessage?driverName=No%20driver%20assigned');
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
+// router.get('/smsmessage', (req, res) => {
+//   const driverName = req.query.driverName;
+//   res.render('smsmessage', { driverName });
+// });
+router.get('/smsmessage', async (req, res) => {
+  try {
+    const driverName = req.query.driverName;
+
+    const bookingRequests = await BookingRequest.find({ archived: false });
+    res.render('smsmessage', { bookingRequests,driverName }); // Render the ambulances using a template engine
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// for☻ s☻ms notifications 
+
+// for s☻ms notifications 
 
 
 

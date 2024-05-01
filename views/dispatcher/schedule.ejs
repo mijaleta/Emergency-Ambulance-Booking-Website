@@ -39,6 +39,11 @@
 </head>
 
 <body class="dashboard dashboard_1">
+
+    <!-- for sending the driver name and nurse name to the smsmessage -->
+
+
+    <!-- for sending the driver name and nurs☻e name to the smsmesage -->
     <div class="full_container">
         <div class="inner_container">
             <!-- Sidebar  -->
@@ -364,10 +369,13 @@
                                                                         </div>
                                                                     </td>
                                                                     <td>
+                                                                        <form action="/dispatch/<%= schedule._id %>" method="POST">
+                                                                            <button type="submit">Dispatch</button>
+                                                                        </form>
                                                                         <!-- Button for dispatch -->
-                                                                        <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
+                                                                        <!-- <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#dispatchModal_<%= schedule._id %>">
                                                                             Dispatch
-                                                                        </button>
+                                                                        </button> -->
                                                                     </td>
                                                                 </tr>
                                                             <% } %>

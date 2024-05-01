@@ -17,7 +17,6 @@ mongoose.connect(process.env.mongo_URI,{ useNewUrlParser: true,useUnifiedTopolog
 });
 
 
-
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   username: { type: String, required: true },
