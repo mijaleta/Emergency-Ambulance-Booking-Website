@@ -938,10 +938,10 @@ router.post('/dispatch/:id', async (req, res) => {
       // Check if schedule has a driver
       if (schedule.driver) {
           // Redirect to the page where you want to show the driver's name
-          res.redirect(`/smsmessage?driverName=${schedule.driver.name}`);
+          res.redirect(`/smsmessage?mobile_number=${schedule.driver.mobile_number}`);
       } else {
           // If no driver assigned, handle accordingly (e.g., redirect with a message)
-          res.redirect('/smsmessage?driverName=No%20driver%20assigned');
+          res.redirect('/smsmessage?mobile_number=No%20driver%20assigned');
       }
   } catch (error) {
       console.error(error);
@@ -956,10 +956,10 @@ router.post('/dispatch/:id', async (req, res) => {
 // });
 router.get('/smsmessage', async (req, res) => {
   try {
-    const driverName = req.query.driverName;
+    const mobile_number = req.query.mobile_number;
 
     const bookingRequests = await BookingRequest.find({ archived: false });
-    res.render('smsmessage', { bookingRequests,driverName }); // Render the ambulances using a template engine
+    res.render('smsmessage', { bookingRequests,mobile_number }); // Render the ambulances using a template engine
 
   } catch (error) {
     res.status(500).json({ error: error.message });
