@@ -9,6 +9,10 @@
     <h1>sms sending page</h1>
       <form action="/send-sms" method="post">
         <label for="recipientNumber">Recipient Number:</label>
+        <!-- <input type="hidden" name="scheduleId" value="<%= scheduleId %>" required> -->
+        <input type="hidden" id="scheduleId" name="scheduleId" value="<%= scheduleId %>" required>
+
+
         <input type="text" id="recipientNumber" name="recipientNumber" value="<%= mobile_number%>" required>
         <br>
         <label for="messageText">Message:</label>

@@ -11,7 +11,7 @@ const Contact = require('../models/contact')
 const BookingRequest = require('../models/patientRequest');
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
-
+const request = require('request')
 router.post('/archive/:id', async (req, res) => {
   try {
       const bookingRequestId = req.params.id;
@@ -308,7 +308,7 @@ router.post('/updateUser', async (req, res) => {
 
   try {
       // Find the user by username
-      let user = await User.findOne({ username });
+      let user = await User.findOne({ username }).maxTimeMS(20000);
 
       if (!user) {
           return res.status(404).json({ message: 'User not found' });
@@ -344,11 +344,6 @@ router.delete('/deleteUser/:userId', async (req, res) => {
 });
 
   
-
-
-
-
-
 
 
 // for dispatcher isDispatcher
@@ -540,7 +535,7 @@ router.post('/register',  async (req, res) => {
       return res.status(400).send('Please provide all required fields');
     }
 
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] }).maxTimeMS(20000);
     if (existingUser) {
       return res.status(400).send('User already exists');
     }
@@ -631,7 +626,7 @@ router.post('/forgot-password', async (req, res) => {
     // Generate a random token
     const token = crypto.randomBytes(20).toString('hex');
     // Find the user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).maxTimeMS(20000);
     if (!user) {
       // User not found with that email
       if (req.accepts('html')) {
@@ -686,7 +681,7 @@ router.post('/forgot-password', async (req, res) => {
     try {
       const token = req.params.token;
       // Find the user with the provided token
-      const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+      const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } }).maxTimeMS(20000);
       if (!user) {
         // Token is invalid or has expired
         return res.status(400).send('Invalid or expired token');
@@ -712,7 +707,7 @@ router.post('/forgot-password', async (req, res) => {
       }
   
       // Find the user with the provided token
-      const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+      const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } }).maxTimeMS(20000);
       if (!user) {
         // Token is invalid or has expired
         return res.status(400).send('Invalid or expired token');
@@ -761,7 +756,7 @@ router.get('/dispatcherAmbulance', async (req, res) => {
 });
 
 router.get('/ArchivedAmbulance', async (req, res) => {
-  try {l
+  try {
     // Fetch archived ambulances from the database
     const archivedAmbulances = await Ambulance.find({ archived: true }).populate('driver');
     // Render the ArchivedAmbulance.ejs file and pass the archived ambulances data to it
@@ -858,7 +853,8 @@ router.post('/patientRequest', async (req, res) => {
 
 router.post('/registerToken', (req, res) => {
   const { token } = req.body;
-
+  // const { token } = req.body;
+  console.log('Received token:', token); // Log the received token
   if (req.isAuthenticated()) {
     User.findByIdAndUpdate(req.user._id, { $addToSet: { fcmTokens: token } }, { new: true })
       .then(user => {
@@ -907,6 +903,7 @@ router.post('/schedule', async (req, res) => {
 });
 
 
+
 router.get('/schedule', async (req, res) => {
   try {
     // Fetch all necessary data in one go
@@ -924,6 +921,95 @@ router.get('/schedule', async (req, res) => {
 });
 
 
+// for sms notifications 
+
+
+
+
+// for s☻ms notifications 
+router.post('/dispatch/:id', async (req, res) => {
+  try {
+      const schedule = await Schedule.findById(req.params.id).populate('driver');
+      if (!schedule) {
+          return res.status(404).send('Schedule not found');
+      }
+      // Dispatch logic here
+
+      // Check if schedule has a driver
+      if (schedule.driver) {
+          // Redirect to the page where you want to show the driver's name
+          res.redirect(`/smsmessage?mobile_number=${schedule.driver.mobile_number}`);
+      } else {
+          // If no driver assigned, handle accordingly (e.g., redirect with a message)
+          res.redirect('/smsmessage?mobile_number=No%20mobile_number%20assigned');
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
+// router.get('/smsmessage', (req, res) => {
+//   const driverName = req.query.driverName;
+//   res.render('smsmessage', { driverName });
+// });
+router.get('/smsmessage', async (req, res) => {
+  try {
+    const mobile_number = req.query.mobile_number;
+
+    const bookingRequests = await BookingRequest.find({ archived: false });
+    res.render('smsmessage', { bookingRequests,mobile_number }); // Render the ambulances using a template engine
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// hahusms
+router.post('/send-sms', (req, res) => {
+
+
+  // const apiSecret = '51228b36aec5d1ade0c459a4b90fe1d73707cc63'; //hahu sami  api
+  const apiSecret = '90adae5bf84b095a6ce3acbe357e3c8ee18cc06b'; // hahu mire   api
+  const recipientNumber = req.body.recipientNumber; // Extract recipient number from the form
+  const messageText = req.body.messageText;
+ 
+
+  const message = {
+    secret: apiSecret,
+    mode: 'devices',
+    // device: '78282884-a511-998c-3568-741020842078', // hahu sami device ID
+    device: '00000000-0000-0000-b983-bc43e57968e9', // hahu mire  device ID
+    sim: 1,
+    priority: 1,
+    phone: recipientNumber,
+    message: messageText,
+  };
+
+  // Send the SMS using the Hahu.io API
+  request.post(
+    {
+      url: 'https://hahu.io/api/send/sms',
+      qs: message,
+    },
+    (error, response, body) => {
+      if (error) {
+        console.error('Error sending SMS:', error);
+        console.log('respose',response);
+        res.status(500).json({ error: 'Failed to send SMS' });
+      } else {
+        console.log('SMS sent successfully:', body);
+        
+        res.status(200).json({ success: true });
+      }
+    }
+  );
+});
+// hahusms
+
+// for☻ s☻ms notifications 
+
+// for s☻ms notifications 
 
 
 

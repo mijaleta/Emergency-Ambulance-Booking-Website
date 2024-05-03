@@ -929,25 +929,26 @@ router.get('/schedule', async (req, res) => {
 // for s☻ms notifications 
 router.post('/dispatch/:id', async (req, res) => {
   try {
-      const schedule = await Schedule.findById(req.params.id).populate('driver');
-      if (!schedule) {
-          return res.status(404).send('Schedule not found');
-      }
-      // Dispatch logic here
+    const schedule = await Schedule.findById(req.params.id).populate('driver');
+    if (!schedule) {
+      return res.status(404).send('Schedule not found');
+    }
+    // Dispatch logic here
 
-      // Check if schedule has a driver
-      if (schedule.driver) {
-          // Redirect to the page where you want to show the driver's name
-          res.redirect(`/smsmessage?mobile_number=${schedule.driver.mobile_number}`);
-      } else {
-          // If no driver assigned, handle accordingly (e.g., redirect with a message)
-          res.redirect('/smsmessage?mobile_number=No%20mobile_number%20assigned');
-      }
+    // Check if schedule has a driver
+    if (schedule.driver) {
+      // Redirect to the smsmessage page with the driver's mobile number and the schedule ID
+      res.redirect(`/smsmessage?mobile_number=${schedule.driver.mobile_number}&scheduleId=${schedule._id}`);
+    } else {
+      // If no driver assigned, handle accordingly (e.g., redirect with a message)
+      res.redirect('/smsmessage?mobile_number=No%20mobile_number%20assigned');
+    }
   } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 // router.get('/smsmessage', (req, res) => {
@@ -957,29 +958,28 @@ router.post('/dispatch/:id', async (req, res) => {
 router.get('/smsmessage', async (req, res) => {
   try {
     const mobile_number = req.query.mobile_number;
+    const scheduleId = req.query.scheduleId; // Retrieve the scheduleId from the query parameters
 
     const bookingRequests = await BookingRequest.find({ archived: false });
-    res.render('smsmessage', { bookingRequests,mobile_number }); // Render the ambulances using a template engine
+    // Pass the scheduleId along with other data to the view
+    res.render('smsmessage', { bookingRequests, mobile_number, scheduleId });
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 // hahusms
-router.post('/send-sms', (req, res) => {
-
-
-  // const apiSecret = '51228b36aec5d1ade0c459a4b90fe1d73707cc63'; //hahu sami  api
-  const apiSecret = ' 90adae5bf84b095a6ce3acbe357e3c8ee18cc06b'; // hahu mire   api
+router.post('/send-sms', async (req, res) => {
+  const apiSecret = '90adae5bf84b095a6ce3acbe357e3c8ee18cc06b'; // Your API secret
   const recipientNumber = req.body.recipientNumber; // Extract recipient number from the form
   const messageText = req.body.messageText;
- 
+  const scheduleId = req.body.scheduleId; // You'll need to pass this from your form
 
   const message = {
     secret: apiSecret,
     mode: 'devices',
-    // device: '78282884-a511-998c-3568-741020842078', // hahu sami device ID
-    device: '00000000-0000-0000-b983-bc43e57968e9', // hahu mire  device ID
+    device: '00000000-0000-0000-b983-bc43e57968e9', // Your device ID
     sim: 1,
     priority: 1,
     phone: recipientNumber,
@@ -992,18 +992,27 @@ router.post('/send-sms', (req, res) => {
       url: 'https://hahu.io/api/send/sms',
       qs: message,
     },
-    (error, response, body) => {
+    async (error, response, body) => {
       if (error) {
         console.error('Error sending SMS:', error);
-        console.log('respose',response);
         res.status(500).json({ error: 'Failed to send SMS' });
       } else {
         console.log('SMS sent successfully:', body);
-        res.status(200).json({ success: true });
+        
+        // If SMS was sent successfully, update the dispatched field
+        try {
+          await Schedule.findByIdAndUpdate(scheduleId, { dispatched: true });
+          res.status(200).json({ success: true, message: 'SMS sent and schedule updated.' });
+        } catch (updateError) {
+          console.error('Error updating schedule:', updateError);
+          res.status(500).json({ error: 'Failed to update schedule' });
+        }
       }
     }
   );
 });
+
+
 // hahusms
 
 // for☻ s☻ms notifications 
