@@ -775,6 +775,7 @@ router.get("/ArchivedAmbulance", async (req, res) => {
 
 const admin = require("firebase-admin");
 const serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
+const { log } = require("console");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -918,17 +919,18 @@ router.get("/schedule", async (req, res) => {
 // for s☻ms notifications
 router.post("/dispatch/:id", async (req, res) => {
   try {
-    const schedule = await Schedule.findById(req.params.id).populate("driver");
+    const schedule = await Schedule.findById(req.params.id).populate("driver").populate("nurse");
     if (!schedule) {
       return res.status(404).send("Schedule not found");
     }
     // Dispatch logic here
 
     // Check if schedule has a driver
-    if (schedule.driver) {
+    if (schedule.driver||schedule.nurse) {
       // Redirect to the smsmessage page with the driver's mobile number and the schedule ID
+      console.log(schedule.nurse.mobile_number);
       res.redirect(
-        `/smsmessage?mobile_number=${schedule.driver.mobile_number}&scheduleId=${schedule._id}`
+        `/smsmessage?mobile_number=${schedule.driver.mobile_number}&nmobile_number=${schedule.nurse.mobile_number}&scheduleId=${schedule._id}`
       );
     } else {
       // If no driver assigned, handle accordingly (e.g., redirect with a message)
@@ -947,11 +949,12 @@ router.post("/dispatch/:id", async (req, res) => {
 router.get("/smsmessage", async (req, res) => {
   try {
     const mobile_number = req.query.mobile_number;
+    const nmobile_number=req.query.nmobile_number;
     const scheduleId = req.query.scheduleId; // Retrieve the scheduleId from the query parameters
 
     const bookingRequests = await BookingRequest.find({ archived: false });
     // Pass the scheduleId along with other data to the view
-    res.render("smsmessage", { bookingRequests, mobile_number, scheduleId });
+    res.render("smsmessage", { bookingRequests, mobile_number, nmobile_number,scheduleId });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
