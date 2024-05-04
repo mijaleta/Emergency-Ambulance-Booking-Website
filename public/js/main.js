@@ -62,21 +62,16 @@ function increaseNotificationCount() {
   // localStorage.setItem('notificationCount', currentCount);
 
 }
-
 const channel = new BroadcastChannel('notificationChannel');
 channel.addEventListener('message', function(event) {
   if (event.data && event.data.type === 'incrementNotificationCount') {
     console.log('Received message from service worker:', event.data);
+    playNotificationSound();
     increaseNotificationCount();
   }
 });
-
-
-// window.addEventListener('load', function() {
-//   // Retrieve the count from localStorage upon page load
-//   const storedCount = localStorage.getItem('notificationCount');
-//   if (storedCount !== null) {
-//     const notificationCountElement = document.getElementById('notificationCount');
-//     notificationCountElement.textContent = storedCount;
-//   }
-// });
+function playNotificationSound() {
+  // Play the notification sound (you can customize this)
+  const audio = new Audio('../s.mp3');
+  audio.play();
+}
