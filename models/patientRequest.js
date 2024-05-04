@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const bookingRequestSchema = new mongoose.Schema({
-    location: { type: String, required: true },
+    location: { type: String, required: false },
     contactInfo: { type: String, required: true },
     urgencyLevel: { type: String, enum: ['low', 'medium', 'high'], required: true },
     status: { type: String, enum: ['pending', 'dispatched', 'completed'], default: 'pending' },
