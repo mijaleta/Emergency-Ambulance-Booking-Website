@@ -30,7 +30,6 @@
     <link rel="stylesheet" href="../css/perfect-scrollbar.css" />
     <!-- custom css -->
     <link rel="stylesheet" href="../css/custom.css" />
-    <link rel="stylesheet" href="../css/schedule.css" />
     <link rel="stylesheet" href="../css/custom/register.css">
     <link rel="stylesheet" href="../css/custom/schedule.css">
     <!--[if lt IE 9]>
@@ -390,25 +389,20 @@
                                                                         </div>
                                                                     </td>
                                                                     <td>
-                                                                        <div class="form-container-Schedule">
-                                                                            <% if (!schedule.dispatched) { %>
-                                                                                <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                    <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                </form>
-                                                                            <% } else { %>
-                                                                                <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                            <% } %>
-                                                                        </div>
-                                                                        <div class="form-container-Schedule">
-                                                                            <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                        <% if (!schedule.dispatched) { %>
+                                                                            <form action="/dispatch/<%= schedule._id %>"
+                                                                                method="POST">
+                                                                                <button
+                                                                                    class="btn btn-warning text-light mb-2"
+                                                                                    type="submit">Dispatch</button>
                                                                             </form>
-                                                                        </div>
+                                                                            <% } else { %>
+                                                                                <button
+                                                                                    class="btn btn-success text-light mb-2"
+                                                                                    disabled>Dispatched</button>
+                                                                                <% } %>
+                                                                                
                                                                     </td>
-
-                                                                    
-                                                                    
-                                                                    
                                                                 </tr>
                                                                 <% } %>
                                                                     <% }); %>
@@ -474,20 +468,20 @@
                                                                                         </div>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <div class="form-container-Schedule">
-                                                                                            <% if (!schedule.dispatched) { %>
-                                                                                                <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                                    <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                                </form>
-                                                                                            <% } else { %>
-                                                                                                <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                            <% } %>
-                                                                                        </div>
-                                                                                        <div class="form-container-Schedule">
-                                                                                            <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                                <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                                        <% if (!schedule.dispatched) {
+                                                                                            %>
+                                                                                            <form
+                                                                                                action="/dispatch/<%= schedule._id %>"
+                                                                                                method="POST">
+                                                                                                <button
+                                                                                                    class="btn btn-warning text-light mb-2"
+                                                                                                    type="submit">Dispatch</button>
                                                                                             </form>
-                                                                                        </div>
+                                                                                            <% } else { %>
+                                                                                                <button
+                                                                                                    class="btn btn-success text-light mb-2"
+                                                                                                    disabled>Dispatched</button>
+                                                                                                <% } %>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <% } %>
@@ -559,29 +553,25 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            <div class="form-container-Schedule">
-                                                                                <% if (!schedule.dispatched) { %>
-                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                    </form>
-                                                                                <% } else { %>
-                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                <% } %>
-                                                                            </div>
-                                                                            <div class="form-container-Schedule">
-                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                            <% if (!schedule.dispatched) { %>
+                                                                                <form
+                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                    method="POST">
+                                                                                    <button
+                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                        type="submit">Dispatch</button>
                                                                                 </form>
-                                                                            </div>
+                                                                                <% } else { %>
+                                                                                    <button
+                                                                                        class="btn btn-success text-light mb-2"
+                                                                                        disabled>Dispatched</button>
+                                                                                    <% } %>
                                                                         </td>
-
                                                                     </tr>
                                                                     <% } %>
                                                                         <% }); %>
 
-                                                                        <td>
-                                                                            <h1>NIGHT SCHEDULE</h1>
-                                                                        </td>
+
 
                                                                             <% schedules.forEach(schedule=> { %>
                                                                                 <% if (schedule.dayOfWeek==='Tuesday' &&
@@ -640,20 +630,20 @@
                                                                                             </div>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <% if (!schedule.dispatched) { %>
-                                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                                    </form>
-                                                                                                <% } else { %>
-                                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                                <% } %>
-                                                                                            </div>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                                            <% if (!schedule.dispatched)
+                                                                                                { %>
+                                                                                                <form
+                                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                                    method="POST">
+                                                                                                    <button
+                                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                                        type="submit">Dispatch</button>
                                                                                                 </form>
-                                                                                            </div>
+                                                                                                <% } else { %>
+                                                                                                    <button
+                                                                                                        class="btn btn-success text-light mb-2"
+                                                                                                        disabled>Dispatched</button>
+                                                                                                    <% } %>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <% } %>
@@ -726,29 +716,26 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            <div class="form-container-Schedule">
-                                                                                <% if (!schedule.dispatched) { %>
-                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                    </form>
-                                                                                <% } else { %>
-                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                <% } %>
-                                                                            </div>
-                                                                            <div class="form-container-Schedule">
-                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                            <% if (!schedule.dispatched) { %>
+                                                                                <form
+                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                    method="POST">
+                                                                                    <button
+                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                        type="submit">Dispatch</button>
                                                                                 </form>
-                                                                            </div>
+                                                                                <% } else { %>
+                                                                                    <button
+                                                                                        class="btn btn-success text-light mb-2"
+                                                                                        disabled>Dispatched</button>
+                                                                                    <% } %>
                                                                         </td>
                                                                     </tr>
                                                                     <% } %>
                                                                         <% }); %>
 
 
-                                                                        <td>
-                                                                            <h1>NIGHT SCHEDULE</h1>
-                                                                        </td>
+
                                                                             <% schedules.forEach(schedule=> { %>
                                                                                 <% if (schedule.dayOfWeek==='Wednesday'
                                                                                     && schedule.shift==='Night' ) { %>
@@ -794,20 +781,20 @@
                                                                                             </div>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <% if (!schedule.dispatched) { %>
-                                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                                    </form>
-                                                                                                <% } else { %>
-                                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                                <% } %>
-                                                                                            </div>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                                            <% if (!schedule.dispatched)
+                                                                                                { %>
+                                                                                                <form
+                                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                                    method="POST">
+                                                                                                    <button
+                                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                                        type="submit">Dispatch</button>
                                                                                                 </form>
-                                                                                            </div>
+                                                                                                <% } else { %>
+                                                                                                    <button
+                                                                                                        class="btn btn-success text-light mb-2"
+                                                                                                        disabled>Dispatched</button>
+                                                                                                    <% } %>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <% } %>
@@ -880,28 +867,25 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            <div class="form-container-Schedule">
-                                                                                <% if (!schedule.dispatched) { %>
-                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                    </form>
-                                                                                <% } else { %>
-                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                <% } %>
-                                                                            </div>
-                                                                            <div class="form-container-Schedule">
-                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                            <% if (!schedule.dispatched) { %>
+                                                                                <form
+                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                    method="POST">
+                                                                                    <button
+                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                        type="submit">Dispatch</button>
                                                                                 </form>
-                                                                            </div>
+                                                                                <% } else { %>
+                                                                                    <button
+                                                                                        class="btn btn-success text-light mb-2"
+                                                                                        disabled>Dispatched</button>
+                                                                                    <% } %>
                                                                         </td>
                                                                     </tr>
                                                                     <% } %>
                                                                         <% }); %>
 
-                                                                        <td>
-                                                                            <h1>NIGHT SCHEDULE</h1>
-                                                                        </td>
+
 
                                                                             <% schedules.forEach(schedule=> { %>
                                                                                 <% if (schedule.dayOfWeek==='Thursday'
@@ -948,20 +932,20 @@
                                                                                             </div>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <% if (!schedule.dispatched) { %>
-                                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                                    </form>
-                                                                                                <% } else { %>
-                                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                                <% } %>
-                                                                                            </div>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                                            <% if (!schedule.dispatched)
+                                                                                                { %>
+                                                                                                <form
+                                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                                    method="POST">
+                                                                                                    <button
+                                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                                        type="submit">Dispatch</button>
                                                                                                 </form>
-                                                                                            </div>
+                                                                                                <% } else { %>
+                                                                                                    <button
+                                                                                                        class="btn btn-success text-light mb-2"
+                                                                                                        disabled>Dispatched</button>
+                                                                                                    <% } %>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <% } %>
@@ -1034,29 +1018,26 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            <div class="form-container-Schedule">
-                                                                                <% if (!schedule.dispatched) { %>
-                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                    </form>
-                                                                                <% } else { %>
-                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                <% } %>
-                                                                            </div>
-                                                                            <div class="form-container-Schedule">
-                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                            <% if (!schedule.dispatched) { %>
+                                                                                <form
+                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                    method="POST">
+                                                                                    <button
+                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                        type="submit">Dispatch</button>
                                                                                 </form>
-                                                                            </div>
+                                                                                <% } else { %>
+                                                                                    <button
+                                                                                        class="btn btn-success text-light mb-2"
+                                                                                        disabled>Dispatched</button>
+                                                                                    <% } %>
                                                                         </td>
                                                                     </tr>
                                                                     <% } %>
                                                                         <% }); %>
 
 
-                                                                        <td>
-                                                                            <h1>NIGHT SCHEDULE</h1>
-                                                                        </td>
+
                                                                             <% schedules.forEach(schedule=> { %>
                                                                                 <% if (schedule.dayOfWeek==='Friday' &&
                                                                                     schedule.shift==='Night' ) { %>
@@ -1102,22 +1083,21 @@
                                                                                             </div>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <% if (!schedule.dispatched) { %>
-                                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                                    </form>
-                                                                                                <% } else { %>
-                                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                                <% } %>
-                                                                                            </div>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                                            <% if (!schedule.dispatched)
+                                                                                                { %>
+                                                                                                <form
+                                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                                    method="POST">
+                                                                                                    <button
+                                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                                        type="submit">Dispatch</button>
                                                                                                 </form>
-                                                                                            </div>
+                                                                                                <% } else { %>
+                                                                                                    <button
+                                                                                                        class="btn btn-success text-light mb-2"
+                                                                                                        disabled>Dispatched</button>
+                                                                                                    <% } %>
                                                                                         </td>
-                                                                                        
                                                                                     </tr>
                                                                                     <% } %>
                                                                                         <% }); %>
@@ -1189,28 +1169,25 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            <div class="form-container-Schedule">
-                                                                                <% if (!schedule.dispatched) { %>
-                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                    </form>
-                                                                                <% } else { %>
-                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                <% } %>
-                                                                            </div>
-                                                                            <div class="form-container-Schedule">
-                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                            <% if (!schedule.dispatched) { %>
+                                                                                <form
+                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                    method="POST">
+                                                                                    <button
+                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                        type="submit">Dispatch</button>
                                                                                 </form>
-                                                                            </div>
+                                                                                <% } else { %>
+                                                                                    <button
+                                                                                        class="btn btn-success text-light mb-2"
+                                                                                        disabled>Dispatched</button>
+                                                                                    <% } %>
                                                                         </td>
                                                                     </tr>
                                                                     <% } %>
                                                                         <% }); %>
 
-                                                                        <td>
-                                                                            <h1>NIGHT SCHEDULE</h1>
-                                                                        </td>
+
 
                                                                             <% schedules.forEach(schedule=> { %>
                                                                                 <% if (schedule.dayOfWeek==='Saturday'
@@ -1257,20 +1234,20 @@
                                                                                             </div>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <% if (!schedule.dispatched) { %>
-                                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                                    </form>
-                                                                                                <% } else { %>
-                                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                                <% } %>
-                                                                                            </div>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                                            <% if (!schedule.dispatched)
+                                                                                                { %>
+                                                                                                <form
+                                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                                    method="POST">
+                                                                                                    <button
+                                                                                                        class="btn btn-warning text-light mb-2 "
+                                                                                                        type="submit">Dispatch</button>
                                                                                                 </form>
-                                                                                            </div>
+                                                                                                <% } else { %>
+                                                                                                    <button
+                                                                                                        class="btn btn-success text-light mb-2"
+                                                                                                        disabled>Dispatched</button>
+                                                                                                    <% } %>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <% } %>
@@ -1343,29 +1320,26 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            <div class="form-container-Schedule">
-                                                                                <% if (!schedule.dispatched) { %>
-                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                    </form>
-                                                                                <% } else { %>
-                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                <% } %>
-                                                                            </div>
-                                                                            <div class="form-container-Schedule">
-                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                            <% if (!schedule.dispatched) { %>
+                                                                                <form
+                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                    method="POST">
+                                                                                    <button
+                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                        type="submit">Dispatch</button>
                                                                                 </form>
-                                                                            </div>
+                                                                                <% } else { %>
+                                                                                    <button
+                                                                                        class="btn btn-success text-light mb-2"
+                                                                                        disabled>Dispatched</button>
+                                                                                    <% } %>
                                                                         </td>
                                                                     </tr>
                                                                     <% } %>
                                                                         <% }); %>
 
 
-                                                                        <td>
-                                                                            <h1>NIGHT SCHEDULE</h1>
-                                                                        </td>
+
                                                                             <% schedules.forEach(schedule=> { %>
                                                                                 <% if (schedule.dayOfWeek==='Sunday' &&
                                                                                     schedule.shift==='Night' ) { %>
@@ -1411,20 +1385,20 @@
                                                                                             </div>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <% if (!schedule.dispatched) { %>
-                                                                                                    <form action="/dispatch/<%= schedule._id %>" method="POST">
-                                                                                                        <button class="btn btn-warning text-light mb-2" type="submit">Dispatch</button>
-                                                                                                    </form>
-                                                                                                <% } else { %>
-                                                                                                    <button class="btn btn-success text-light mb-2" disabled>Dispatched</button>
-                                                                                                <% } %>
-                                                                                            </div>
-                                                                                            <div class="form-container-Schedule">
-                                                                                                <form action="/archiveSchedule/<%= schedule._id %>" method="POST">
-                                                                                                    <button class="btn bg-secondary text-light mb-2" type="submit">Archive</button>
+                                                                                            <% if (!schedule.dispatched)
+                                                                                                { %>
+                                                                                                <form
+                                                                                                    action="/dispatch/<%= schedule._id %>"
+                                                                                                    method="POST">
+                                                                                                    <button
+                                                                                                        class="btn btn-warning text-light mb-2"
+                                                                                                        type="submit">Dispatch</button>
                                                                                                 </form>
-                                                                                            </div>
+                                                                                                <% } else { %>
+                                                                                                    <button
+                                                                                                        class="btn btn-success text-light mb-2"
+                                                                                                        disabled>Dispatched</button>
+                                                                                                    <% } %>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <% } %>

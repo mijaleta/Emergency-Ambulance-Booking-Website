@@ -110,36 +110,46 @@
         <div class="row justify-content-center position-relative" style="margin-top: -100px; z-index: 1;">
             <div class="col-lg-8">
                 <div class="bg-white rounded p-5 m-5 mb-0">
-                    <form action="login" method="post">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <input type="string" class="form-control bg-light border-0" name="username" placeholder=" username"
-                                    style="height: 55px;">
-                            </div>
-                            <div class="col-12 ">
-                                <input type="password" class="form-control bg-light border-0" name="password" placeholder="Password"
-                                    style="height: 55px;">
-                            </div>
-
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Login</button>
-                            </div>
-                            <div class="row">
-                                <div class="col-7">
-                                    <p>Don't have an account? <a href="/registerl" class="nav-item nav-link">Sign
-                                            up</a></p>
-                                </div>
-
-                                <div class="col-5"  p>
-                                    <a href="forgot-password" class="btn btn-secondary mt-4 py-3" >
-                                        Forgot Password </a>
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                    </form>
+                    <!-- Add the 'needs-validation' class and 'novalidate' attribute to your form -->
+<form action="login" method="post" class="needs-validation" novalidate>
+    <div class="row g-3">
+      <div class="col-12">
+        <!-- Add the 'required' attribute to make the field mandatory -->
+        <input type="text" class="form-control bg-light border-0" name="username" placeholder="Username" style="height: 55px;" required>
+        <div class="invalid-feedback">Please enter your username.</div>
+      </div>
+      <div class="col-12">
+        <!-- Add the 'required' attribute to make the field mandatory -->
+        <input type="password" class="form-control bg-light border-0" name="password" placeholder="Password" style="height: 55px;" required>
+        <div class="invalid-feedback">Please enter your password.</div>
+      </div>
+  
+      <div class="col-12">
+        <button class="btn btn-primary w-100 py-3" type="submit">Login</button>
+      </div>
+    </div>
+  </form>
+  
+  <!-- Add this script before the closing body tag -->
+  <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+      'use strict';
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll('.needs-validation');
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    })();
+  </script>
+  
                 </div>
             </div>
         </div>

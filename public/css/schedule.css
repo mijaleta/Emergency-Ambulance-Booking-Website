@@ -1,0 +1,4 @@
+.form-container-Schedule {
+  display: inline-block; /* Display forms side by side */
+  margin-right: 10px; /* Add some spacing between forms */
+}

@@ -58,9 +58,6 @@ router.get("/ss", (req, res) => {
 router.get("/", (req, res) => {
   res.render("indexl");
 });
-router.get("/login", (req, res) => {
-  res.render("loginl"); // Renders the index view
-});
 router.get("/forgot-password", (req, res) => {
   res.render("forgetPasswordl"); // Renders the index view
 });
@@ -136,6 +133,36 @@ router.delete("/booking-requests/:id", async (req, res) => {
     res.status(500).send("Internal server error");
   }
 });
+
+// Middleware to check if the user is already logged in
+function redirectToDashboardIfLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    // User is logged in, redirect to the appropriate dashboard
+    const userRole = req.user.role;
+    switch (userRole) {
+      case "admin":
+        return res.redirect("/adminDashboard");
+      case "nurse":
+        return res.redirect("/nurseDashboard");
+      case "driver":
+        return res.redirect("/driverDashboard");
+      case "dispatcher":
+        return res.redirect("/dispatcherDashboard");
+      default:
+        return res.status(403).send("Unauthorized");
+    }
+  } else {
+    // User is not logged in, proceed to the login page
+    next();
+  }
+}
+
+// Apply the middleware to the login page route
+router.get("/login", redirectToDashboardIfLoggedIn, (req, res) => {
+  // Render the login page if the user is not logged in
+  res.render("loginl");
+});
+
 
 // login route
 router.post("/login", passport.authenticate("local"), (req, res) => {
@@ -353,8 +380,12 @@ router.get("/dispatcherDashboard", isDispatcher, (req, res) => {
   res.render("dispatcherDashboard"); // Renders the index view
 });
 
-router.get("/dispatcherContact", (req, res) => {
-  res.render("dispatcherContact"); // Renders the index view
+// 
+
+
+router.get("/dispatcherContact", async(req, res) => {
+  const contacts = await Contact.find({});
+  res.render("dispatcherContact", { contacts }); // Renders the index view
 });
 router.get("/dispatcherDispatcher", (req, res) => {
   res.render("dispatcherDispatcher"); // Renders the index view
@@ -813,14 +844,6 @@ router.post("/patientRequest", async (req, res) => {
 
       // Check if there are valid tokens
       if (tokens.length > 0) {
-        // Send a notification to each token
-        // const message = {
-        //   notification: {
-        //     title: "New Ambulance Request",
-        //     body: "A new ambulance request has been received."
-        //   },
-        //   tokens: tokens // Array of FCM tokens
-        // };
 
         const message = {
           data: {
@@ -873,30 +896,59 @@ router.post("/registerToken", (req, res) => {
 
 // archived patient request
 
+
+
+// Middleware to check the schedule conditions
+
+
 router.post("/schedule", async (req, res) => {
   try {
     const { ambulance, driver, nurse, pickupTime, dayOfWeek, shift } = req.body;
 
-    // Create a new schedule entry
-    const newSchedule = new Schedule({
-      ambulance,
-      driver,
-      nurse,
-      pickupTime,
+    // Define the maximum number of schedules allowed per shift
+    const maxSchedulesPerShift = 3;
+
+    // Check the number of existing non-archived schedules for the given dayOfWeek and shift
+    const existingSchedulesCount = await Schedule.countDocuments({
       dayOfWeek,
-      shift, // Include the shift field in the new schedule entry
+      shift,
+      archived: false // Only count schedules that are not archived
     });
 
-    // Save the new schedule entry to the database
-    await newSchedule.save();
+    // If the number of existing non-archived schedules is less than the maximum, or if the schedule is to be archived, proceed with creating a new schedule
+    if (existingSchedulesCount < maxSchedulesPerShift || req.body.archived) {
+      // Create a new schedule entry
+      const newSchedule = new Schedule({
+        ambulance,
+        driver,
+        nurse,
+        pickupTime,
+        dayOfWeek,
+        shift,
+        archived: req.body.archived || false // Set the archived status based on the request, defaulting to false
+      });
 
-    // Redirect to a page to view scheduled bookings or send a success message
-    res.redirect("/schedule");
+      // Save the new schedule entry to the database
+      await newSchedule.save();
+
+      // Redirect to a page to view scheduled bookings or send a success message
+      res.redirect("/schedule");
+    } else {
+      // If the maximum number of non-archived schedules is reached, send an error message
+      res.status(400).send("Maximum number of active schedules reached for this shift on the selected day.");
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 });
+
+
+
+
+
+
+
 
 router.get("/schedule", async (req, res) => {
   try {
@@ -904,7 +956,9 @@ router.get("/schedule", async (req, res) => {
     const ambulances = await Ambulance.find();
     const drivers = await User.find({ role: "driver" });
     const nurses = await User.find({ role: "nurse" });
-    const schedules = await Schedule.find().populate("ambulance driver nurse");
+    // const schedules = await Schedule.find().populate("ambulance driver nurse");
+    const schedules = await Schedule.find({ archived:false }).populate("ambulance driver nurse");
+
 
     // Pass all the data to the 'schedule' template
     res.render("schedule", { ambulances, drivers, nurses, schedules });
@@ -913,6 +967,41 @@ router.get("/schedule", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+router.get("/archivedSchedule", async (req, res) => {
+  try {
+    // Fetch all necessary data in one go
+    const ambulances = await Ambulance.find();
+    const drivers = await User.find({ role: "driver" });
+    const nurses = await User.find({ role: "nurse" });
+    // const schedules = await Schedule.find().populate("ambulance driver nurse");
+    const schedules = await Schedule.find({ archived:true }).populate("ambulance driver nurse");
+
+
+    // Pass all the data to the 'schedule' template
+    res.render("ArchivedSchedule", { ambulances, drivers, nurses, schedules });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+// archive schedule
+router.post('/archiveSchedule/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+      await Schedule.findByIdAndUpdate(id, { archived: true });
+      res.redirect('/ArchivedSchedule'); // Redirect to the schedules page or wherever you want
+  } catch (error) {
+      console.error('Error archiving the schedule:', error);
+      res.status(500).send('Server error');
+  }
+});
+// archive schedule
+
+
+
+// contact retrieve
+
+// contact retrieve☻
 
 // for sms notifications
 
@@ -968,6 +1057,7 @@ router.post("/send-sms", async (req, res) => {
     .map((number) => number.trim()); // Extract recipient numbers from the form and split by comma
   const messageText = req.body.messageText;
   const scheduleId = req.body.scheduleId; // You'll need to pass this from your form
+  // const bookingRequestId = req.body.bookingRequestId; // You'll need to pass this from your form
 
   // Array to store promises for each SMS sending request
   const sendRequests = recipientNumbers.map((recipientNumber) => {
@@ -1006,6 +1096,17 @@ router.post("/send-sms", async (req, res) => {
     await Schedule.findByIdAndUpdate(scheduleId, {
       dispatched: true,
     });
+
+
+
+        // Retrieve the bookingRequestId from the form submission
+        const bookingRequestId = req.body.bookingRequestId;
+
+        // Update the status of the BookingRequest to true
+        await BookingRequest.findByIdAndUpdate(bookingRequestId, {
+          status: true,
+        });
+    
 
     res.status(200).json({
       success: true,

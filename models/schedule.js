@@ -8,7 +8,8 @@ const scheduleSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }, // Timestamp when the booking is created
     dispatched: { type: Boolean, default: false }, // Adding the status field with default value of true
     dayOfWeek: { type: String, required: true }, // Adding the dayOfWeek field to store the selected day of the week
-    shift: { type: String, enum: ['Day', 'Night'], required: true } // Shift: Day or Night
+    shift: { type: String, enum: ['Day', 'Night'], required: true },// Shift: Day or Night
+    archived: { type: Boolean, default: false } // New field for archiving
 
 });
 

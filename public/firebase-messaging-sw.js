@@ -1,6 +1,5 @@
 importScripts('https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js');
-// importScripts('https://unpkg.com/waud.js');
 const firebaseConfig = {
   apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
   authDomain: "ambulancebooking-812cd.firebaseapp.com",

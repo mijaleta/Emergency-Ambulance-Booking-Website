@@ -6,7 +6,7 @@ const bookingRequestSchema = new mongoose.Schema({
     location: { type: String, required: false },
     contactInfo: { type: String, required: true },
     urgencyLevel: { type: String, enum: ['low', 'medium', 'high'], required: true },
-    status: { type: String, enum: ['pending', 'dispatched', 'completed'], default: 'pending' },
+    status: { type: Boolean, default: false } ,// New field for archiving
     createdAt: { type: Date, default: Date.now },
     archived: { type: Boolean, default: false } // New field for archiving
 });

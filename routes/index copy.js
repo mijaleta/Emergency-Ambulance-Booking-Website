@@ -58,9 +58,6 @@ router.get("/ss", (req, res) => {
 router.get("/", (req, res) => {
   res.render("indexl");
 });
-router.get("/login", (req, res) => {
-  res.render("loginl"); // Renders the index view
-});
 router.get("/forgot-password", (req, res) => {
   res.render("forgetPasswordl"); // Renders the index view
 });
@@ -136,6 +133,36 @@ router.delete("/booking-requests/:id", async (req, res) => {
     res.status(500).send("Internal server error");
   }
 });
+
+// Middleware to check if the user is already logged in
+function redirectToDashboardIfLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    // User is logged in, redirect to the appropriate dashboard
+    const userRole = req.user.role;
+    switch (userRole) {
+      case "admin":
+        return res.redirect("/adminDashboard");
+      case "nurse":
+        return res.redirect("/nurseDashboard");
+      case "driver":
+        return res.redirect("/driverDashboard");
+      case "dispatcher":
+        return res.redirect("/dispatcherDashboard");
+      default:
+        return res.status(403).send("Unauthorized");
+    }
+  } else {
+    // User is not logged in, proceed to the login page
+    next();
+  }
+}
+
+// Apply the middleware to the login page route
+router.get("/login", redirectToDashboardIfLoggedIn, (req, res) => {
+  // Render the login page if the user is not logged in
+  res.render("loginl");
+});
+
 
 // login route
 router.post("/login", passport.authenticate("local"), (req, res) => {
@@ -353,8 +380,12 @@ router.get("/dispatcherDashboard", isDispatcher, (req, res) => {
   res.render("dispatcherDashboard"); // Renders the index view
 });
 
-router.get("/dispatcherContact", (req, res) => {
-  res.render("dispatcherContact"); // Renders the index view
+// 
+
+
+router.get("/dispatcherContact", async(req, res) => {
+  const contacts = await Contact.find({});
+  res.render("dispatcherContact", { contacts }); // Renders the index view
 });
 router.get("/dispatcherDispatcher", (req, res) => {
   res.render("dispatcherDispatcher"); // Renders the index view
@@ -775,6 +806,7 @@ router.get("/ArchivedAmbulance", async (req, res) => {
 
 const admin = require("firebase-admin");
 const serviceAccount = require("../env/ambulancebooking-812cd-firebase-adminsdk-nlrl0-62836b8b07.json");
+const { log } = require("console");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -812,14 +844,6 @@ router.post("/patientRequest", async (req, res) => {
 
       // Check if there are valid tokens
       if (tokens.length > 0) {
-        // Send a notification to each token
-        // const message = {
-        //   notification: {
-        //     title: "New Ambulance Request",
-        //     body: "A new ambulance request has been received."
-        //   },
-        //   tokens: tokens // Array of FCM tokens
-        // };
 
         const message = {
           data: {
@@ -903,7 +927,9 @@ router.get("/schedule", async (req, res) => {
     const ambulances = await Ambulance.find();
     const drivers = await User.find({ role: "driver" });
     const nurses = await User.find({ role: "nurse" });
-    const schedules = await Schedule.find().populate("ambulance driver nurse");
+    // const schedules = await Schedule.find().populate("ambulance driver nurse");
+    const schedules = await Schedule.find({ archived:false }).populate("ambulance driver nurse");
+
 
     // Pass all the data to the 'schedule' template
     res.render("schedule", { ambulances, drivers, nurses, schedules });
@@ -912,23 +938,59 @@ router.get("/schedule", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+router.get("/archivedSchedule", async (req, res) => {
+  try {
+    // Fetch all necessary data in one go
+    const ambulances = await Ambulance.find();
+    const drivers = await User.find({ role: "driver" });
+    const nurses = await User.find({ role: "nurse" });
+    // const schedules = await Schedule.find().populate("ambulance driver nurse");
+    const schedules = await Schedule.find({ archived:true }).populate("ambulance driver nurse");
+
+
+    // Pass all the data to the 'schedule' template
+    res.render("ArchivedSchedule", { ambulances, drivers, nurses, schedules });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+// archive schedule
+router.post('/archiveSchedule/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+      await Schedule.findByIdAndUpdate(id, { archived: true });
+      res.redirect('/schedules'); // Redirect to the schedules page or wherever you want
+  } catch (error) {
+      console.error('Error archiving the schedule:', error);
+      res.status(500).send('Server error');
+  }
+});
+// archive schedule
+
+
+
+// contact retrieve
+
+// contact retrieve☻
 
 // for sms notifications
 
 // for s☻ms notifications
 router.post("/dispatch/:id", async (req, res) => {
   try {
-    const schedule = await Schedule.findById(req.params.id).populate("driver");
+    const schedule = await Schedule.findById(req.params.id).populate("driver").populate("nurse");
     if (!schedule) {
       return res.status(404).send("Schedule not found");
     }
     // Dispatch logic here
 
     // Check if schedule has a driver
-    if (schedule.driver) {
+    if (schedule.driver||schedule.nurse) {
       // Redirect to the smsmessage page with the driver's mobile number and the schedule ID
+      console.log(schedule.nurse.mobile_number);
       res.redirect(
-        `/smsmessage?mobile_number=${schedule.driver.mobile_number}&scheduleId=${schedule._id}`
+        `/smsmessage?mobile_number=${schedule.driver.mobile_number}&nmobile_number=${schedule.nurse.mobile_number}&scheduleId=${schedule._id}`
       );
     } else {
       // If no driver assigned, handle accordingly (e.g., redirect with a message)
@@ -947,11 +1009,12 @@ router.post("/dispatch/:id", async (req, res) => {
 router.get("/smsmessage", async (req, res) => {
   try {
     const mobile_number = req.query.mobile_number;
+    const nmobile_number=req.query.nmobile_number;
     const scheduleId = req.query.scheduleId; // Retrieve the scheduleId from the query parameters
 
     const bookingRequests = await BookingRequest.find({ archived: false });
     // Pass the scheduleId along with other data to the view
-    res.render("smsmessage", { bookingRequests, mobile_number, scheduleId });
+    res.render("smsmessage", { bookingRequests, mobile_number, nmobile_number,scheduleId });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -965,6 +1028,7 @@ router.post("/send-sms", async (req, res) => {
     .map((number) => number.trim()); // Extract recipient numbers from the form and split by comma
   const messageText = req.body.messageText;
   const scheduleId = req.body.scheduleId; // You'll need to pass this from your form
+  // const bookingRequestId = req.body.bookingRequestId; // You'll need to pass this from your form
 
   // Array to store promises for each SMS sending request
   const sendRequests = recipientNumbers.map((recipientNumber) => {
@@ -1003,6 +1067,17 @@ router.post("/send-sms", async (req, res) => {
     await Schedule.findByIdAndUpdate(scheduleId, {
       dispatched: true,
     });
+
+
+
+        // Retrieve the bookingRequestId from the form submission
+        const bookingRequestId = req.body.bookingRequestId;
+
+        // Update the status of the BookingRequest to true
+        await BookingRequest.findByIdAndUpdate(bookingRequestId, {
+          status: true,
+        });
+    
 
     res.status(200).json({
       success: true,

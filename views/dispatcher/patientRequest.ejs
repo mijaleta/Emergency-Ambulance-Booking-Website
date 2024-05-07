@@ -84,6 +84,8 @@
                               Patient Request</span></a></li>
                               <li><a href="ArchivedAmbulance"><i class="fa fa-table purple_color2"></i> <span>Archived
                                 Ambulance</span></a></li>
+                                <li><a href="archivedSchedule"><i class="fa fa-table purple_color2"></i> <span>Archived
+                                    Archived Schedule</span></a></li>
                       </ul>
                 </div>
             </nav>
@@ -263,11 +265,16 @@
                                                     bookingRequests.forEach((bookingRequest, index) => { %>
                                                     <tr id="row_<%= bookingRequest._id %>">
                                                         <td><%= index + 1 %></td> <!-- Incremental number -->
-                                                        <td><%= bookingRequest.location %></td>
+                                                        <td><%= Number(bookingRequest.location.split(',')[0]).toFixed(1) %>,<%= Number(bookingRequest.location.split(',')[1]).toFixed(1) %></td>
                                                         <td><%= bookingRequest.contactInfo %></td>
                                                         <td><%= bookingRequest.urgencyLevel %></td>
                                                         <td>
                                                             <button class="btn btn-primary viewDetailButton" data-booking-request-id="<%= bookingRequest._id %>">View Details</button>
+                                                            <% if (bookingRequest.status) { %>
+                                                                <button type="button" class="btn bg-success text-light ">success</button>
+                                                            <% } else { %>
+                                                                <button type="button" class="btn bg-warning text-light ">pending</button>
+                                                            <% } %>
                                                             <form class="archive-form" data-id="<%= bookingRequest._id %>" style="display: inline;">
                                                                 <button type="button" class="btn bg-secondary text-light archive-button">Archive</button>
                                                             </form>
