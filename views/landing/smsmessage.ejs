@@ -1,41 +1,145 @@
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sms sending page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dispatched Detail and SMS</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-weight: bold;
+      width: 100px;
+      display: inline-block; 
+    }
+
+    .form-control {
+      border-radius: 6px;
+      width: calc(100% - 120px); 
+    }
+
+    .btn-send {
+      border-radius: 12px;
+      background-color: #007bff;
+      color: #fff;
+      margin-left: 40%;
+      font-size: 20px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-send:hover {
+      background-color: #0056b3;
+    }
+
+    h2 {
+      color: #007bff;
+      margin-left: 30%;
+      margin-bottom: 20px;
+    }
+
+    .btn-reset {
+      border-radius: 20px;
+      background-color: #007bff;
+      color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    .btn-reset:hover {
+      background-color: #0056b3;
+    }
+
+  </style>
 </head>
 <body>
-    <h1>sms sending page</h1>
-      <form action="/send-sms" method="post">
-        <label for="recipientNumber">Recipient Number:</label>
-        <!-- <input type="hidden" name="scheduleId" value="<%= scheduleId %>" required> -->
+  <div class="container">
+    <form action="/send-sms" method="post">
+      <h2>Realtime SMS Details</h2>
+      <div class="form-group">
+        <label for="recipient" class="form-label">Recipient No</label>
+
         <input type="hidden" id="scheduleId" name="scheduleId" value="<%= scheduleId %>" required>
+        <input type="text"  class="form-control" id="recipient" name="recipients" value="<%= mobile_number%>,<%= nmobile_number%> " required>
 
+        <!-- <input type="text" class="form-control" id="recipient" placeholder="Enter recipient number"> -->
+      </div>
+      <div class="form-group">
+        <label for="message" class="form-label">Message</label>
+        <input type="hidden" id="bookingRequestId" name="bookingRequestId" value="<%= bookingRequests.length > 0 ? bookingRequests[bookingRequests.length - 1]._id : '' %>" required>
 
-        <input type="text" id="recipientNumber" name="recipients" value="<%= mobile_number%>,<%= nmobile_number%> " required>
-
-        <br>
-         <!-- Hidden input for bookingRequestId -->
-  <!-- <input type="hidden" id="bookingRequestId" name="bookingRequestId" value="<%= bookingRequests._id %>" required> -->
-  <input type="hidden" id="bookingRequestId" name="bookingRequestId" value="<%= bookingRequests.length > 0 ? bookingRequests[bookingRequests.length - 1]._id : '' %>" required>
-
-        <label for="messageText">Message:</label>
-        <textarea id="messageText" name="messageText"  rows="4" cols="50" required></textarea>
-        <br>
-        <input type="submit" value="Send SMS">
+        <textarea class="form-control"  id="messageText" name="messageText"  rows="5" placeholder="Enter your message"></textarea>
+      </div>
+      <button type="submit" class="btn btn-send btn-block">Send SMS</button>
     </form>
+  </div>
 
-    <script>
-        // Get the textarea element
-        var textarea = document.getElementById("messageText");
-    
-        // Set the value of the textarea using JavaScript
-        textarea.value = `<% if (bookingRequests.length > 0) { %>
-            <%= bookingRequests[bookingRequests.length - 1].contactInfo %>
-        <% } else { %>
-            No booking requests found.
-        <% } %>`;
-    </script>
+
+
+
+
+
+
+
+  <script>
+    // Get the textarea element
+    var textarea = document.getElementById("messageText");
+
+    // Set the value of the textarea using JavaScript
+    textarea.value = `<% if (bookingRequests.length > 0) { %>
+        <%= bookingRequests[bookingRequests.length - 1].contactInfo %>
+    <% } else { %>
+        No booking requests found.
+    <% } %>`;
+</script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

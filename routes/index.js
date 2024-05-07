@@ -935,8 +935,10 @@ router.post("/schedule", async (req, res) => {
       res.redirect("/schedule");
     } else {
       // If the maximum number of non-archived schedules is reached, send an error message
-      res.status(400).send("Maximum number of active schedules reached for this shift on the selected day.");
-    }
+      // console.log(req.body); // Add this line just before the error response is sent
+       res.render('schedule', { error: "limitReached" });
+
+      res.status(400).send("Maximum number of active schedules reached for this shift on the selected day.");    }
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -975,8 +977,6 @@ router.get("/archivedSchedule", async (req, res) => {
     const nurses = await User.find({ role: "nurse" });
     // const schedules = await Schedule.find().populate("ambulance driver nurse");
     const schedules = await Schedule.find({ archived:true }).populate("ambulance driver nurse");
-
-
     // Pass all the data to the 'schedule' template
     res.render("ArchivedSchedule", { ambulances, drivers, nurses, schedules });
   } catch (error) {
@@ -1108,11 +1108,7 @@ router.post("/send-sms", async (req, res) => {
         });
     
 
-    res.status(200).json({
-      success: true,
-      message: "All SMS sent and schedule updated.",
-      results: results,
-    });
+    res.render('smsSuccess')
   } catch (error) {
     console.error("Error during SMS sending or schedule updating:", error);
     res.status(500).json({ error: "Failed to send all SMS or update schedule" });

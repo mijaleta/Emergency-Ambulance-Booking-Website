@@ -7,34 +7,35 @@
 </head>
 <body>
     <h1>sms sending page</h1>
-
-
-
-
-    phone number: <textarea rows="2" cols="50" >
-        <%= mobile_number%>
-    </textarea>
-<br>
-    patient information: <textarea rows="2" cols="50" readonly>
-        <% if (bookingRequests.length > 0) { %>
-            <%= bookingRequests[bookingRequests.length - 1].contactInfo %>
-        <% } else { %>
-            No booking requests found.
-        <% } %>
-    </textarea>
-    <br>
-
-    <button><h3>send</h3></button>
       <form action="/send-sms" method="post">
         <label for="recipientNumber">Recipient Number:</label>
-        <input type="text" id="recipientNumber" name="<%= mobile_number%>"  required>
+        <!-- <input type="hidden" name="scheduleId" value="<%= scheduleId %>" required> -->
+        <input type="hidden" id="scheduleId" name="scheduleId" value="<%= scheduleId %>" required>
+
+
+        <input type="text" id="recipientNumber" name="recipients" value="<%= mobile_number%>,<%= nmobile_number%> " required>
+
         <br>
+         <!-- Hidden input for bookingRequestId -->
+  <!-- <input type="hidden" id="bookingRequestId" name="bookingRequestId" value="<%= bookingRequests._id %>" required> -->
+  <input type="hidden" id="bookingRequestId" name="bookingRequestId" value="<%= bookingRequests.length > 0 ? bookingRequests[bookingRequests.length - 1]._id : '' %>" required>
+
         <label for="messageText">Message:</label>
-        <textarea id="messageText" name="messageText" rows="4" cols="50" required></textarea>
+        <textarea id="messageText" name="messageText"  rows="4" cols="50" required></textarea>
         <br>
         <input type="submit" value="Send SMS">
     </form>
 
-     
+    <script>
+        // Get the textarea element
+        var textarea = document.getElementById("messageText");
+    
+        // Set the value of the textarea using JavaScript
+        textarea.value = `<% if (bookingRequests.length > 0) { %>
+            <%= bookingRequests[bookingRequests.length - 1].contactInfo %>
+        <% } else { %>
+            No booking requests found.
+        <% } %>`;
+    </script>
 </body>
 </html>

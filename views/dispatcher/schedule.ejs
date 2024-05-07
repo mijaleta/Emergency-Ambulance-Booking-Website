@@ -37,6 +37,8 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 
 <body class="dashboard dashboard_1">
@@ -241,12 +243,14 @@
                                                         data-dismiss="modal">&times;</button>
                                                 </div>
 
+                                               
+
                                                 <!-- Modal Body -->
                                                 <div class="modal-body">
                                                     <!-- Your registration form content goes here -->
 
 
-                                                    <form action="/schedule" method="post">
+                                                    <form action="/schedule" method="post"  id="scheduleForm">
                                                         <div class="form-group col-md-12">
                                                             <label for="dayOfWeek">Day of the Week</label>
                                                             <select name="dayOfWeek" class="form-control">
@@ -314,6 +318,10 @@
                                                                 schedule</button>
                                                         </div>
                                                     </form>
+                                                    <!-- for popup -->
+                                                    <!-- Popup -->
+
+                                                    <!-- for popup☻ -->
 
 
                                                 </div>
@@ -326,6 +334,64 @@
                                             </div>
                                         </div>
                                     </div>
+                                
+                                        
+                                        <!-- ... existing modal code ... -->
+                                        
+
+                                    <!-- added javascript for the popup -->
+                                       <!-- Popup -->
+
+                                       <!-- <style>
+                                        /* Style for the popup */
+                                        .popup {
+                                            position: fixed;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            background-color: #e5e84d; /* Red color for error message */
+                                            color: #ffffff;
+                                            text-align: center;
+                                            padding: 10px;
+                                            display: none;
+                                            z-index: 9999;
+                                        }
+                                    </style> -->
+    <!-- <div class="popup" id="popupMessage">
+        Maximum number of active schedules reached for this shift on the selected day.
+    </div> -->
+
+    <!-- Your existing JavaScript code for showing the popup -->
+    <!-- <script>
+        // Function to show the popup
+        function showPopup() {
+            document.getElementById("popupMessage").style.display = "block";
+        }
+    
+        // Add an event listener to the form submission
+        document.getElementById("scheduleForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent default form submission
+            // Submit the form using AJAX
+            fetch('/schedule', {
+                method: 'POST',
+                body: new FormData(document.getElementById('scheduleForm'))
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Handle successful response
+                    // Redirect or show success message
+                    window.location.href = "/schedule"; // Redirect to the schedule page
+                } else {
+                    // Handle error response
+                    showPopup(); // Show the popup
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script> -->
+                                    <!-- added javascript for the popup☻ -->
 
 
                                     <div class="tab-content col-lg-12" id="myTabContent">
