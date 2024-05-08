@@ -8,6 +8,8 @@ const User = require("../models/user");
 const Ambulance = require("../models/ambulance");
 const Schedule = require("../models/schedule");
 const Contact = require("../models/contact");
+const SpecialRequest = require("../models/specialRequest");
+const Feedback = require("../models/feedback");
 const BookingRequest = require("../models/patientRequest");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
@@ -872,6 +874,66 @@ router.post("/patientRequest", async (req, res) => {
   }
 });
 
+
+router.post('/special-requests', async (req, res) => {
+  try {
+    const { requestText } = req.body;
+    const newRequest = new SpecialRequest({ requestText });
+    await newRequest.save();
+    res.status(201).json({ message: 'Request saved successfully' });
+
+    // Retrieve all users who should be notified
+    const usersToNotify = await User.find({ role: "dispatcher" }); // Adjust the query to match your needs
+
+    // Check if there are users to notify
+    if (usersToNotify.length > 0) {
+      // Create an array to hold all the tokens
+      const tokens = usersToNotify
+        .map((user) => user.fcmTokens)
+        .flat()
+        .filter((token) => token != null);
+
+      // Check if there are valid tokens
+      if (tokens.length > 0) {
+        const message = {
+          data: {
+            title: "New Special Request",
+            body: "A new special request has been submitted.",
+          },
+          tokens: tokens, // Array of FCM tokens
+        };
+
+        admin
+          .messaging()
+          .sendMulticast(message)
+          .then((response) =>
+            console.log("Notifications sent successfully:", response)
+          )
+          .catch((error) =>
+            console.error("Error sending notifications:", error)
+          );
+      }
+    }
+  } catch (error) {
+    console.error("Error handling special request:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.post("/registerToken", (req, res) => {
   const { token } = req.body;
   // const { token } = req.body;
@@ -1122,6 +1184,35 @@ router.post("/send-sms", async (req, res) => {
 
 // for s☻ms notifications
 
+
+// feedback
+// Route to handle POST request
+router.post('/submit-feedback', async (req, res) => {  
+  console.log('Request received:', req.body); // Log the incoming request body
+
+
+  try {
+    const { contactNumber, feedbackType, feedbackText } = req.body;
+
+    // Create a new feedback document
+    const newFeedback = new Feedback({
+      contactNumber,
+      feedbackType,
+      feedbackText,
+    });
+
+    // Save the feedback to the database
+    await newFeedback.save();
+
+    res.status(201).send('Feedback submitted successfully');
+  } catch (error) {
+    console.error('Error occurred:', error); // Log any errors
+
+    res.status(500).send('Error submitting feedback');
+  }
+});
+
+// feedback
 // Route to Log out
 router.get("/logout", function (req, res) {
   req.logout(function (err) {

@@ -8,6 +8,8 @@ const User = require("../models/user");
 const Ambulance = require("../models/ambulance");
 const Schedule = require("../models/schedule");
 const Contact = require("../models/contact");
+const SpecialRequest = require("../models/specialRequest");
+const Feedback = require("../models/feedback");
 const BookingRequest = require("../models/patientRequest");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
@@ -872,6 +874,31 @@ router.post("/patientRequest", async (req, res) => {
   }
 });
 
+
+// Create a new special request
+router.post('/special-requests', async (req, res) => {
+  try {
+    const { requestText } = req.body;
+    const newRequest = new SpecialRequest({ requestText });
+    await newRequest.save();
+    res.status(201).json({ message: 'Request saved successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
 router.post("/registerToken", (req, res) => {
   const { token } = req.body;
   // const { token } = req.body;
@@ -896,30 +923,61 @@ router.post("/registerToken", (req, res) => {
 
 // archived patient request
 
+
+
+// Middleware to check the schedule conditions
+
+
 router.post("/schedule", async (req, res) => {
   try {
     const { ambulance, driver, nurse, pickupTime, dayOfWeek, shift } = req.body;
 
-    // Create a new schedule entry
-    const newSchedule = new Schedule({
-      ambulance,
-      driver,
-      nurse,
-      pickupTime,
+    // Define the maximum number of schedules allowed per shift
+    const maxSchedulesPerShift = 3;
+
+    // Check the number of existing non-archived schedules for the given dayOfWeek and shift
+    const existingSchedulesCount = await Schedule.countDocuments({
       dayOfWeek,
-      shift, // Include the shift field in the new schedule entry
+      shift,
+      archived: false // Only count schedules that are not archived
     });
 
-    // Save the new schedule entry to the database
-    await newSchedule.save();
+    // If the number of existing non-archived schedules is less than the maximum, or if the schedule is to be archived, proceed with creating a new schedule
+    if (existingSchedulesCount < maxSchedulesPerShift || req.body.archived) {
+      // Create a new schedule entry
+      const newSchedule = new Schedule({
+        ambulance,
+        driver,
+        nurse,
+        pickupTime,
+        dayOfWeek,
+        shift,
+        archived: req.body.archived || false // Set the archived status based on the request, defaulting to false
+      });
 
-    // Redirect to a page to view scheduled bookings or send a success message
-    res.redirect("/schedule");
+      // Save the new schedule entry to the database
+      await newSchedule.save();
+
+      // Redirect to a page to view scheduled bookings or send a success message
+      res.redirect("/schedule");
+    } else {
+      // If the maximum number of non-archived schedules is reached, send an error message
+      // console.log(req.body); // Add this line just before the error response is sent
+       res.render('schedule', { error: "limitReached" });
+
+      res.status(400).send("Maximum number of active schedules reached for this shift on the selected day.");    }
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 });
+
+
+
+
+
+
+
 
 router.get("/schedule", async (req, res) => {
   try {
@@ -946,8 +1004,6 @@ router.get("/archivedSchedule", async (req, res) => {
     const nurses = await User.find({ role: "nurse" });
     // const schedules = await Schedule.find().populate("ambulance driver nurse");
     const schedules = await Schedule.find({ archived:true }).populate("ambulance driver nurse");
-
-
     // Pass all the data to the 'schedule' template
     res.render("ArchivedSchedule", { ambulances, drivers, nurses, schedules });
   } catch (error) {
@@ -960,7 +1016,7 @@ router.post('/archiveSchedule/:id', async (req, res) => {
   try {
       const { id } = req.params;
       await Schedule.findByIdAndUpdate(id, { archived: true });
-      res.redirect('/schedules'); // Redirect to the schedules page or wherever you want
+      res.redirect('/ArchivedSchedule'); // Redirect to the schedules page or wherever you want
   } catch (error) {
       console.error('Error archiving the schedule:', error);
       res.status(500).send('Server error');
@@ -1079,11 +1135,7 @@ router.post("/send-sms", async (req, res) => {
         });
     
 
-    res.status(200).json({
-      success: true,
-      message: "All SMS sent and schedule updated.",
-      results: results,
-    });
+    res.render('smsSuccess')
   } catch (error) {
     console.error("Error during SMS sending or schedule updating:", error);
     res.status(500).json({ error: "Failed to send all SMS or update schedule" });
@@ -1097,6 +1149,35 @@ router.post("/send-sms", async (req, res) => {
 
 // for s☻ms notifications
 
+
+// feedback
+// Route to handle POST request
+router.post('/submit-feedback', async (req, res) => {  
+  console.log('Request received:', req.body); // Log the incoming request body
+
+
+  try {
+    const { contactNumber, feedbackType, feedbackText } = req.body;
+
+    // Create a new feedback document
+    const newFeedback = new Feedback({
+      contactNumber,
+      feedbackType,
+      feedbackText,
+    });
+
+    // Save the feedback to the database
+    await newFeedback.save();
+
+    res.status(201).send('Feedback submitted successfully');
+  } catch (error) {
+    console.error('Error occurred:', error); // Log any errors
+
+    res.status(500).send('Error submitting feedback');
+  }
+});
+
+// feedback
 // Route to Log out
 router.get("/logout", function (req, res) {
   req.logout(function (err) {
