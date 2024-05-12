@@ -222,10 +222,9 @@
                                                   <td><%= user.role %></td>
                                                   <td>
 <!-- Update button inside the table -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="fillModal('<%= user._id %>', '<%= user.name %>', '<%= user.mobile_number %>', '<%= user.username %>', '<%= user.email %>', '<%= user.role %>')">Update</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" da   ta-target="#editModal" onclick="fillModal('<%= user._id %>', '<%= user.name %>', '<%= user.mobile_number %>', '<%= user.username %>', '<%= user.email %>', '<%= user.role %>')">Update</button>
 
-                                                    <button class="btn btn-success">Suspend</button>
-                                                    <button class="btn btn-danger" onclick="deleteUser('<%= user._id %>')">Delete</button> <!-- Pass user ID to deleteUser function -->
+                                    
                                                 </td>
                                                 </tr>
                                               <% }); %>
@@ -274,26 +273,7 @@ function fillModal(userId, name, mobileNumber, username, email, role) {
 
 
 
-    // this is for the delete operation on the user of the system 
-    function deleteUser(userId) {
-    if (confirm('Are you sure you want to delete this user?')) {
-        fetch('/deleteUser/' + userId, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (response.ok) {
-                // Refresh the page or update the user list as needed
-                location.reload(); // Refresh the page after deletion
-            } else {
-                console.error('Failed to delete user');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-}
-
+ 
 </script>
 
     <!-- jQuery -->

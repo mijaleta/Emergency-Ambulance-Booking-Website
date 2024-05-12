@@ -198,6 +198,82 @@
             </div>
          </div>
       </div>
+
+      <!--firebase cloud messaign notification -->
+      <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js"></script>
+
+<script>
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
+    authDomain: "ambulancebooking-812cd.firebaseapp.com",
+    projectId: "ambulancebooking-812cd",
+    storageBucket: "ambulancebooking-812cd.appspot.com",
+    messagingSenderId: "887269267926",
+    appId: "1:887269267926:web:fff487690a9b8364e02c77",
+    measurementId: "G-H5CN5R5BLD"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+
+// Existing Firebase initialization and configuration...
+
+// Function to request permission and retrieve token
+const requestPermissionAndToken = async () => {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      const token = await messaging.getToken();
+      // Send the token to your backend for notification delivery
+      sendTokenToServer(token);
+    } else {
+      console.log('Permission denied');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+// Request permission and retrieve token when the page loads
+window.addEventListener('load', requestPermissionAndToken);
+
+// Function to send the token to the backend
+function sendTokenToServer(token) {
+  // Make a POST request to your backend with the token
+  fetch('/registerToken', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+   },
+    body: JSON.stringify({ token: token }) // Include the token in the request body
+  })
+  .then(response => response.json())
+  .then(data => console.log('Token sent to server successfully', data))
+  .catch(error => console.error('Error sending token to server:', error));
+}
+
+
+
+
+// for when the window is closed 
+
+// Handle incoming messages
+// messaging.onMessage((payload) => {
+//       alert('Message received: ' + JSON.stringify(payload));
+//     });
+
+
+
+
+
+
+
+</script>
+      <!--firebase cloud messaign notification☻ -->
       <!-- jQuery -->
       <script src="../js/jquery.min.js"></script>
       <script src="../js/popper.min.js"></script>
@@ -212,6 +288,7 @@
       <script src="../js/perfect-scrollbar.min.js"></script>
       <!-- custom js -->
       <script src="../js/custom.js"></script>
+      <script src="../js/main.js"></script>
       
       <!-- google map js -->
       <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script> -->

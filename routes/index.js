@@ -226,6 +226,7 @@ router.get("/dashboard", (req, res) => {
         user: {
           username: req.user.username,
           role: req.user.role,
+          name: req.user.name, // Add the driver's name here
         },
       });
     } else {
@@ -250,18 +251,21 @@ router.get("/dashboard", (req, res) => {
   }
 });
 
-router.get("/adminDashboard", (req, res) => {
+
+
+
+router.get("/adminDashboard",isAdmin, (req, res) => {
   res.render("adminDashboard"); // Renders the index view
 });
-router.get("/adminAmbulance", (req, res) => {
+router.get("/adminAmbulance",isAdmin, (req, res) => {
   res.render("adminAmbulance"); // Renders the index view
 });
-router.get("/adminContact", (req, res) => {
+router.get("/adminContact", isAdmin,(req, res) => {
   res.render("adminContact"); // Renders the index view
 });
 
 // Route to update user details
-router.post("/updateUser", async (req, res) => {
+router.post("/updateUser",isAdmin, async (req, res) => {
   try {
     const { userId, name, mobile_number, username, email, role } = req.body;
 
@@ -301,7 +305,7 @@ router.post("/updateUser", async (req, res) => {
 
 // Route to fetch dispatcher users and render the table
 // Route to fetch dispatcher users and render the table
-router.get("/adminDispatcher", async (req, res) => {
+router.get("/adminDispatcher", isAdmin,async (req, res) => {
   try {
     const dispatcherUsers = await User.find({ role: "dispatcher" });
     res.render("adminDispatcher", { users: dispatcherUsers }); // Pass users to the template
@@ -311,7 +315,7 @@ router.get("/adminDispatcher", async (req, res) => {
 });
 
 // Route to fetch nurse users and render the table
-router.get("/adminNurse", async (req, res) => {
+router.get("/adminNurse",isAdmin, async (req, res) => {
   try {
     const nurseUsers = await User.find({ role: "nurse" });
     res.render("adminNurse", { users: nurseUsers });
@@ -321,7 +325,7 @@ router.get("/adminNurse", async (req, res) => {
 });
 
 // Route to fetch driver users and render the table
-router.get("/adminDriver", async (req, res) => {
+router.get("/adminDriver",isAdmin, async (req, res) => {
   try {
     const driverUsers = await User.find({ role: "driver" });
     res.render("adminDriver", { users: driverUsers });
@@ -330,15 +334,15 @@ router.get("/adminDriver", async (req, res) => {
   }
 });
 
-router.get("/adminMap", (req, res) => {
+router.get("/adminMap",isAdmin, (req, res) => {
   res.render("adminMap"); // Renders the index view
 });
-router.get("/adminSettings", (req, res) => {
+router.get("/adminSettings",isAdmin, (req, res) => {
   res.render("adminSettings"); // Renders the index view
 });
 
 // Route to handle updating user details
-router.post("/updateUser", async (req, res) => {
+router.post("/updateUser", isAdmin,async (req, res) => {
   const { name, mobile_number, username, email, role } = req.body;
 
   try {
@@ -385,17 +389,17 @@ router.get("/dispatcherDashboard", isDispatcher, (req, res) => {
 // 
 
 
-router.get("/dispatcherContact", async(req, res) => {
+router.get("/dispatcherContact", isDispatcher,async(req, res) => {
   const contacts = await Contact.find({});
   res.render("dispatcherContact", { contacts }); // Renders the index view
 });
-router.get("/dispatcherDispatcher", (req, res) => {
+router.get("/dispatcherDispatcher",isDispatcher, (req, res) => {
   res.render("dispatcherDispatcher"); // Renders the index view
 });
-router.get("/dispatcherMap", (req, res) => {
+router.get("/dispatcherMap",isDispatcher, (req, res) => {
   res.render("dispatcherMap"); // Renders the index view
 });
-router.get("/dispatcherSettings", (req, res) => {
+router.get("/dispatcherSettings",isDispatcher, (req, res) => {
   res.render("dispatcherSettings"); // Renders the index view
 });
 
@@ -411,7 +415,7 @@ router.get("/dispatcherSettings", (req, res) => {
 //   }
 // });
 // new
-router.post("/add-ambulance", async (req, res) => {
+router.post("/add-ambulance", isDispatcher,async (req, res) => {
   try {
     const { type, available, driver } = req.body;
 
@@ -433,7 +437,7 @@ router.post("/add-ambulance", async (req, res) => {
 });
 
 // Route to get the list of registered drivers
-router.get("/get-drivers", async (req, res) => {
+router.get("/get-drivers",isDispatcher, async (req, res) => {
   try {
     // Find all users with role 'driver'
     const drivers = await User.find({ role: "driver" }, "name");
@@ -450,7 +454,7 @@ router.get("/get-drivers", async (req, res) => {
 });
 
 // Route to update an ambulance
-router.post("/updateAmbulance", async (req, res) => {
+router.post("/updateAmbulance",isDispatcher, async (req, res) => {
   try {
     const { ambulanceId, type, available } = req.body;
 
@@ -482,7 +486,7 @@ router.delete("/deleteAmbulance/:ambulanceId", async (req, res) => {
   }
 });
 
-router.get("/dispatcherAmbulance", async (req, res) => {
+router.get("/dispatcherAmbulance", isDispatcher,async (req, res) => {
   try {
     // Find ambulances that are not archived
     const ambulances = await Ambulance.find({ archived: false }).populate(
@@ -501,7 +505,7 @@ router.get("/dispatcherAmbulance", async (req, res) => {
   }
 });
 
-router.get("/patientRequest", async (req, res) => {
+router.get("/patientRequest", isDispatcher, async (req, res) => {
   try {
     const ambulances = await Ambulance.find();
     const bookingRequests = await BookingRequest.find({ archived: false });
@@ -544,14 +548,14 @@ const transporter = nodemailer.createTransport({
 // // Express.js routes
 // Function to save admin user to the database
 // Route for user registration (accessible only to admin) isAdmin
-router.get("/register", (req, res) => {
-  res.render("register"); // Render registration form
-});
+// router.get("/register", (req, res) => {
+//   res.render("register"); // Render registration form
+// });
 
 // Route to handle user update form submission
 // Route to handle user registration form submission
 // isAdmin,
-router.post("/register", async (req, res) => {
+router.post("/register", isAdmin, async (req, res) => {
   try {
     const { username, email, role, name, mobile_number, fcmToken } = req.body;
 
@@ -816,16 +820,35 @@ admin.initializeApp({
 
 router.post("/patientRequest", async (req, res) => {
   try {
-    const { location, contactInfo, urgencyLevel } = req.body;
+    const { location, contactInfo, emergency_type, number,address} = req.body;
+
+    // Function to determine the level based on emergency_type
+function determineLevel(emergencyType) {
+  switch (emergencyType) {
+    case 'Animal':
+      return 'low';
+    case 'Labour':
+      return 'medium';
+    case 'Car':
+      return 'high';
+    default:
+      return 'low'; // Default level if none of the cases match
+  }
+}
     const bookingRequest = new BookingRequest({
-      location,
-      contactInfo,
-      urgencyLevel,
+      location,        // This will use the value from the 'location' variable
+      contactInfo,     // This will use the value from the 'contactInfo' variable
+      address,         // This will use the value from the 'address' variable
+      emergency_type,  // This will use the value from the 'emergency_type' variable
+      number,          // This will use the value from the 'number' variable
+      level: determineLevel(emergency_type), // Set level based on emergency_type
+       // Default value set as 'low'
+      // createdAt and archived fields will automatically be set to their default values
     });
 
     const savedRequest = await bookingRequest.save();
 
-    // Send the response immediately after saving the request
+    // Send the response yimmediately after saving the request
     res.status(200).json({
       message: "Booking request submitted successfully",
       data: savedRequest,
@@ -873,6 +896,8 @@ router.post("/patientRequest", async (req, res) => {
     }
   }
 });
+
+
 
 
 router.post('/special-requests', async (req, res) => {
@@ -1102,8 +1127,9 @@ router.get("/smsmessage", async (req, res) => {
     const mobile_number = req.query.mobile_number;
     const nmobile_number=req.query.nmobile_number;
     const scheduleId = req.query.scheduleId; // Retrieve the scheduleId from the query parameters
-
+    
     const bookingRequests = await BookingRequest.find({ archived: false });
+    // const bookingRequests = await BookingRequest.find({ archived: false });
     // Pass the scheduleId along with other data to the view
     res.render("smsmessage", { bookingRequests, mobile_number, nmobile_number,scheduleId });
   } catch (error) {
@@ -1162,8 +1188,11 @@ router.post("/send-sms", async (req, res) => {
 
 
         // Retrieve the bookingRequestId from the form submission
-        const bookingRequestId = req.body.bookingRequestId;
-
+        // const bookingRequestId = req.body.bookingRequestId;
+        const bookingRequestId = await BookingRequest.findOne({
+          status: false,
+          archived: false
+        }).sort('createdAt');
         // Update the status of the BookingRequest to true
         await BookingRequest.findByIdAndUpdate(bookingRequestId, {
           status: true,
@@ -1212,6 +1241,37 @@ router.post('/submit-feedback', async (req, res) => {
   }
 });
 
+
+// router.get("/scheduleNurseAndDriver", function (req, res) {
+//   req.logout(function (err) {
+//     if (err) {
+//       console.error("Error logging out:", err);
+//       return res.status(500).send("Internal server error");
+//     }
+//     // Redirect the user to the login page after successful logout
+//     res.redirect("/login");
+//   });
+// });
+
+router.get("/scheduleNurseAndDriver", async (req, res) => {
+  try {
+    // Fetch all necessary data in one go
+    const ambulances = await Ambulance.find();
+    const drivers = await User.find({ role: "driver" });
+    const nurses = await User.find({ role: "nurse" });
+    // const schedules = await Schedule.find().populate("ambulance driver nurse");
+    const schedules = await Schedule.find({ archived:false }).populate("ambulance driver nurse");
+
+
+    // Pass all the data to the 'schedule' template
+    res.render("scheduleNurseAndDriver", { ambulances, drivers, nurses, schedules });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// scheduleNurseAndDriver
 // feedback
 // Route to Log out
 router.get("/logout", function (req, res) {

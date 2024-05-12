@@ -1,13 +1,14 @@
 // models/BookingRequest.js
 
 const mongoose = require('mongoose');
+
 const bookingRequestSchema = new mongoose.Schema({
-    location: { type: String, required: true },
+    location: { type: String, required: false },
     contactInfo: { type: String, required: true },
     urgencyLevel: { type: String, enum: ['low', 'medium', 'high'], required: true },
-    status: { type: String, enum: ['pending', 'dispatched', 'completed'], default: 'pending' },
+    status: { type: Boolean, default: false } ,// New field for archiving
     createdAt: { type: Date, default: Date.now },
-    dispatcher: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } // Reference to dispatcher
-
+    archived: { type: Boolean, default: false } // New field for archiving
 });
+
 module.exports = mongoose.model('BookingRequest', bookingRequestSchema);

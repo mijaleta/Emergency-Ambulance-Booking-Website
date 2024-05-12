@@ -226,6 +226,7 @@ router.get("/dashboard", (req, res) => {
         user: {
           username: req.user.username,
           role: req.user.role,
+          name: req.user.name, // Add the driver's name here
         },
       });
     } else {
@@ -875,18 +876,55 @@ router.post("/patientRequest", async (req, res) => {
 });
 
 
-// Create a new special request
+
+
 router.post('/special-requests', async (req, res) => {
   try {
     const { requestText } = req.body;
     const newRequest = new SpecialRequest({ requestText });
     await newRequest.save();
     res.status(201).json({ message: 'Request saved successfully' });
+
+    // Retrieve all users who should be notified
+    const usersToNotify = await User.find({ role: "dispatcher" }); // Adjust the query to match your needs
+
+    // Check if there are users to notify
+    if (usersToNotify.length > 0) {
+      // Create an array to hold all the tokens
+      const tokens = usersToNotify
+        .map((user) => user.fcmTokens)
+        .flat()
+        .filter((token) => token != null);
+
+      // Check if there are valid tokens
+      if (tokens.length > 0) {
+        const message = {
+          data: {
+            title: "New Special Request",
+            body: "A new special request has been submitted.",
+          },
+          tokens: tokens, // Array of FCM tokens
+        };
+
+        admin
+          .messaging()
+          .sendMulticast(message)
+          .then((response) =>
+            console.log("Notifications sent successfully:", response)
+          )
+          .catch((error) =>
+            console.error("Error sending notifications:", error)
+          );
+      }
+    }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error handling special request:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 });
+
 
 
 
