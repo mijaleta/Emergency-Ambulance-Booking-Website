@@ -36,6 +36,15 @@
         <% } else { %>
             No booking requests found.
         <% } %>`;
+
+// previuo code
+        textarea.value = `<% if (bookingRequests.length > 0) { %>
+        <%= bookingRequests[bookingRequests.length - 1].contactInfo %>
+    <% } else { %>
+        No booking requests found.
+    <% } %>`;
+
+
     </script>
 </body>
 </html>

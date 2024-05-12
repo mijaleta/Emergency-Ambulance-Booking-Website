@@ -106,11 +106,19 @@
     var textarea = document.getElementById("messageText");
 
     // Set the value of the textarea using JavaScript
-    textarea.value = `<% if (bookingRequests.length > 0) { %>
-        <%= bookingRequests[bookingRequests.length - 1].contactInfo %>
-    <% } else { %>
-        No booking requests found.
-    <% } %>`;
+
+    
+    // new code 
+
+    // Set the value of the textarea using JavaScript
+textarea.value = `<% if (bookingRequests.length > 0) { %>
+    <%= bookingRequests[0].contactInfo %>
+<% } else { %>
+    No booking requests found.
+<% } %>`;
+    // new code 
+
+
 </script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>

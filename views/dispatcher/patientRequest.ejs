@@ -261,13 +261,13 @@
                                             </thead>
                                         
                                             <tbody id="tableBody">
-                                                <% bookingRequests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                                                    bookingRequests.forEach((bookingRequest, index) => { %>
+                                                <% bookingRequests.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+   bookingRequests.forEach((bookingRequest, index) => { %>
                                                     <tr id="row_<%= bookingRequest._id %>">
                                                         <td><%= index + 1 %></td> <!-- Incremental number -->
                                                         <td><%= Number(bookingRequest.location.split(',')[0]).toFixed(1) %>,<%= Number(bookingRequest.location.split(',')[1]).toFixed(1) %></td>
                                                         <td><%= bookingRequest.contactInfo %></td>
-                                                        <td><%= bookingRequest.urgencyLevel %></td>
+                                                        <td><%= bookingRequest.level %></td>
                                                         <td>
                                                             <button class="btn btn-primary viewDetailButton" data-booking-request-id="<%= bookingRequest._id %>">View Details</button>
                                                             <% if (bookingRequest.status) { %>
@@ -442,6 +442,8 @@
     <!-- custom js -->
     <script src="../js/chart_custom_style1.js"></script>
     <script src="../js/custom.js"></script>
+    <script src="../js/main.js"></script>
+
 </body>
 
 </html>

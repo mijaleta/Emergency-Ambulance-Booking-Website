@@ -10,7 +10,7 @@ async function createAdmin() {
             return;
         }
        // Create admin user
-  const adminPassword = 'a'; // Set the password for the admin user
+  const adminPassword = 'qwertQWERT'; // Set the password for the admin user
   const hashedAdminPassword = await bcrypt.hash(adminPassword, 10); // Hash the password
   const adminUser = new User({
       name:'General Admin',
@@ -36,13 +36,15 @@ async function createAdmin() {
     if (req.user && req.user.role === 'admin') {
         return next();
     }
-    res.status(403).send('not authorized');
+    res.redirect('/login')
+    // res.status(403).send('not authorized');
   }
     // Middleware to check if user is admin
     function isDispatcher(req, res, next) {
         if (req.user && req.user.role === 'dispatcher') {
             return next();
         }
-        res.status(403).send('not authorized');
+        res.redirect('/login')
+        // res.status(403).send('not authorized');
       }
   module.exports={isAdmin,isDispatcher}
