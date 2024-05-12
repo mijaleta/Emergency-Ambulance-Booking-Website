@@ -1,36 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Special Requests</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-  <div class="container mt-5">
-    <h1>Special Requests</h1>
-    <ul id="specialRequestsList" class="list-group mt-3">
-      <!-- Special requests will be appended here dynamically -->
-    </ul>
-  </div>
+   <head>
+      <!-- basic -->
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <!-- mobile metas -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+      <!-- site metas -->
+      <title>Emergency Ambulance</title>
+      <meta name="keywords" content="">
+      <meta name="description" content="">
+      <meta name="author" content="">
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch('/specialRequests')
-        .then(response => response.json())
-        .then(specialRequests => {
-          const specialRequestsList = document.getElementById('specialRequestsList');
-          specialRequests.forEach(request => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('list-group-item');
-            listItem.textContent = request.requestText;
-            specialRequestsList.appendChild(listItem);
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching special requests:', error);
-        });
-    });
-  </script>
-</body>
+      <!-- site icon -->
+      <link rel="icon" href="../images/fevicon.png" type="image/png" />
+      <!-- bootstrap css -->
+      <link rel="stylesheet" href="../css/bootstrap.min.css" />
+      <!-- site css -->
+      <link rel="stylesheet" href="../style.css" />
+      <!-- responsive css -->
+      <link rel="stylesheet" href="../css/responsive.css" />
+      <!-- color css -->
+      <link rel="stylesheet" href="../css/colors.css" />
+      <!-- select bootstrap -->
+      <link rel="stylesheet" href="../css/bootstrap-select.css" />
+      <!-- scrollbar css -->
+      <link rel="stylesheet" href="../css/perfect-scrollbar.css" />
+      <!-- custom css -->
+      <link rel="stylesheet" href="../css/custom.css" />
+
+        <style>
+        #map { height: 100px;
+      
+      }
+
+    </style>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
+      <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+   </head>
+   <body class="dashboard dashboard_1">
+      <div class="full_container">
+         <div class="inner_container">
+            <!-- Sidebar  -->
+            <nav id="sidebar">
+               <div class="sidebar_blog_1">
+                  <div class="sidebar-header">
+                     <div class="logo_section">
+                        <a href="/"><img class="logo_icon img-responsive" src="../images/logo/logo_icon.png" alt="#" /></a>
+                     </div>
+                  </div>
+                  <div class="sidebar_user_info">
+                     <div class="icon_setting"></div>
+                     <div class="user_profle_side">
+                        <div class="user_img"><img class="img-responsive" src="../images/layout_img/user.jpg" alt="#" /></div>
+                        <div class="user_info">
+                           <h6>Dispatcher</h6>
+                           <p><span class="online_animation"></span> Online</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="sidebar_blog_2">
+                  <h4>Ambulance Mgt</h4>
+                  <ul class="list-unstyled components">
+                     <li class="active">
+                       <a href="dispatcherDashboard" aria-expanded="false"><i class="fa fa-dashboard yellow_color"></i> <span>Dispatcher Dashboard</span></a>
+                     </li>
+                     <li><a href="schedule "><i class="fa fa-table purple_color2"></i>
+                         <span>Schedule</span></a></li>
+                     <li><a href="dispatcherAmbulance"><i class="fa fa-table purple_color2"></i>
+                         <span>Ambulances</span></a></li>
+                     <li><a href="patientRequest"><i class="fa fa-table purple_color2"></i> <span>Patient
+                           Request</span></a></li>
+         
+                     <li><a href="dispatcherContact"><i class="fa fa-paper-plane red_color"></i>
+                         <span>Contact</span></a></li>
+                     <li><a href="dispatcherMap"><i class="fa fa-map purple_color2"></i> <span>Map</span></a></li>
+                     <li><a href="dispatcherSettings"><i class="fa fa-cog yellow_color"></i>
+                         <span>Settings</span></a></li>
+                         <li><a href="ArchivedPatientRequest"><i class="fa fa-table purple_color2"></i> <span>Archived
+                           Patient Request</span></a></li>
+                           <li><a href="ArchivedAmbulance"><i class="fa fa-table purple_color2"></i> <span>Archived
+                             Ambulance</span></a></li>
+                             <li><a href="archivedSchedule"><i class="fa fa-table purple_color2"></i> <span>Archived
+                                 Archived Schedule</span></a></li>
+                                 <li><a href="specialRequestPage"><i class="fa fa-table purple_color2"></i> <span>special Request</span></a></li>
+                   </ul>
+              </div>
+            </nav>
+            <!-- end sidebar -->
+            <!-- right content -->
+            <div id="content">
+               <!-- topbar -->
+               <div class="topbar">
+                  <nav class="navbar navbar-expand-lg navbar-light">
+                     <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+                        <div class="logo_section">
+                           <a href="dispatcherMap"><img class="img-responsive" src="../images/logo/logo11.png" alt="#" /></a>
+                        </div>
+                        <div class="right_topbar">
+                           <div class="icon_info">
+                              <ul>
+                                 <li><a href="/patientRequest"><i id="bellIcon" class="fa fa-bell-o"></i><span id="notificationCount" class="badge">0</span></a></li>
+                              </ul>
+                              <ul class="user_profile_dd">
+                                 <li>
+                                    <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="../images/layout_img/user.jpg" alt="#" /><span class="name_user">Mr. X</span></a>
+                                    <div class="dropdown-menu">
+                                       <a class="dropdown-item" href="dispatcherDashboard">My Profile</a>
+                                       <a class="dropdown-item" href="dispatcherSettings">Settings</a>
+                                       <a class="dropdown-item" href="dispatcherDashboard">Help</a>
+                                       <a class="dropdown-item" href="logout"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
+                                    </div>
+                                 </li>
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                  </nav>
+               </div>
+               <!-- end topbar -->
+               <!-- dashboard inner -->
+               <div class="container mt-5">
+                <h1 class="mb-4">Special Requests</h1>
+                <ul class="list-group">
+                  <% requests.forEach(function(request) { %>
+                    <li class="list-group-item"><%= request.requestText %></li>
+                  <% }); %>
+                </ul>
+              
+              </div>
+               <!-- end dashboard inner -->
+            </div>
+         </div>
+      </div>
+
+      <!--firebase cloud messaign notification -->
+      <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js"></script>
+
+<script>
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsa3Qp2X-JddKBjicW6dLH6pVv6yiUV24",
+    authDomain: "ambulancebooking-812cd.firebaseapp.com",
+    projectId: "ambulancebooking-812cd",
+    storageBucket: "ambulancebooking-812cd.appspot.com",
+    messagingSenderId: "887269267926",
+    appId: "1:887269267926:web:fff487690a9b8364e02c77",
+    measurementId: "G-H5CN5R5BLD"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+
+// Existing Firebase initialization and configuration...
+
+// Function to request permission and retrieve token
+const requestPermissionAndToken = async () => {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      const token = await messaging.getToken();
+      // Send the token to your backend for notification delivery
+      sendTokenToServer(token);
+    } else {
+      console.log('Permission denied');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+// Request permission and retrieve token when the page loads
+window.addEventListener('load', requestPermissionAndToken);
+
+// Function to send the token to the backend
+function sendTokenToServer(token) {
+  // Make a POST request to your backend with the token
+  fetch('/registerToken', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+   },
+    body: JSON.stringify({ token: token }) // Include the token in the request body
+  })
+  .then(response => response.json())
+  .then(data => console.log('Token sent to server successfully', data))
+  .catch(error => console.error('Error sending token to server:', error));
+}
+
+
+
+
+// for when the window is closed 
+
+// Handle incoming messages
+// messaging.onMessage((payload) => {
+//       alert('Message received: ' + JSON.stringify(payload));
+//     });
+
+
+
+
+
+
+
+</script>
+      <!--firebase cloud messaign notification☻ -->
+      <!-- jQuery -->
+      <script src="../js/jquery.min.js"></script>
+      <script src="../js/popper.min.js"></script>
+      <script src="../js/bootstrap.min.js"></script>
+      <!-- wow animation -->
+      <script src="../js/animate.js"></script>
+      <!-- select country -->
+      <script src="../js/bootstrap-select.js"></script>
+      <!-- owl carousel -->
+      <script src="../js/owl.carousel.js"></script> 
+      <!-- nice scrollbar -->
+      <script src="../js/perfect-scrollbar.min.js"></script>
+      <!-- custom js -->
+      <script src="../js/custom.js"></script>
+      <script src="../js/main.js"></script>
+      
+      <!-- google map js -->
+      <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script> -->
+      <!-- end google map js -->
+   </body>
 </html>
