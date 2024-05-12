@@ -1209,9 +1209,9 @@ router.post("/send-sms", async (req, res) => {
 
 // hahusms
 
-// for☻ s☻ms notifications
+// for sms notifications
 
-// for s☻ms notifications
+// for sms notifications
 
 
 // feedback
@@ -1285,4 +1285,8 @@ router.get("/logout", function (req, res) {
   });
 });
 
+// testing 
+router.get("/smsSuccess", function (req, res) {
+  res.render('smsSuccess')
+});
 module.exports = router;
