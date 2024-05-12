@@ -106,9 +106,9 @@
     // Get the textarea element
     var textarea = document.getElementById("messageText");
     textarea.value = `<% if (bookingRequests.length > 0) { %>
-        Contact Info: <%= bookingRequests[0].contactInfo %><br>
-        Address: <%= bookingRequests[0].address %><br>
-        Patient Condition: <%= bookingRequests[0].patient_condition %><br>
+        Contact Info: <%= bookingRequests[0].contactInfo %>
+        Address: <%= bookingRequests[0].address %>
+        Patient Condition: <%= bookingRequests[0].patient_condition %>
         Emergency Type: <%= bookingRequests[0].emergency_type %>
     <% } else { %>
         No booking requests found.
