@@ -600,7 +600,7 @@ router.post("/register", isAdmin, async (req, res) => {
     };
     await transporter.sendMail(mailOptions);
 
-    res.status(201).render("index");
+    res.status(201).render("userRegistered");
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).send("Internal Server Error");
