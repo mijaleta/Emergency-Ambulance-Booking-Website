@@ -1294,4 +1294,9 @@ router.get("/specialRequestPage", async function (req, res) {
     res.status(500).send(error);
   }
 });
+
+// 
+router.get("/x", async function (req, res) {
+  res.render('smsSuccess')
+});
 module.exports = router;
