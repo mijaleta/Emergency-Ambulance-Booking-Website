@@ -7,6 +7,7 @@ const bookingRequestSchema = new mongoose.Schema({
     location: { type: String, required: false },
     contactInfo: { type: String, required: true },
     address: { type: String, required: true },
+    patient_condition: { type: String, required: true },
     emergency_type: { type: String, enum: ['Animal', 'Labour', 'Car'], required: true },
     number:{type: Number, required:true},
     level: { type:String, default: 'low' } ,// New field for archiving
