@@ -7,6 +7,8 @@ const router = express.Router();
 const User = require("../models/user");
 const Ambulance = require("../models/ambulance");
 const Schedule = require("../models/schedule");
+const SpeciaRequest = require("../models/specialRequest");
+
 const Contact = require("../models/contact");
 const SpecialRequest = require("../models/specialRequest");
 const Feedback = require("../models/feedback");
@@ -1284,7 +1286,13 @@ router.get("/logout", function (req, res) {
 });
 
 // testing 
-router.get("/smsSuccess", function (req, res) {
-  res.render('smsSuccess')
+router.get("/specialRequestPage", async function (req, res) {
+    try {
+    const specialRequests = await SpecialRequest.find().sort({ createdAt: -1 }); // Retrieving newest requests first
+    res.render(specialRequests);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
 });
 module.exports = router;
