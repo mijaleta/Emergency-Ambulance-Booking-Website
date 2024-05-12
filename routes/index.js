@@ -820,7 +820,7 @@ admin.initializeApp({
 
 router.post("/patientRequest", async (req, res) => {
   try {
-    const { location, contactInfo, emergency_type, number,address} = req.body;
+    const { patient_condition,location, contactInfo, emergency_type, number,address} = req.body;
 
     // Function to determine the level based on emergency_type
 function determineLevel(emergencyType) {
@@ -840,7 +840,8 @@ function determineLevel(emergencyType) {
       contactInfo,     // This will use the value from the 'contactInfo' variable
       address,         // This will use the value from the 'address' variable
       emergency_type,  // This will use the value from the 'emergency_type' variable
-      number,          // This will use the value from the 'number' variable
+      number,
+      patient_condition,          // This will use the value from the 'number' variable
       level: determineLevel(emergency_type), // Set level based on emergency_type
        // Default value set as 'low'
       // createdAt and archived fields will automatically be set to their default values
@@ -1209,9 +1210,9 @@ router.post("/send-sms", async (req, res) => {
 
 // hahusms
 
-// for☻ s☻ms notifications
+// for sms notifications
 
-// for s☻ms notifications
+// for sms notifications
 
 
 // feedback
@@ -1285,4 +1286,8 @@ router.get("/logout", function (req, res) {
   });
 });
 
+// testing 
+router.get("/smsSuccess", function (req, res) {
+  res.render('smsSuccess')
+});
 module.exports = router;
