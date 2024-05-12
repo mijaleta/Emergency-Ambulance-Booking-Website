@@ -12,6 +12,7 @@
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
+
       <!-- site icon -->
       <link rel="icon" href="../images/fevicon.png" type="image/png" />
       <!-- bootstrap css -->
@@ -28,6 +29,11 @@
       <link rel="stylesheet" href="../css/perfect-scrollbar.css" />
       <!-- custom css -->
       <link rel="stylesheet" href="../css/custom.css" />
+
+
+      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
       <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -139,6 +145,39 @@
                               <div class="map_section padding_infor_info">
                                  <div class="map m_style1">
                                     <div id="map"></div>
+                              <!-- now -->
+                              <button id="getLocationBtn">Get Driver Location</button>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script>
+        const map = L.map('map').setView([7.677546817291676, 36.82594308478845], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        // Function to handle getting user location
+        document.getElementById('getLocationBtn').addEventListener('click', () => {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const { latitude, longitude } = position.coords;
+                    const userLocation = [latitude, longitude];
+
+                    // Update routing control with user's location
+                    L.Routing.control({
+                        waypoints: [
+                            L.latLng(userLocation), // Start point
+                            L.latLng(7.690838560510956, 36.8187126516854) // End point (default)
+                        ]
+                    }).addTo(map);
+                }, error => {
+                    console.error('Error getting user location:', error);
+                    alert('Error getting your location. Please try again.');
+                });
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        });
+    </script>
+                              <!-- now -->
                                  </div>
                               </div>
                            </div>
@@ -173,8 +212,9 @@
       <script src="../js/perfect-scrollbar.min.js"></script>
       <!-- custom js -->
       <script src="../js/custom.js"></script>
+      
       <!-- google map js -->
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
+      <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script> -->
       <!-- end google map js -->
    </body>
 </html>
