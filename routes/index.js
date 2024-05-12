@@ -1287,12 +1287,11 @@ router.get("/logout", function (req, res) {
 
 // testing 
 router.get("/specialRequestPage", async function (req, res) {
-    try {
-    const specialRequests = await SpecialRequest.find().sort({ createdAt: -1 }); // Retrieving newest requests first
-    res.render(specialRequests);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
+  try {
+    const requests = await SpecialRequest.find();
+    res.render('specialRequestPage', { requests: requests });
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 module.exports = router;
