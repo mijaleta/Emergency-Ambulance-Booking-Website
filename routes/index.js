@@ -762,10 +762,7 @@ router.post("/reset-password/:token", async (req, res) => {
     await user.save();
 
     // Redirect to login page with success message
-    res.render("login", {
-      message:
-        "Your password has been reset successfully. Please log in with your new password.",
-    });
+    res.redirect("/login");
   } catch (error) {
     console.error("Error resetting password:", error);
     res.status(500).send("Internal Server Error");
