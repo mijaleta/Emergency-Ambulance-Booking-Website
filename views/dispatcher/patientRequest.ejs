@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <!-- basic -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,6 +32,7 @@
     <link rel="stylesheet" href="../css/custom.css" />
     <link rel="stylesheet" href="../css/custom/register.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -148,7 +150,7 @@
                         </div>
 
                         <div class="d-flex">
-                            <div class="container mt-2">
+                            <div class="container ">
                             </div>
 
                             <!-- <div class="container mt-2">
@@ -190,7 +192,7 @@
                                 </div>
                                 <div class="modal-footer d-flex">
                                     <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Back</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -226,8 +228,8 @@
                                 </ul>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">Back</button>
+                                <!-- <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button> -->
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -255,10 +257,12 @@
                                                 </div>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Location</th>
+                                                    <!-- <th>Location</th> -->
                                                     <th>Contact Information</th>
                                                     <th>Urgency Level</th>
+                                                    <th>suggested Ambu</th>
                                                     <th>Action</th>
+                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                         
@@ -267,20 +271,46 @@
    bookingRequests.forEach((bookingRequest, index) => { %>
                                                     <tr id="row_<%= bookingRequest._id %>">
                                                         <td><%= index + 1 %></td> <!-- Incremental number -->
-                                                        <td><%= Number(bookingRequest.location.split(',')[0]).toFixed(1) %>,<%= Number(bookingRequest.location.split(',')[1]).toFixed(1) %></td>
+                                                        <!-- <td><%= Number(bookingRequest.location.split(',')[0]).toFixed(1) %>,<%= Number(bookingRequest.location.split(',')[1]).toFixed(1) %></td> -->
                                                         <td><%= bookingRequest.contactInfo %></td>
                                                         <td><%= bookingRequest.level %></td>
+                                                        <!-- <td><%= bookingRequest.level %></td> -->
                                                         <td>
-                                                            <button class="btn btn-primary viewDetailButton" data-booking-request-id="<%= bookingRequest._id %>">View Details</button>
+                                                            <span class="badge badge-info"><%= bookingRequest.level %></span>
+                                                          </td>
+                                                        <td> 
                                                             <% if (bookingRequest.status) { %>
-                                                                <button type="button" class="btn bg-success text-light ">success</button>
-                                                            <% } else { %>
-                                                                <button type="button" class="btn bg-warning text-light ">pending</button>
-                                                            <% } %>
+                                                            <button type="button" class="btn bg-success text-light ">success</button>
+                                                        <% } else { %>
+                                                            <button type="button" class="btn bg-warning text-light ">pending</button>
+                                                        <% } %></td>
+                                                       
+                                                       
+
+
+
+
+
+
+
+                                                        <td>
+                                                            <!-- Add title attribute for view button -->
+                                                            <button class="btn btn-primary viewDetailButton" data-booking-request-id="<%= bookingRequest._id %>" title="View Details">
+                                                              <i class="bi bi-eye-fill"></i>
+                                                            </button>
+                                                            
+                                                            <!-- Add title attribute for complete button -->
                                                             <form class="archive-form" data-id="<%= bookingRequest._id %>" style="display: inline;">
-                                                                <button type="button" class="btn bg-secondary text-light archive-button">Archive</button>
+                                                              <button type="button" class="btn bg-secondary text-light archive-button" title="Mark as Complete">
+                                                                <!-- <i class="bi bi-check-lg"></i> -->
+                                                                <span class="bi bi-arrow-right"></span>
+                                                                <!-- <span class="bi bi-check"></span> -->
+
+
+                                                              </button>
                                                             </form>
-                                                        </td>
+                                                          </td>
+                                                          
                                                     </tr>
                                                 <% }); %>
                                             </tbody>
@@ -322,7 +352,7 @@
                                         }
 
                                         // Define initial pagination state
-                                        var pageSize = 4; // Number of rows per page
+                                        var pageSize = 7; // Number of rows per page
                                         var currentPage = 1; // Current page
                                         paginateRows(currentPage, pageSize);
                                     </script>
@@ -416,7 +446,6 @@
 
 
     </script>
-
 
 
 
