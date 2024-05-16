@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,7 +46,7 @@
 
     h2 {
       color: #007bff;
-      margin-left: 30%;
+      text-align: center;
       margin-bottom: 20px;
     }
 
@@ -69,73 +60,28 @@
     .btn-reset:hover {
       background-color: #0056b3;
     }
-
   </style>
 </head>
 <body>
   <div class="container">
-    <form action="/send-sms" method="post">
+    <form  action="/send-sms" method="post">
       <h2>Realtime SMS Details</h2>
       <div class="form-group">
-        <label for="recipient" class="form-label">Recipient No</label>
-
-        <input type="hidden" id="scheduleId" name="scheduleId" value="<%= scheduleId %>" required>
-        <input type="text"  class="form-control" id="recipient" name="recipients" value="<%= mobile_number%>,<%= nmobile_number%> " required>
-
-        <!-- <input type="text" class="form-control" id="recipient" placeholder="Enter recipient number"> -->
+        <label for="recipients" class="form-label">Recipients</label>
+        <input type="text" class="form-control" id="recipients" name="recipients" placeholder="Enter recipient numbers separated by commas" value="<%= mobile_number%>,<%= nmobile_number%>,<%= bookingRequests[0].contactInfo%> " required>
       </div>
       <div class="form-group">
         <label for="message" class="form-label">Message</label>
-        <input type="hidden" id="bookingRequestId" name="bookingRequestId" value="<%= bookingRequests.length > 0 ? bookingRequests[bookingRequests.length - 1]._id : '' %>" required>
-
-        <textarea class="form-control"  id="messageText" name="messageText"  rows="5" placeholder="Enter your message"></textarea>
+        <textarea class="form-control" id="messageText" name="messageText" rows="5" placeholder="Enter your message"></textarea>
       </div>
       <button type="submit" class="btn btn-send btn-block">Send SMS</button>
     </form>
   </div>
 
- <form action="/send-sms" method="post">
+  <script>
+    // Generate the message based on booking request details
   
-  
-
-  <!-- Email input -->
-  <div data-mdb-input-init class="form-outline mb-4">
-     <input type="hidden" id="scheduleId" name="scheduleId" value="<%= scheduleId %>" required>
-    <input type="email" id="form4Example2"  name="recipients"  class="form-control" value="<%= bookingRequests.length > 0 ? bookingRequests[bookingRequests.length - 1]._id : '' %>" required />
-    <label class="form-label" for="form4Example2">Phone number</label>
-  </div>
-
-  <!-- Message input -->
-  <div data-mdb-input-init class="form-outline mb-4">
-    <textarea class="form-control" id="messageText" name="messageText" rows="4"></textarea>
-    <label class="form-label" for="form4Example3">Message</label>
-  </div>
-
-  <!-- Checkbox -->
-  <div class="form-check d-flex justify-content-center mb-4">
-    <input class="form-check-input me-2" type="checkbox" value="" id="form4Example4" checked />
-    <label class="form-check-label" for="form4Example4">
-      Send me a copy of this message
-    </label>
-  </div>
-
-  <!-- Submit button -->
-  <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
-    Send
-  </button>
-</form>
-
-
-
-
-
-
-
- <!-- Your existing code -->
-<script>
-    // Get the textarea element
-    var textarea = document.getElementById("messageText");
-    textarea.value = `<% if (bookingRequests.length > 0) { %>
+    var messageForFirstTwo = `<% if (bookingRequests.length > 0) { %>
         Contact Info: <%= bookingRequests[0].contactInfo %>
         Address: <%= bookingRequests[0].address %>
         Patient Condition: <%= bookingRequests[0].patient_condition %>
@@ -143,36 +89,38 @@
     <% } else { %>
         No booking requests found.
     <% } %>`;
-</script>
+    var messageForThird = "This is a different message for the third recipient.";
+
+    document.getElementById('messageText').value = messageForFirstTwo;
+
+    document.getElementById('smsForm').value = messageForThird;
+      var recipients = document.getElementById('recipients').value.split(',');
+      recipients = recipients.map(recipient => recipient.trim());
+
+      if (recipients.length !== 3) {
+        alert("Please enter exactly three recipient numbers.");
+        return false;
+      }
+
+      var messages = [
+        messageForFirstTwo,
+        messageForFirstTwo,
+        messageForThird
+      ];
+
+      recipients.forEach((number, index) => {
+        let message = messages[index];
+        console.log(`Sending message to ${number}: ${message}`);
+        // Simulate sending the SMS
+        // alert(`Message to ${number}: ${message}`);
+      });
+
+      // Optionally, submit the form data via an AJAX request here
+
+      return false;
+    };
+  </script>
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
