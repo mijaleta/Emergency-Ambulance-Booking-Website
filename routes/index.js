@@ -15,6 +15,8 @@ const Feedback = require("../models/feedback");
 const BookingRequest = require("../models/patientRequest");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
+// const jest = require('@jest/globals').jest;
+
 const request = require("request");
 router.post("/archive/:id", async (req, res) => {
   try {
@@ -103,6 +105,14 @@ router.post("/contact", (req, res) => {
       res.status(500).send("Error submitting form data");
     });
 });
+
+// for testing ♥
+// Mock mongoose model
+
+
+// for testing ♥☻
+
+
 
 // Route to handle detailed view of a booking request
 // router.get('/booking-requests/:id', async (req, res) => {
