@@ -1149,8 +1149,8 @@ router.get("/smsmessage", async (req, res) => {
 
 // hahusms
 router.post("/send-sms", async (req, res) => {
-  const apiSecret = "90adae5bf84b095a6ce3acbe357e3c8ee18cc06b"; // Mire API secret
-  // const apiSecret= "45d69c92f73964d7d741c186f9cd71907713dab3";// Sami API secret
+  // const apiSecret = "90adae5bf84b095a6ce3acbe357e3c8ee18cc06b"; // Mire API secret
+  const apiSecret= "45d69c92f73964d7d741c186f9cd71907713dab3";// Sami API secret
   const recipientNumbers = req.body.recipients
     .split(",")
     .map((number) => number.trim()); // Extract recipient numbers from the form and split by comma
@@ -1167,8 +1167,8 @@ router.post("/send-sms", async (req, res) => {
           qs: {
             secret: apiSecret,
             mode: "devices",
-             device: "00000000-0000-0000-b983-bc43e57968e9", // Mire device ID
-            //devicce:"78282884-a511-998c-3568-741020842078", // Sami device ID
+            //  device: "00000000-0000-0000-b983-bc43e57968e9", // Mire device ID
+            devicce:"78282884-a511-998c-3568-741020842078", // Sami device ID
             sim: 1,
             priority: 1,
             phone: recipientNumber,
