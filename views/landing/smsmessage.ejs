@@ -68,7 +68,7 @@
       <h2>Realtime SMS Details</h2>
       <div class="form-group">
         <label for="recipients" class="form-label">Recipients</label>
-        <input type="text" class="form-control" id="recipients" name="recipients" placeholder="Enter recipient numbers separated by commas" value="<%= mobile_number%>,<%= nmobile_number%>,<%= bookingRequests[0].contactInfo%> " required>
+        <input type="text" class="form-control" id="recipients" name="recipients" placeholder="Enter recipient numbers separated by commas" value="<%= mobile_number %>,<%= nmobile_number %>,<%= bookingRequests[0].contactInfo %>" required>
       </div>
       <div class="form-group">
         <label for="message" class="form-label">Message</label>
@@ -79,8 +79,7 @@
   </div>
 
   <script>
-    // Generate the message based on booking request details
-  
+    // Generate the messages based on booking request details
     var messageForFirstTwo = `<% if (bookingRequests.length > 0) { %>
         Contact Info: <%= bookingRequests[0].contactInfo %>
         Address: <%= bookingRequests[0].address %>
@@ -91,34 +90,50 @@
     <% } %>`;
     var messageForThird = "This is a different message for the third recipient.";
 
-    document.getElementById('messageText').value = messageForFirstTwo;
+    document.addEventListener('DOMContentLoaded', function() {
+      var form = document.getElementById('smsForm');
+      var recipientsInput = document.getElementById('recipients');
+      var messageText = document.getElementById('messageText');
+      messageText.value = `${messageForFirstTwo}, ${messageForThird}`;
 
-    document.getElementById('smsForm').value = messageForThird;
-      var recipients = document.getElementById('recipients').value.split(',');
-      recipients = recipients.map(recipient => recipient.trim());
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-      if (recipients.length !== 3) {
-        alert("Please enter exactly three recipient numbers.");
-        return false;
-      }
+        var recipients = recipientsInput.value.split(',').map(function(recipient) {
+          return recipient.trim();
+        });
 
-      var messages = [
-        messageForFirstTwo,
-        messageForFirstTwo,
-        messageForThird
-      ];
+        if (recipients.length !== 3) {
+          alert("Please enter exactly three recipient numbers.");
+          return false;
+        }
 
-      recipients.forEach((number, index) => {
-        let message = messages[index];
-        console.log(`Sending message to ${number}: ${message}`);
+        var messages = messageText.value.split(',');
+        if (messages.length !== 2) {
+          alert("The message textarea should contain exactly two messages separated by a comma.");
+          return false;
+        }
+
+        var messageForFirstTwo = messages[0].trim();
+        var messageForThird = messages[1].trim();
+
         // Simulate sending the SMS
-        // alert(`Message to ${number}: ${message}`);
+        recipients.forEach(function(number, index) {
+          var message;
+          if (index < 2) {
+            message = messageForFirstTwo;
+          } else {
+            message = messageForThird;
+          }
+          console.log(`Sending message to ${number}: ${message}`);
+          // Here you would send the actual SMS
+        });
+
+        // Optionally, submit the form data via an AJAX request here
+
+        return false;
       });
-
-      // Optionally, submit the form data via an AJAX request here
-
-      return false;
-    
+    });
   </script>
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
