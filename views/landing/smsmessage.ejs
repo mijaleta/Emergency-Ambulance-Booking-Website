@@ -64,23 +64,26 @@
 </head>
 <body>
   <div class="container">
-    <form action="/send-sms" method="post">
+     <form action="/send-sms" method="post">
       <h2>Realtime SMS Details</h2>
       <div class="form-group">
         <label for="recipients" class="form-label">Recipients</label>
         <input type="text" class="form-control" id="recipients" name="recipients" placeholder="Enter recipient numbers separated by commas" value="<%= mobile_number %>,<%= nmobile_number %>,<%= bookingRequests[0].contactInfo %>" required>
       </div>
       <div class="form-group">
-        <label for="message" class="form-label">Message</label>
-        <textarea class="form-control" id="messageText" name="messageText" rows="5" placeholder="Enter your message"></textarea>
+        <label for="message1" class="form-label">Message 1</label>
+        <textarea class="form-control" id="message1" name="message1" rows="3" aria-placeholder="first message"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="message2" class="form-label">Message 2</label>
+        <textarea class="form-control" id="message2" name="message2" rows="3" placeholder="Enter message for the third recipient" value="Hello3 "></textarea>
       </div>
       <button type="submit" class="btn btn-send btn-block">Send SMS</button>
     </form>
   </div>
 
   <script>
-    // Generate the messages based on booking request details
-    var messageForFirstTwo = `<% if (bookingRequests.length > 0) { %>
+    var mymessage1=`<% if (bookingRequests.length > 0) { %>
         Contact Info: <%= bookingRequests[0].contactInfo %>
         Address: <%= bookingRequests[0].address %>
         Patient Condition: <%= bookingRequests[0].patient_condition %>
@@ -88,18 +91,18 @@
     <% } else { %>
         No booking requests found.
     <% } %>`;
-    var messageForThird = "This is a different message for the third recipient.";
-
+    var mymessage2="Hello third"
+    message1.value=mymessage1;
+    message2.value=mymessage2;
     document.addEventListener('DOMContentLoaded', function() {
-      var form = document.getElementById('smsForm');
-      var recipientsInput = document.getElementById('recipients');
-      var messageText = document.getElementById('messageText');
-
-      // Set initial value for the message text area
-      messageText.value = `${messageForFirstTwo}, ${messageForThird}`;
+      // var form = document.getElementById('smsForm');
 
       form.addEventListener('submit', function(event) {
         event.preventDefault();
+
+        var recipientsInput = document.getElementById('recipients');
+        var message1Input = document.getElementById('message1');
+        var message2Input = document.getElementById('message2');
 
         var recipients = recipientsInput.value.split(',').map(function(recipient) {
           return recipient.trim();
@@ -110,23 +113,19 @@
           return false;
         }
 
-        var messages = messageText.value.split(',');
-        console.log("Message for first two recipients:", messages[0].trim());
-        console.log("Message for third recipient:", messages[1].trim());
+        var message1 = message1Input.value.trim();
+        var message2 = message2Input.value.trim();
 
-        if (messages.length !== 2) {
-          alert("The message textarea should contain exactly two messages separated by a comma.");
+        if (!message1 || !message2) {
+          alert("Please enter both messages.");
           return false;
         }
 
-        var messageForFirstTwo = messages[0].trim();
-        var messageForThird = messages[1].trim();
-
         // Prepare the messages for each recipient
         var recipientMessages = [
-          { number: recipients[0], message: messageForFirstTwo },
-          { number: recipients[1], message: messageForFirstTwo },
-          { number: recipients[2], message: messageForThird }
+          { number: recipients[0], message: message1 },
+          { number: recipients[1], message: message1 },
+          { number: recipients[2], message: message2 }
         ];
 
         // Simulate sending the SMS
