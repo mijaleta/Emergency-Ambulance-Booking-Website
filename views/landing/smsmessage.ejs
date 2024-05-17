@@ -64,7 +64,7 @@
 </head>
 <body>
   <div class="container">
-    <form  action="/send-sms" method="post">
+    <form action="/send-sms" method="post">
       <h2>Realtime SMS Details</h2>
       <div class="form-group">
         <label for="recipients" class="form-label">Recipients</label>
@@ -94,6 +94,8 @@
       var form = document.getElementById('smsForm');
       var recipientsInput = document.getElementById('recipients');
       var messageText = document.getElementById('messageText');
+
+      // Set initial value for the message text area
       messageText.value = `${messageForFirstTwo}, ${messageForThird}`;
 
       form.addEventListener('submit', function(event) {
@@ -109,6 +111,9 @@
         }
 
         var messages = messageText.value.split(',');
+        console.log("Message for first two recipients:", messages[0].trim());
+        console.log("Message for third recipient:", messages[1].trim());
+
         if (messages.length !== 2) {
           alert("The message textarea should contain exactly two messages separated by a comma.");
           return false;
@@ -117,19 +122,39 @@
         var messageForFirstTwo = messages[0].trim();
         var messageForThird = messages[1].trim();
 
-        // Simulate sending the SMS
-        recipients.forEach(function(number, index) {
-          var message;
-          if (index < 2) {
-            message = messageForFirstTwo;
-          } else {
-            message = messageForThird;
-          }
-          console.log(`Sending message to ${number}: ${message}`);
-          // Here you would send the actual SMS
-        });
+        // Prepare the messages for each recipient
+        var recipientMessages = [
+          { number: recipients[0], message: messageForFirstTwo },
+          { number: recipients[1], message: messageForFirstTwo },
+          { number: recipients[2], message: messageForThird }
+        ];
 
-        // Optionally, submit the form data via an AJAX request here
+        // Simulate sending the SMS
+        recipientMessages.forEach(function(recipient) {
+          console.log(`Sending message to ${recipient.number}: ${recipient.message}`);
+          // Simulate an API call
+          fetch('/send-sms', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              number: recipient.number,
+              message: recipient.message
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 200) {
+              console.log(`SMS sent successfully to ${recipient.number}`);
+            } else {
+              console.error(`Error sending SMS to ${recipient.number}: ${data.message}`);
+            }
+          })
+          .catch(error => {
+            console.error(`Network error sending SMS to ${recipient.number}:`, error);
+          });
+        });
 
         return false;
       });
