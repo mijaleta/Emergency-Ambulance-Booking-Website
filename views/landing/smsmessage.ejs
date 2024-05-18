@@ -164,6 +164,7 @@
             console.error(`Network error sending SMS to ${recipient.number}:`, error);
           });
         });
+        alert("message is sent succussfully");
         window.location.href = '/schedule'; 
         
         return false;
