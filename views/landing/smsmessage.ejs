@@ -64,15 +64,15 @@
 </head>
 <body>
   <div class="container">
-    <form action="/send-sms" method="post"> 
+    <form id="smsForm">
       <h2>Realtime SMS Details</h2>
       <div class="form-group">
         <label for="recipients" class="form-label">Recipients</label>
-        <input type="text" class="form-control" id="recipients" name="recipients" placeholder="Enter recipient numbers separated by commas" required>
+        <input type="text" class="form-control" id="recipients" name="recipients" placeholder="Enter recipient numbers separated by commas" value="<%= mobile_number %>,<%= nmobile_number %>,<%= bookingRequests[0].contactInfo %>" required>
       </div>
       <div class="form-group">
-        <label for="messages" class="form-label">Messages</label>
-        <textarea class="form-control" id="messages" name="messages" rows="5" placeholder="Enter messages separated by commas (one per recipient)" required></textarea>
+        <label for="messageText" class="form-label">Message</label>
+        <textarea class="form-control" id="messageText" name="messageText" rows="5" placeholder="Enter your message" ></textarea>
       </div>
       <button type="submit" class="btn btn-send btn-block">Send SMS</button>
     </form>
@@ -81,41 +81,65 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var form = document.getElementById('smsForm');
+      var recipientsInput = document.getElementById('recipients');
+      var messageText = document.getElementById('messageText');
+
+      // Generate the messages based on booking request details
+      var messageForFirstTwo = `<% if (bookingRequests.length > 0) { %>
+          Contact Info: <%= bookingRequests[0].contactInfo %>
+          Address: <%= bookingRequests[0].address %>
+          Patient Condition: <%= bookingRequests[0].patient_condition %>
+          Emergency Type: <%= bookingRequests[0].emergency_type %>
+      <% } else { %>
+          No booking requests found.
+      <% } %>`.replace(/\s+/g, ' ').trim();
+
+      var messageForThird = "This is a different message for the third recipient.";
+
+      // Set initial value for the message text area
+      messageText.value = `${messageForFirstTwo}, ${messageForThird}`;
 
       form.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        var recipientsInput = document.getElementById('recipients').value;
-        var messagesInput = document.getElementById('messages').value;
-
-        var recipients = recipientsInput.split(',').map(function(recipient) {
+        var recipients = recipientsInput.value.split(',').map(function(recipient) {
           return recipient.trim();
         });
 
-        var messages = messagesInput.split(',').map(function(message) {
-          return message.trim();
-        });
-
-        if (recipients.length !== messages.length) {
-          alert("The number of recipients and messages must be equal.");
+        if (recipients.length !== 3) {
+          alert("Please enter exactly three recipient numbers.");
           return false;
         }
 
-        var recipientMessages = recipients.map((number, index) => {
-          // Split the message based on comma and select appropriate part
-          var parts = messages[index].split(',');
-          var messageToSend = (index < 2) ? parts[0] : parts[1];
-          return { number, message: messageToSend };
-        });
+        var messages = messageText.value.split(',');
+        if (messages.length !== 2) {
+          alert("The message textarea should contain exactly two messages separated by a comma.");
+          return false;
+        }
 
+        var messageForFirstTwo = messages[0].trim();
+        var messageForThird = messages[1].trim();
+
+        // Prepare the messages for each recipient
+        var recipientMessages = [
+          { number: recipients[0], message: messageForFirstTwo },
+          { number: recipients[1], message: messageForFirstTwo },
+          { number: recipients[2], message: messageForThird }
+        ];
+
+        // Simulate sending the SMS
         recipientMessages.forEach(function(recipient) {
           console.log(`Sending message to ${recipient.number}: ${recipient.message}`);
+          // Simulate an API call
           fetch('/send-sms', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(recipient)
+            body: JSON.stringify({
+              recipients: recipient.number,
+              messageText: recipient.message
+            })
           })
           .then(response => response.json())
           .then(data => {
