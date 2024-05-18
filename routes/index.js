@@ -1249,7 +1249,7 @@ router.post("/send-sms", async (req, res) => {
         // const bookingRequestId = req.body.bookingRequestId;
         const bookingRequestId = await BookingRequest.findOne({
           status: false,
-          archived: false
+          archived: false,
         }).sort('createdAt');
         // Update the status of the BookingRequest to true
         await BookingRequest.findByIdAndUpdate(bookingRequestId, {

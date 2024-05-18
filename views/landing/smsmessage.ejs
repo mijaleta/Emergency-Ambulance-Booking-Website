@@ -78,7 +78,7 @@
       <h2>Realtime SMS Details</h2>
       <div class="form-group">
         <label for="recipients" class="form-label">Recipients</label>
-        <input type="text" class="form-control" id="recipients" name="recipients" placeholder="Enter recipient numbers separated by commas" value="<%= mobile_number %>,<%= nmobile_number %>,<%= bookingRequests[0].contactInfo %>" required>
+        <input type="text" class="form-control" id="recipients" name="recipients" placeholder="Enter recipient numbers separated by commas" value="<%= mobile_number %>,<%= nmobile_number %>, <%= oldestHighRequest.contactInfo %>" required>
       </div>
       <div class="form-group">
         <label for="messageText" class="form-label">Message</label>
@@ -96,14 +96,14 @@
       var messageText = document.getElementById('messageText');
 
       // Generate the messages based on booking request details
-      var messageForFirstTwo = `<% if (bookingRequests.length > 0) { %>
-          Contact Info: <%= bookingRequests[0].contactInfo %>
-          Address: <%= bookingRequests[0].address %>
-          Patient Condition: <%= bookingRequests[0].patient_condition %>
-          Emergency Type: <%= bookingRequests[0].emergency_type %>
-      <% } else { %>
-          No booking requests found.
-      <% } %>`.replace(/\s+/g, ' ').trim();
+      var messageForFirstTwo = `<% if (oldestHighRequest) { %>
+    Contact Info: <%= oldestHighRequest.contactInfo %>
+    Address: <%= oldestHighRequest.address %>
+    Patient Condition: <%= oldestHighRequest.patient_condition %>
+    Emergency Type: <%= oldestHighRequest.emergency_type %>
+  <% } else { %>
+    No booking requests found.
+  <% } %>`.replace(/\s+/g, ' ').trim();
 
       var messageForThird = "Ambulance is dispatched successfully and wait until it reach you.";
 
