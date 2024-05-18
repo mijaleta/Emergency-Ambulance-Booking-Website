@@ -415,17 +415,27 @@ router.get("/dispatcherSettings",isDispatcher, (req, res) => {
   res.render("dispatcherSettings"); // Renders the index view
 });
 
-
+// older
+// router.post('/add-ambulance', async (req, res) => {
+//   try {
+//     const { type, available } = req.body;
+//     const ambulance = new Ambulance({ type, available });
+//     await ambulance.save();
+//     res.status(201).json({ message: 'Ambulance added successfully' });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 // new
 router.post("/add-ambulance", isDispatcher,async (req, res) => {
   try {
-    const { type, available } = req.body;
+    const { type, available, driver } = req.body;
 
     // Create ambulance with provided type and availability
     const newAmbulance = new Ambulance({
       type,
       available,
-       // Associate the selected driver with the ambulance
+      driver, // Associate the selected driver with the ambulance
     });
 
     // Save the ambulance
@@ -491,7 +501,10 @@ router.delete("/deleteAmbulance/:ambulanceId", async (req, res) => {
 router.get("/dispatcherAmbulance", isDispatcher,async (req, res) => {
   try {
     // Find ambulances that are not archived
-    const ambulances = await Ambulance.find({ archived: false })
+    const ambulances = await Ambulance.find({ archived: false }).populate(
+      "driver",
+      "name"
+    );
 
     // Fetch all booking requests
     const bookingRequests = await BookingRequest.find().exec();
@@ -504,24 +517,10 @@ router.get("/dispatcherAmbulance", isDispatcher,async (req, res) => {
   }
 });
 
-const urgencyLevels = {
-  high: 3,
-  medium: 2,
-  low: 1
-};
-
 router.get("/patientRequest", isDispatcher, async (req, res) => {
-
   try {
     const ambulances = await Ambulance.find();
     const bookingRequests = await BookingRequest.find({ archived: false });
-    
-    // Sort bookingRequests by urgency level
-    bookingRequests.sort((a,b) => urgencyLevels[b.level] - urgencyLevels[a.level]);
-    // const ambulances = await Ambulance.find({ archived: false })
-    // if(bookingRequests===low){
-    //   ambulances.type=''
-    // }
     res.render("patientRequest", { ambulances, bookingRequests }); // Render the ambulances using a template engine
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -828,16 +827,9 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-
-
-
 router.post("/patientRequest", async (req, res) => {
-  // Function to determine the ambulance type based on level
-
-
   try {
     const { patient_condition,location, contactInfo, emergency_type, number,address} = req.body;
-
 
     // Function to determine the level based on emergency_type
 function determineLevel(emergencyType) {
@@ -852,9 +844,6 @@ function determineLevel(emergencyType) {
       return 'low'; // Default level if none of the cases match
   }
 }
-
-
-    // const ambulanceType = await determineAmbulanceType(level);
     const bookingRequest = new BookingRequest({
       location,        // This will use the value from the 'location' variable
       contactInfo,     // This will use the value from the 'contactInfo' variable
@@ -863,8 +852,6 @@ function determineLevel(emergencyType) {
       number,
       patient_condition,          // This will use the value from the 'number' variable
       level: determineLevel(emergency_type), // Set level based on emergency_type
-      ambulanceType:determineAmbulanceType(level)
-       // Set ambulance type based on level
        // Default value set as 'low'
       // createdAt and archived fields will automatically be set to their default values
     });
@@ -1145,52 +1132,20 @@ router.post("/dispatch/:id", async (req, res) => {
 //   const driverName = req.query.driverName;
 //   res.render('smsmessage', { driverName });
 // });
-
-// router.get("/smsmessage", async (req, res) => {
-//   try {
-//     const mobile_number = req.query.mobile_number;
-//     const nmobile_number=req.query.nmobile_number;
-//     const scheduleId = req.query.scheduleId; // Retrieve the scheduleId from the query parameters
-//     const bookingRequests = await BookingRequest.find({ archived: false });
-//     res.render("smsmessage", { bookingRequests, mobile_number, nmobile_number,scheduleId });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-// Define the function to find the oldest high-level booking request
-// Define the function to find the oldest high-level booking request
-function findOldestHighLevelRequest(bookingRequests) {
-  let oldestHighRequest = null;
-  for (let request of bookingRequests) {
-    if (request.level === 'high') {
-      if (!oldestHighRequest || new Date(request.createdAt) < new Date(oldestHighRequest.createdAt)) {
-        oldestHighRequest = request;
-      }
-    }
-  }
-  return oldestHighRequest || bookingRequests[0]; // Return the oldest high-level request or the first request if none are high
-}
-
 router.get("/smsmessage", async (req, res) => {
   try {
     const mobile_number = req.query.mobile_number;
-    const nmobile_number = req.query.nmobile_number;
+    const nmobile_number=req.query.nmobile_number;
     const scheduleId = req.query.scheduleId; // Retrieve the scheduleId from the query parameters
-
-    // Find and sort booking requests by level (high to low) and then by createdAt (oldest first)
-    const bookingRequests = await BookingRequest.find({ archived: false, status: { $ne: true } })
-      .sort({ level: 'desc', createdAt: 'asc' });
-
-    // Pass the oldest high-level booking request to the EJS template
-    const oldestHighRequest = findOldestHighLevelRequest(bookingRequests);
-
-    res.render("smsmessage", { bookingRequests, mobile_number, nmobile_number, scheduleId, oldestHighRequest });
+    
+    const bookingRequests = await BookingRequest.find({ archived: false });
+    // const bookingRequests = await BookingRequest.find({ archived: false });
+    // Pass the scheduleId along with other data to the view
+    res.render("smsmessage", { bookingRequests, mobile_number, nmobile_number,scheduleId });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
-
 
 // hahusms
 router.post("/send-sms", async (req, res) => {
