@@ -175,12 +175,7 @@
                       </div>
                       <!-- drivers -->
                       <!-- Dropdown to select driver -->
-                      <div class="form-group col-md-12">
-                        <label for="inputDriver">Select Driver</label>
-                        <select class="form-control" id="inputDriver" name="driver">
-                          <!-- Options will be dynamically populated via JavaScript -->
-                        </select>
-                      </div>
+                      
                       <div class="regr">
                         <div class="form-group">
 
@@ -202,20 +197,7 @@
             </div>
 
             <!--  start js part for adding ambulance -->
-            <script>
-              $(document).ready(function () {
-                // Fetch registered drivers from backend
-                fetch('/get-drivers')
-                  .then(response => response.json())
-                  .then(data => {
-                    console.log('Response from /get-drivers:', data);
-                    data.forEach(driver => {
-                      $('#inputDriver').append('<option value="' + driver._id + '">' + driver.name + '</option>');
-                    });
-                  })
-                  .catch(error => console.error('Error fetching drivers:', error));
-              });
-            </script>
+           
 
             <!--  end js part for adding ambulance -->
 
@@ -252,12 +234,7 @@
                       placeholder="Available" required>
                   </div>
                   <!-- Dropdown to select driver -->
-                  <div class="form-group col-md-12">
-                    <label for="inputDriver">Select Driver</label>
-                    <select class="form-control" id="inputDriver" name="driver">
-                      <!-- Options will be dynamically populated via JavaScript -->
-                    </select>
-                  </div>
+                  
                   <!-- Add additional form fields if needed -->
                   <div class="regr">
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -293,7 +270,7 @@
                               <th>#</th>
                               <th>Amb Type</th>
                               <th>No of Ambu</th>
-                              <th>Driver Name</th>
+                              <th>status</th>
                               <th>Action</th>
                           </tr>
                       </thead>
@@ -303,8 +280,8 @@
                               <tr id="row_<%= ambulance._id %>">
                                   <td><%= index + 1 %></td> <!-- Incremental number -->
                                   <td><%= ambulance.type %></td>
-                                  <td><%= ambulance.available %></td>
-                                  <td><%= ambulance.driver ? ambulance.driver.name : 'No driver assigned' %></td>
+                                  <td><%= ambulance.available %></td>                                  
+                                  <td>ooo</td>                                  
                                   <td>
                                       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal"
                                           onclick="fillModal('<%= ambulance._id %>', '<%= ambulance.type %>', '<%= ambulance.available %>', '<%= ambulance.driver ? ambulance.driver._id : '' %>', '<%= ambulance.driver ? ambulance.driver.name : '' %>')">Update</button>

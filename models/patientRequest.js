@@ -11,9 +11,11 @@ const bookingRequestSchema = new mongoose.Schema({
     emergency_type: { type: String, enum: ['Animal', 'Labour', 'Car'], required: true },
     number:{type: Number, required:true},
     level: { type:String, default: 'low' } ,// New field for archiving
+    ambulanceType: { type: String, default: 'Basic' }, // New field to store ambulance type
     status: { type: Boolean, default: false } ,// New field for archiving
     createdAt: { type: Date, default: Date.now },
-    archived: { type: Boolean, default: false } // New field for archiving
+    archived: { type: Boolean, default: false }, // New field for archiving
+    
 });
 
 module.exports = mongoose.model('BookingRequest', bookingRequestSchema);

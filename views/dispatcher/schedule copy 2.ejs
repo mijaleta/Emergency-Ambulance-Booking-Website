@@ -332,7 +332,64 @@
                                         </div>
                                     </div>
                                 
-                                       
+                                        
+                                        <!-- ... existing modal code ... -->
+                                        
+
+                                    <!-- added javascript for the popup -->
+                                       <!-- Popup -->
+
+                                       <!-- <style>
+                                        /* Style for the popup */
+                                        .popup {
+                                            position: fixed;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            background-color: #e5e84d; /* Red color for error message */
+                                            color: #ffffff;
+                                            text-align: center;
+                                            padding: 10px;
+                                            display: none;
+                                            z-index: 9999;
+                                        }
+                                    </style> -->
+    <!-- <div class="popup" id="popupMessage">
+        Maximum number of active schedules reached for this shift on the selected day.
+    </div> -->
+
+    <!-- Your existing JavaScript code for showing the popup -->
+    <!-- <script>
+        // Function to show the popup
+        function showPopup() {
+            document.getElementById("popupMessage").style.display = "block";
+        }
+    
+        // Add an event listener to the form submission
+        document.getElementById("scheduleForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent default form submission
+            // Submit the form using AJAX
+            fetch('/schedule', {
+                method: 'POST',
+                body: new FormData(document.getElementById('scheduleForm'))
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Handle successful response
+                    // Redirect or show success message
+                    window.location.href = "/schedule"; // Redirect to the schedule page
+                } else {
+                    // Handle error response
+                    showPopup(); // Show the popup
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script> -->
+                                    <!-- added javascript for the popup☻ -->
+
 
                                     <div class="tab-content col-lg-12" id="myTabContent">
                                         <div class="tab-pane fade active show" id="home" role="tabpanel">
@@ -495,6 +552,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Date</th>
+                                                                <!-- <th scope="col">Ambulance</th> -->
                                                                 <th scope="col">Driver</th>
                                                                 <th scope="col">Nurse</th>
                                                                 <th scope="col">Status</th>
@@ -583,7 +641,15 @@
                                                                                                             <% } %>
                                                                                             </div>
                                                                                         </th>
-                                                                                        
+                                                                                        <td>
+                                                                                            <div class="r-no">
+                                                                                                <span>
+                                                                                                    <%= schedule.ambulance.type
+                                                                                                        %>
+                                                                                                </span>
+                                                                                                <!-- Display the ambulance type -->
+                                                                                            </div>
+                                                                                        </td>
                                                                                         <td>
                                                                                             <div class="r-no">
                                                                                                 <% if (schedule.driver)
@@ -646,6 +712,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Date</th>
+                                                                <th scope="col">Ambulance</th>
                                                                 <th scope="col">Driver</th>
                                                                 <th scope="col">Nurse</th>
                                                                 <th scope="col">Status</th>
@@ -667,7 +734,14 @@
                                                                                             <% } %>
                                                                             </div>
                                                                         </th>
-                                                                        
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span>
+                                                                                    <%= schedule.ambulance.type %>
+                                                                                </span>
+                                                                                <!-- Display the ambulance type -->
+                                                                            </div>
+                                                                        </td>
                                                                         <td>
                                                                             <div class="r-no">
                                                                                 <% if (schedule.driver) { %>
@@ -733,7 +807,15 @@
                                                                                                             <% } %>
                                                                                             </div>
                                                                                         </th>
-                                                                                        
+                                                                                        <td>
+                                                                                            <div class="r-no">
+                                                                                                <span>
+                                                                                                    <%= schedule.ambulance.type
+                                                                                                        %>
+                                                                                                </span>
+                                                                                                <!-- Display the ambulance type -->
+                                                                                            </div>
+                                                                                        </td>
                                                                                         <td>
                                                                                             <div class="r-no">
                                                                                                 <span>
@@ -784,6 +866,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Date</th>
+                                                                <th scope="col">Ambulance</th>
                                                                 <th scope="col">Driver</th>
                                                                 <th scope="col">Nurse</th>
                                                                 <th scope="col">Status</th>
@@ -805,7 +888,14 @@
                                                                                             <% } %>
                                                                             </div>
                                                                         </th>
-                                                                       
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span>
+                                                                                    <%= schedule.ambulance.type %>
+                                                                                </span>
+                                                                                <!-- Display the ambulance type -->
+                                                                            </div>
+                                                                        </td>
                                                                         <td>
                                                                             <div class="r-no">
                                                                                 <% if (schedule.driver) { %>
@@ -871,7 +961,15 @@
                                                                                                             <% } %>
                                                                                             </div>
                                                                                         </th>
-                                                                                     
+                                                                                        <td>
+                                                                                            <div class="r-no">
+                                                                                                <span>
+                                                                                                    <%= schedule.ambulance.type
+                                                                                                        %>
+                                                                                                </span>
+                                                                                                <!-- Display the ambulance type -->
+                                                                                            </div>
+                                                                                        </td>
                                                                                         <td>
                                                                                             <div class="r-no">
                                                                                                 <span>
@@ -922,6 +1020,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Date</th>
+                                                                <th scope="col">Ambulance</th>
                                                                 <th scope="col">Driver</th>
                                                                 <th scope="col">Nurse</th>
                                                                 <th scope="col">Status</th>
@@ -943,7 +1042,14 @@
                                                                                             <% } %>
                                                                             </div>
                                                                         </th>
-                                                                        
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span>
+                                                                                    <%= schedule.ambulance.type %>
+                                                                                </span>
+                                                                                <!-- Display the ambulance type -->
+                                                                            </div>
+                                                                        </td>
                                                                         <td>
                                                                             <div class="r-no">
                                                                                 <% if (schedule.driver) { %>
@@ -1009,7 +1115,15 @@
                                                                                                             <% } %>
                                                                                             </div>
                                                                                         </th>
-                                                                                       
+                                                                                        <td>
+                                                                                            <div class="r-no">
+                                                                                                <span>
+                                                                                                    <%= schedule.ambulance.type
+                                                                                                        %>
+                                                                                                </span>
+                                                                                                <!-- Display the ambulance type -->
+                                                                                            </div>
+                                                                                        </td>
                                                                                         <td>
                                                                                             <div class="r-no">
                                                                                                 <span>
@@ -1061,6 +1175,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Date</th>
+                                                                <th scope="col">Ambulance</th>
                                                                 <th scope="col">Driver</th>
                                                                 <th scope="col">Nurse</th>
                                                                 <th scope="col">Status</th>
@@ -1082,7 +1197,14 @@
                                                                                             <% } %>
                                                                             </div>
                                                                         </th>
-                                                                        
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span>
+                                                                                    <%= schedule.ambulance.type %>
+                                                                                </span>
+                                                                                <!-- Display the ambulance type -->
+                                                                            </div>
+                                                                        </td>
                                                                         <td>
                                                                             <div class="r-no">
                                                                                 <% if (schedule.driver) { %>
@@ -1151,6 +1273,15 @@
                                                                                         <td>
                                                                                             <div class="r-no">
                                                                                                 <span>
+                                                                                                    <%= schedule.ambulance.type
+                                                                                                        %>
+                                                                                                </span>
+                                                                                                <!-- Display the ambulance type -->
+                                                                                            </div>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <div class="r-no">
+                                                                                                <span>
                                                                                                     <%= schedule.driver.name
                                                                                                         %>
                                                                                                 </span>
@@ -1198,6 +1329,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Date</th>
+                                                                <th scope="col">Ambulance</th>
                                                                 <th scope="col">Driver</th>
                                                                 <th scope="col">Nurse</th>
                                                                 <th scope="col">Status</th>
@@ -1219,7 +1351,14 @@
                                                                                             <% } %>
                                                                             </div>
                                                                         </th>
-
+                                                                        <td>
+                                                                            <div class="r-no">
+                                                                                <span>
+                                                                                    <%= schedule.ambulance.type %>
+                                                                                </span>
+                                                                                <!-- Display the ambulance type -->
+                                                                            </div>
+                                                                        </td>
                                                                         <td>
                                                                             <div class="r-no">
                                                                                 <% if (schedule.driver) { %>
@@ -1285,6 +1424,15 @@
                                                                                                             <% } %>
                                                                                             </div>
                                                                                         </th>
+                                                                                        <td>
+                                                                                            <div class="r-no">
+                                                                                                <span>
+                                                                                                    <%= schedule.ambulance.type
+                                                                                                        %>
+                                                                                                </span>
+                                                                                                <!-- Display the ambulance type -->
+                                                                                            </div>
+                                                                                        </td>
                                                                                         <td>
                                                                                             <div class="r-no">
                                                                                                 <% if (schedule && schedule.driver) { %>
