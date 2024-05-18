@@ -93,25 +93,25 @@
       <button type="submit" class="btn btn-send btn-block">Send SMS</button>
     </form>
   </div>
-
-
-
-
-
-
  <!-- Your existing code -->
-<script>
-    // Get the textarea element
-    var textarea = document.getElementById("messageText");
-    textarea.value = `<% if (bookingRequests.length > 0) { %>
-        Contact Info: <%= bookingRequests[0].contactInfo %>
-        Address: <%= bookingRequests[0].address %>
-        Patient Condition: <%= bookingRequests[0].patient_condition %>
-        Emergency Type: <%= bookingRequests[0].emergency_type %>
-    <% } else { %>
-        No booking requests found.
-    <% } %>`;
+
+
+
+ <script>
+  // Get the textarea element
+  var textarea = document.getElementById("messageText");
+
+  // Set the value of the textarea
+  textarea.value = `<% if (oldestHighRequest) { %>
+    Contact Info: <%= oldestHighRequest.contactInfo %>
+    Address: <%= oldestHighRequest.address %>
+    Patient Condition: <%= oldestHighRequest.patient_condition %>
+    Emergency Type: <%= oldestHighRequest.emergency_type %>
+  <% } else { %>
+    No booking requests found.
+  <% } %>`;
 </script>
+
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
