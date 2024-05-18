@@ -64,7 +64,7 @@
 </head>
 <body>
   <div class="container">
-    <form id="smsForm">
+    <form id="smsForm" action="/send-sms" method="post">
       <h2>Realtime SMS Details</h2>
       <div class="form-group">
         <label for="recipients" class="form-label">Recipients</label>
@@ -99,8 +99,8 @@
       // Set initial value for the message text area
       messageText.value = `${messageForFirstTwo}, ${messageForThird}`;
 
-      form.addEventListener('submit', function(event) {
-        event.preventDefault();
+       form.addEventListener('submit', function(event) {
+      //   event.preventDefault();
 
         var recipients = recipientsInput.value.split(',').map(function(recipient) {
           return recipient.trim();
