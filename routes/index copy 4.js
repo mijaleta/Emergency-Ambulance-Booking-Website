@@ -505,9 +505,9 @@ router.get("/dispatcherAmbulance", isDispatcher,async (req, res) => {
 });
 
 const urgencyLevels = {
-  High: 3,
-  Medium: 2,
-  Low: 1
+  high: 3,
+  medium: 2,
+  low: 1
 };
 
 router.get("/patientRequest", isDispatcher, async (req, res) => {
@@ -836,20 +836,20 @@ router.post("/patientRequest", async (req, res) => {
 
 
   try {
-    const {level,patient_name,location, contactInfo, emergency_type, number,address} = req.body;
+    const {patient_name,location, contactInfo, emergency_type, number,address} = req.body;
 
 
     // Function to determine the level based on emergency_type
-function determineAmbulanceType(emergencyType) {
+function determineLevel(emergencyType) {
   switch (emergencyType) {
-    case 'Low':
-      return 'Basic';
-    case 'Medium':
-      return 'Medium';
-    case 'High':
-      return 'Advanced';
+    case 'Animal':
+      return 'low';
+    case 'Labour':
+      return 'medium';
+    case 'Car':
+      return 'high';
     default:
-      return 'Basic'; // Default level if none of the cases match
+      return 'low'; // Default level if none of the cases match
   }
 }
 
@@ -862,7 +862,7 @@ function determineAmbulanceType(emergencyType) {
       emergency_type,  // This will use the value from the 'emergency_type' variable
       number,
       patient_name,
-      level,
+      level: determineLevel(emergency_type), // Set level based on emergency_type
       ambulanceType:determineAmbulanceType(level)
        // Set ambulance type based on level
        // Default value set as 'low'
