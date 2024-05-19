@@ -104,21 +104,27 @@
                 <div class="bg-white rounded p-5 m-5 mb-0">
                     <form id="registerForm">
                         <div class="row g-3">
-                            <div class="col-12">
-                                <input type="text" id="fullName" class="form-control bg-light border-0" placeholder=" Full Name" style="height: 55px;" required>
-                            </div>
-                            <div class="col-12">
-                                <input type="email" id="email" class="form-control bg-light border-0" placeholder="Your Email" style="height: 55px;" required>
-                            </div>
-                            <div class="col-12">
-                                <input type="tel" id="phone" class="form-control bg-light border-0" placeholder=" Phone Number" style="height: 55px;" required>
-                            </div>
-                            <div class="col-12">
-                                <input type="password" id="password" class="form-control bg-light border-0" placeholder="Password" style="height: 55px;" required>
-                            </div>
-                            <div class="col-12">
-                                <input type="password" id="confirmPassword" class="form-control bg-light border-0" placeholder="Confirm Password" style="height: 55px;" required>
-                            </div>
+                     <div class="col-12">
+    <input type="text" id="fullName" class="form-control bg-light border-0" placeholder=" Full Name" style="height: 55px;" required>
+    <div class="invalid-feedback"></div>
+</div>
+<div class="col-12">
+    <input type="email" id="email" class="form-control bg-light border-0" placeholder="Your Email" style="height: 55px;" required>
+    <div class="invalid-feedback"></div>
+</div>
+<div class="col-12">
+    <input type="tel" id="phone" class="form-control bg-light border-0" placeholder=" Phone Number" style="height: 55px;" required>
+    <div class="invalid-feedback"></div>
+</div>
+<div class="col-12">
+    <input type="password" id="password" class="form-control bg-light border-0" placeholder="Password" style="height: 55px;" required>
+    <div class="invalid-feedback"></div>
+</div>
+<div class="col-12">
+    <input type="password" id="confirmPassword" class="form-control bg-light border-0" placeholder="Confirm Password" style="height: 55px;" required>
+    <div class="invalid-feedback"></div>
+</div>
+
                             <div class="col-12">
                                 <button class="btn btn-primary w-100 py-3" type="submit">Sign up</button>
                             </div>
@@ -187,45 +193,82 @@
     <script src="js/main.js"></script>
 
     <!-- Form Validation Script -->
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+        e.preventDefault();
 
-            const fullName = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
 
-            if (fullName.length < 5) {
-                alert('Full name must be at least 5 characters long.');
-                return;
-            }
+        const fullName = fullNameInput.value.trim();
+        const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim();
+        const password = passwordInput.value.trim();
+        const confirmPassword = confirmPasswordInput.value.trim();
 
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(email)) {
-                alert('Please enter a valid email address.');
-                return;
-            }
+        // Regular expression patterns for phone number and name validation
+        const phonePattern = /^(09|07|\+2519|\+2517)\d{8}$/;
+        const namePattern = /^[a-zA-Z]{5,}$/;
 
-            if (phone.length < 10) {
-                alert('Please enter a valid phone number.');
-                return;
-            }
+        let isValid = true;
 
-            if (password.length < 8) {
-                alert('Password must be at least 8 characters long.');
-                return;
-            }
+        if (!namePattern.test(fullName)) {
+            fullNameInput.classList.add('is-invalid');
+            fullNameInput.nextElementSibling.textContent = 'Full name must be at least 5 characters long and contain only alphabets.';
+            isValid = false;
+        } else {
+            fullNameInput.classList.remove('is-invalid');
+            fullNameInput.nextElementSibling.textContent = '';
+        }
 
-            if (password !== confirmPassword) {
-                alert('Passwords do not match.');
-                return;
-            }
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            emailInput.classList.add('is-invalid');
+            emailInput.nextElementSibling.textContent = 'Please enter a valid email address.';
+            isValid = false;
+        } else {
+            emailInput.classList.remove('is-invalid');
+            emailInput.nextElementSibling.textContent = '';
+        }
 
+        if (!phonePattern.test(phone)) {
+            phoneInput.classList.add('is-invalid');
+            phoneInput.nextElementSibling.textContent = 'Please enter a valid phone number starting with 09, 07, +2519, or +2517 and having 8 digits.';
+            isValid = false;
+        } else {
+            phoneInput.classList.remove('is-invalid');
+            phoneInput.nextElementSibling.textContent = '';
+        }
+
+        if (password.length < 8) {
+            passwordInput.classList.add('is-invalid');
+            passwordInput.nextElementSibling.textContent = 'Password must be at least 8 characters long.';
+            isValid = false;
+        } else {
+            passwordInput.classList.remove('is-invalid');
+            passwordInput.nextElementSibling.textContent = '';
+        }
+
+        if (password !== confirmPassword) {
+            confirmPasswordInput.classList.add('is-invalid');
+            confirmPasswordInput.nextElementSibling.textContent = 'Passwords do not match.';
+            isValid = false;
+        } else {
+            confirmPasswordInput.classList.remove('is-invalid');
+            confirmPasswordInput.nextElementSibling.textContent = '';
+        }
+
+        if (isValid) {
             this.submit();
-        });
-    </script>
+        }
+    });
+</script>
+
+
+
 </body>
 
 </html>
