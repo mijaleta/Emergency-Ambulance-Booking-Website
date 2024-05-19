@@ -1243,18 +1243,27 @@ router.post("/send-sms", async (req, res) => {
       dispatched: true,
     });
 
+    const urgencyLevels = {
+      high: 3,
+      medium: 2,
+      low: 1
+    };
 
+    const bookingRequests = await BookingRequest.find({
+      status: false,
+      archived: false
+    }).sort({ createdAt: 1 }); // Sort by createdAt in ascending order
 
-        // Retrieve the bookingRequestId from the form submission
-        // const bookingRequestId = req.body.bookingRequestId;
-        const bookingRequestId = await BookingRequest.findOne({
-          status: false,
-          archived: false,
-        }).sort('createdAt');
-        // Update the status of the BookingRequest to true
-        await BookingRequest.findByIdAndUpdate(bookingRequestId, {
-          status: true,
-        });
+    // Sort the booking requests array by urgency level
+    bookingRequests.sort((a, b) => urgencyLevels[b.level] - urgencyLevels[a.level]);
+
+    // Assuming you want to update the first booking request in sorted order
+    if (bookingRequests.length > 0) {
+      const bookingRequestId = bookingRequests[0]._id; // Get the _id of the first sorted booking request
+      await BookingRequest.findByIdAndUpdate(bookingRequestId, {
+        status: true,
+      });
+    }
     
 
     res.render('smsSuccess')

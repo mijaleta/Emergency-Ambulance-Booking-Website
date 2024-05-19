@@ -111,7 +111,7 @@
       messageText.value = `${messageForFirstTwo}, ${messageForThird}`;
 
        form.addEventListener('submit', function(event) {
-       //event.preventDefault();
+       event.preventDefault();
 
         var recipients = recipientsInput.value.split(',').map(function(recipient) {
           return recipient.trim();
