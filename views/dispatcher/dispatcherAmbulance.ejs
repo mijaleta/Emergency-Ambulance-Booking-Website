@@ -169,9 +169,9 @@
                       </div>
 
                       <div class="form-group col-md-12">
-                        <label for="inputAvailability4">Available</label>
+                        <label for="inputAvailability4">VIN</label>
                         <input type="available" class="form-control" id="inputAvailability4" name="available"
-                          placeholder="No of Available Amb">
+                          placeholder="vehicle identification number">
                       </div>
                       <!-- drivers -->
                       <!-- Dropdown to select driver -->
@@ -269,7 +269,7 @@
                           <tr>
                               <th>#</th>
                               <th>Amb Type</th>
-                              <th>No of Ambu</th>
+                              <th>VIN</th>
                               <th>status</th>
                               <th>Action</th>
                           </tr>
@@ -281,7 +281,10 @@
                                   <td><%= index + 1 %></td> <!-- Incremental number -->
                                   <td><%= ambulance.type %></td>
                                   <td><%= ambulance.available %></td>                                  
-                                  <td>ooo</td>                                  
+                                  <td> 
+                                    <button type="button" class="btn bg-success text-light ">success</button>
+                                
+                            </td>                                 
                                   <td>
                                       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal"
                                           onclick="fillModal('<%= ambulance._id %>', '<%= ambulance.type %>', '<%= ambulance.available %>', '<%= ambulance.driver ? ambulance.driver._id : '' %>', '<%= ambulance.driver ? ambulance.driver.name : '' %>')">Update</button>
